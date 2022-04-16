@@ -1,9 +1,10 @@
 {
-    name: 'cortex-template',
+    name: 'cortex-matrix',
     version: '0.0.1',
     namespace: 'cortex',
     test_driver: 'Catch-Main',
     depends: [
-        '',
+        'cortex-iterators^0.3.0',
+        'cortex-concepts^0.1.1'
     ]
 }

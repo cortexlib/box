@@ -1,6 +1,7 @@
 {
-    name: 'cortex-library-template-directory',
+    name: 'matrix',
     uses: [
-        '',
+        'cortex/iterators',
+        'cortex/concepts'
     ]
 }
