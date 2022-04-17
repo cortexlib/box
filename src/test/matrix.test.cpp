@@ -1,6 +1,8 @@
 #include <catch2/catch.hpp>
 #include <matrix.hpp>
 #include <utility>
+#include <string>
+#include <adaptors/enumerate.hpp>
 
 
 TEST_CASE("Constructors of Matrix")
@@ -38,7 +40,7 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(n.row_size() == 10);
         REQUIRE(n.column_size() == 10);
 
-        for (int i = 0; i < 100; ++i)
+        for (auto i { 0UL }; i < m.size(); ++i)
         {
             REQUIRE(n[i] == 1);
             REQUIRE(m[i] == 1);
@@ -58,7 +60,7 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(n.row_size() == 10);
         REQUIRE(n.column_size() == 10);
 
-        for (int i = 0; i < 100; ++i)
+        for (auto i { 0UL }; i < m.size(); ++i)
             REQUIRE(n[i] == 1);
     }
 
@@ -76,7 +78,7 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(n.row_size() == 10);
         REQUIRE(n.column_size() == 10);
 
-        for (int i = 0; i < 100; ++i)
+        for (auto i { 0UL }; i < m.size(); ++i)
         {
             REQUIRE(n[i] == 1);
             REQUIRE(m[i] == 1);
@@ -97,7 +99,7 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(n.row_size() == 10);
         REQUIRE(n.column_size() == 10);
 
-        for (int i = 0; i < 100; ++i)
+        for (auto i { 0UL }; i < m.size(); ++i)
             REQUIRE(n[i] == 1);
     }
 }
@@ -185,5 +187,95 @@ TEST_CASE("Element Access")
         REQUIRE(m.at(0, 1) == 2);
 
         REQUIRE_THROWS_AS(m.at(10, 1), std::out_of_range);
+    }
+}
+
+TEST_CASE("Element Modifiers")
+{
+    SECTION("matrix::swap")
+    {
+        cortex::matrix<int> m(2, 3, 1);
+        cortex::matrix<int> n(7, 4, 2);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == 1);
+
+        for (auto i { 0UL }; i < n.size(); ++i)
+            REQUIRE(n[i] == 2);
+
+        m.swap(n);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == 2);
+
+        for (auto i { 0UL }; i < n.size(); ++i)
+            REQUIRE(n[i] == 1);
+    }
+
+    SECTION("matrix::flatten")
+    {
+        cortex::matrix<int> m(2, 3, 1);
+        std::vector<int> v = m.flatten();
+
+        for (auto i { 0UL }; i < v.size(); ++i)
+            REQUIRE(v[i] == 1);
+    }
+}
+
+TEST_CASE("Iterators")
+{
+    SECTION("Range for-loop")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+
+        for (auto& elem : m)
+        {
+            REQUIRE(elem == 1);
+            elem = 2;
+        }
+
+        for (auto& elem : m)
+            REQUIRE(elem == 2);
+    }
+
+    SECTION("matrix::begin and matrix::end")
+    {
+        cortex::matrix<int> m(10, 10);
+
+        std::iota(m.begin(), m.end(), 1);
+
+        auto idx { 1 };
+        for (auto& elem : m)
+        {
+            REQUIRE(elem == idx++);
+            elem = 2 * elem;
+        }
+
+        idx = 1;
+        for (auto& elem : m)
+        {
+            REQUIRE(elem == idx * 2);
+            ++idx;
+        }
+    }
+
+    SECTION("matrix::clear")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+
+        m.clear();
+
+        for (auto& elem : m)
+            REQUIRE(elem == 0);
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 100);
+
+        REQUIRE_THROWS_AS(m.at(0, 0) = 1, std::out_of_range);
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 100);
     }
 }

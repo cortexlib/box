@@ -23,11 +23,39 @@
 #include <iterator>
 #include <initializer_list>
 #include <cassert>
+#include <vector>
 
 
 
 namespace cortex
 {
+    /**
+     * @brief Matrix - Two Dimensional Array
+     * 
+     * @details Matrix is a two dimensional array that 
+     * stores elements sequentially in memory but is 
+     * viewed as a series of rows and columns. Matrix
+     * supports standard mathematical operations as long 
+     * as the underlying data type supports them. This is 
+     * checked at compile time through the use of concepts.
+     * 
+     * @todo Add support for iterators
+     * @todo Add support for range based for loops
+     * @todo Add support for basic arithmatic
+     * @todo Add support for matrix operations
+     * @todo Add support for operator overloads
+     * @todo Add support for std::allocator
+     * @todo Add support for std::initializer_list
+     * @todo Add support for std::swap
+     * @todo Add support for swaps of different matrix types
+     * @todo Add support for flatten ✔️
+     * @todo Add support for assign
+     * @todo Add support for clear ✔️
+     * @todo Add support for resize
+     * @todo Add support for reserve
+     * 
+     * @tparam _Tp 
+     */
     template<typename _Tp>
     class matrix
     {
@@ -50,22 +78,25 @@ namespace cortex
             size_type m_rows;
 
             size_type m_size;
+            size_type m_capacity;
 
             pointer m_data;
 
     public:
 
-        matrix()
+        constexpr matrix()
         : m_columns(size_type())
         , m_rows(size_type())
         , m_size(size_type())
+        , m_capacity(size_type())
         , m_data(pointer())
         { }
 
-        matrix(size_type cols, size_type rows)
+        constexpr matrix(size_type cols, size_type rows)
         : m_columns(cols)
         , m_rows(rows)
         , m_size(cols * rows != 0 ? cols * rows : std::max(cols, rows))
+        , m_capacity(m_size)
         , m_data(_M_allocate(m_size))
         { 
             if constexpr (std::is_default_constructible_v<value_type>)
@@ -74,24 +105,27 @@ namespace cortex
                 std::uninitialized_fill_n(m_data, m_size, value_type());
         }
 
-        matrix(size_type cols, size_type rows, const value_type& value)
+        constexpr matrix(size_type cols, size_type rows, const value_type& value)
         : m_columns(cols)
         , m_rows(rows)
         , m_size(cols * rows != 0 ? cols * rows : std::max(cols, rows))
+        , m_capacity(m_size)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_fill_n(m_data, m_size, value); }
 
-        matrix(const matrix& other)
+        constexpr matrix(const matrix& other)
         : m_columns(other.m_columns)
         , m_rows(other.m_rows)
         , m_size(other.m_size)
+        , m_capacity(other.m_capacity)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
 
-        matrix(matrix&& other) noexcept
+        constexpr matrix(matrix&& other) noexcept
         : m_columns(other.m_columns)
         , m_rows(other.m_rows)
         , m_size(other.m_size)
+        , m_capacity(other.m_capacity)
         , m_data(other.m_data)
         { 
             other.m_data = pointer();
@@ -100,22 +134,24 @@ namespace cortex
             other.m_size = size_type(); 
         }
 
-        matrix& operator=(const matrix& other)
+        constexpr matrix& operator=(const matrix& other)
         {
             m_columns = other.m_columns;
             m_rows = other.m_rows;
             m_size = other.m_size;
+            m_capacity = other.m_size;
             m_data = _M_allocate(m_size);
             std::uninitialized_copy_n(other.m_data, m_size, m_data);
 
             return *this;
         }
 
-        matrix& operator=(matrix&& other) noexcept
+        constexpr matrix& operator=(matrix&& other) noexcept
         {
             m_columns = other.m_columns;
             m_rows = other.m_rows;
             m_size = other.m_size;
+            m_capacity = other.m_capacity;
             m_data = other.m_data;
 
             other.m_data = pointer();
@@ -126,7 +162,11 @@ namespace cortex
             return *this;
         }
 
+    #if __cplusplus >= 202202L
+        constexpr ~matrix()
+    #else
         ~matrix()
+    #endif
         {
             if (m_data != pointer())
                 std::destroy_n(m_data, m_size);
@@ -138,6 +178,23 @@ namespace cortex
             m_columns = size_type();
             m_rows = size_type();
             m_size = size_type();
+            m_capacity = size_type();
+        }
+
+
+        /**
+         * @brief Swaps two matrices
+         * 
+         * @todo Implement swap for different types
+         * which requires utilising std::allocator.
+         * 
+         * @param other 
+         */
+        void swap(matrix& other) noexcept
+        {
+            matrix tmp = other;
+            other = *this;
+            *this = tmp;
         }
 
         constexpr size_type size() const noexcept
@@ -152,8 +209,14 @@ namespace cortex
         constexpr size_type max_size() const noexcept
         { return m_size; }
 
+        constexpr size_type capacity() const noexcept
+        { return m_capacity; }
+
         constexpr auto dimensions() const noexcept
         { return std::tie(m_columns, m_rows); }
+
+        constexpr bool is_square() const noexcept
+        { return m_columns == m_rows; }
 
         constexpr bool empty() const noexcept
         { return m_size == 0; }
@@ -196,6 +259,60 @@ namespace cortex
         constexpr const_reference back() const noexcept
         { return *(m_data + m_size - 1); }
 
+        constexpr std::vector<value_type> flatten() noexcept
+        {
+            std::vector<value_type> vec(m_size);
+            std::copy_n(m_data, m_size, vec.begin());
+            return vec;
+        }
+
+        constexpr iterator begin() noexcept
+        { return iterator(m_data); }
+
+        constexpr const_iterator begin() const noexcept
+        { return const_iterator(m_data); }
+
+        constexpr const_iterator cbegin() const noexcept
+        { return const_iterator(m_data); }
+
+        constexpr reverse_iterator rbegin() noexcept
+        { return reverse_iterator(end()); }
+
+        constexpr const_reverse_iterator rbegin() const noexcept
+        { return const_reverse_iterator(end()); }
+
+        constexpr const_reverse_iterator crbegin() const noexcept
+        { return const_reverse_iterator(end()); }
+
+        constexpr iterator end() noexcept
+        { return iterator(m_data + m_size); }
+
+        constexpr const_iterator end() const noexcept
+        { return const_iterator(m_data + m_size); }
+
+        constexpr const_iterator cend() const noexcept
+        { return const_iterator(m_data + m_size); }
+
+        constexpr reverse_iterator rend() noexcept
+        { return reverse_iterator(begin()); }
+
+        constexpr const_reverse_iterator rend() const noexcept
+        { return const_reverse_iterator(begin()); }
+
+        constexpr const_reverse_iterator crend() const noexcept
+        { return const_reverse_iterator(begin()); }
+
+        constexpr void clear() noexcept
+        {
+            if (auto __n { (m_data + m_size) - m_data })
+            {
+                std::destroy_n(m_data, m_size);
+            
+                m_size = size_type();
+                m_columns = size_type();
+                m_rows = size_type();   
+            }         
+        }
 
     private:
 
