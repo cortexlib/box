@@ -148,10 +148,42 @@ TEST_CASE("Matrix Meta-Data Access")
         cortex::matrix<int> m(10, 10, 1);
         REQUIRE(!m.empty());
     }
+}
 
+TEST_CASE("Element Access")
+{
     SECTION("matrix::data")
     {
         cortex::matrix<int> m(10, 10, 1);
         REQUIRE(m.data() != nullptr);
+    }
+
+    SECTION("matrix::front")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m.front() == 1);
+
+        m.front() = 2;
+        REQUIRE(m.front() == 2);
+    }
+
+    SECTION("matrix::back")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m.back() == 1);
+
+        m.back() = 2;
+        REQUIRE(m.back() == 2);
+    }
+
+    SECTION("matrix::at")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m.at(0, 1) == 1);
+
+        m.at(0, 1) = 2;
+        REQUIRE(m.at(0, 1) == 2);
+
+        REQUIRE_THROWS_AS(m.at(10, 1), std::out_of_range);
     }
 }

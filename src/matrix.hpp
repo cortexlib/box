@@ -169,17 +169,47 @@ namespace cortex
          * @param index 
          * @return constexpr reference 
          */
-        constexpr reference operator[](size_type index)
+        constexpr reference operator[](size_type index) 
         { return *(m_data + index); }
+
+        constexpr reference at(size_type column, size_type row)
+        { 
+            _M_range_check(column, row);
+            return *(m_data + (m_columns * row) + column);
+        }
+
+        constexpr const_reference at(size_type column, size_type row) const
+        { 
+            _M_range_check(column, row);
+            return *(m_data + (m_columns * row) + column); 
+        }
+
+        constexpr reference front() noexcept
+        { return *m_data; }
+
+        constexpr const_reference front() const noexcept
+        { return *m_data; }
+
+        constexpr reference back() noexcept
+        { return *(m_data + m_size - 1); }
+
+        constexpr const_reference back() const noexcept
+        { return *(m_data + m_size - 1); }
 
 
     private:
 
-        pointer _M_allocate(size_type __n)
+        constexpr pointer _M_allocate(size_type __n)
         { return __n != 0 ? static_cast<pointer>(::operator new(__n * sizeof(value_type))) : pointer(); }
 
-        void _M_deallocate(pointer __p, size_type __n)
+        constexpr void _M_deallocate(pointer __p, [[maybe_unused]] size_type __n)
         { ::operator delete(__p); }
+
+        constexpr void _M_range_check(size_type __column, size_type __row) const
+        {
+            if (__column >= this->column_size() || __row >= this->row_size())
+                throw std::out_of_range("matrix::_M_range_check - index out of range.");
+        }
     };
 } // namespace cortex
 
