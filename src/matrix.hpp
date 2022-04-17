@@ -39,8 +39,8 @@ namespace cortex
      * as the underlying data type supports them. This is 
      * checked at compile time through the use of concepts.
      * 
-     * @todo Add support for iterators
-     * @todo Add support for range based for loops
+     * @todo Add support for iterators ✔️
+     * @todo Add support for range based for loops ✔️
      * @todo Add support for basic arithmatic
      * @todo Add support for matrix operations
      * @todo Add support for operator overloads
@@ -53,6 +53,7 @@ namespace cortex
      * @todo Add support for clear ✔️
      * @todo Add support for resize
      * @todo Add support for reserve
+     * @todo Add support for shrink_to_fit
      * 
      * @tparam _Tp 
      */
@@ -183,6 +184,55 @@ namespace cortex
 
 
         /**
+         * @brief Reserves a new memory block for the matrix
+         * 
+         * @details matrix::reserve makes no garuntee that the
+         * the order is preserved of elements in the matrix after
+         * it has been called.
+         * 
+         * @todo Ensure that the element's order is preserved. 
+         * 
+         * @param new_columns 
+         * @param new_rows 
+         */
+        constexpr void reserve(size_type new_columns, size_type new_rows)
+        {
+            auto new_capacity = new_columns * new_rows != 0 ? new_columns * new_rows : std::max(new_columns, new_rows);
+
+            if (new_capacity > m_capacity)
+            {
+                auto new_data = _M_allocate(new_capacity);
+
+                if constexpr (std::is_move_constructible_v<value_type>)                    
+                    std::uninitialized_move_n(m_data, m_size, new_data);
+                else
+                    std::uninitialized_copy_n(m_data, m_size, new_data);
+
+                if (m_data != pointer())
+                    _M_deallocate(m_data, m_size);
+
+                m_data = new_data;
+                m_capacity = new_capacity;
+                m_columns = new_columns;
+                m_rows = new_rows;
+            }
+        }
+
+        constexpr void clear() noexcept
+        {
+            if (auto __n { (m_data + m_size) - m_data })
+            {
+                std::destroy_n(m_data, m_size);
+            
+                m_size = size_type();
+                m_columns = size_type();
+                m_rows = size_type();
+                m_data = pointer();
+            }         
+        }
+
+
+        /**
          * @brief Swaps two matrices
          * 
          * @todo Implement swap for different types
@@ -221,8 +271,11 @@ namespace cortex
         constexpr bool empty() const noexcept
         { return m_size == 0; }
 
+        constexpr pointer data() noexcept
+        { return _M_data_ptr(m_data); }
+
         constexpr pointer data() const noexcept
-        { return m_data; }
+        { return _M_data_ptr(m_data); }
 
         /**
          * @brief 
@@ -302,18 +355,6 @@ namespace cortex
         constexpr const_reverse_iterator crend() const noexcept
         { return const_reverse_iterator(begin()); }
 
-        constexpr void clear() noexcept
-        {
-            if (auto __n { (m_data + m_size) - m_data })
-            {
-                std::destroy_n(m_data, m_size);
-            
-                m_size = size_type();
-                m_columns = size_type();
-                m_rows = size_type();   
-            }         
-        }
-
     private:
 
         constexpr pointer _M_allocate(size_type __n)
@@ -327,6 +368,22 @@ namespace cortex
             if (__column >= this->column_size() || __row >= this->row_size())
                 throw std::out_of_range("matrix::_M_range_check - index out of range.");
         }
+
+        template<typename _Up>
+        _Up* _M_data_ptr(_Up* __ptr) const noexcept
+        { return __ptr; }
+
+#if __cplusplus >= 201103L
+        template<typename _Ptr>
+        typename std::pointer_traits<_Ptr>::element_type* 
+        _M_data_ptr(_Ptr __ptr) const
+        { return this->empty() ? nullptr : std::to_address(*__ptr); }
+#else
+        template<typename _Up>
+        _Up* _M_data_ptr(_Up* __ptr) noexcept
+        { return __ptr; }
+#endif // __cplusplus >= 201103L
+
     };
 } // namespace cortex
 

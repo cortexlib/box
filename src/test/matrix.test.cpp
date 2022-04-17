@@ -220,6 +220,69 @@ TEST_CASE("Element Modifiers")
         for (auto i { 0UL }; i < v.size(); ++i)
             REQUIRE(v[i] == 1);
     }
+
+    SECTION("matrix::clear")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+
+        auto ptr { m.begin().base() };
+        REQUIRE(m.data() == std::to_address(ptr));
+
+        m.clear();
+
+        for (auto& elem : m)
+            REQUIRE(elem == 0);
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 100);
+
+        REQUIRE_THROWS_AS(m.at(0, 0) = 1, std::out_of_range);
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 100);
+        REQUIRE(m.data() == nullptr);
+        REQUIRE(m.data() == typename decltype(m)::pointer());
+    }
+
+    SECTION("matrix::reserve")
+    {
+        cortex::matrix<int> m(7, 3, 1);
+
+        REQUIRE(m.capacity() == 21);
+
+        m.reserve(8, 4);
+
+        REQUIRE(m.capacity() == 32);
+    }
+
+    SECTION("matrix::reserve - column and row order preservation")
+    {
+        cortex::matrix<int> m(7, 3, 1);
+
+        REQUIRE(m.capacity() == 21);
+        REQUIRE(m.column_size() == 7);
+        REQUIRE(m.row_size() == 3);
+
+        for (auto& elem : m)
+            REQUIRE(elem == 1);
+
+        m.reserve(8, 4);
+
+        REQUIRE(m.capacity() == 32);
+        REQUIRE(m.column_size() == 8);
+        REQUIRE(m.row_size() == 4);
+
+        for (auto elem = m.begin(); elem != m.cend(); ++elem)
+        {
+            auto dist { static_cast<decltype(m)::size_type>(std::distance(m.begin(), elem)) };
+            if (dist < m.size())
+                REQUIRE(*elem == 1);
+            else
+                REQUIRE(*elem == 0);
+        }
+    }
 }
 
 TEST_CASE("Iterators")
@@ -257,25 +320,5 @@ TEST_CASE("Iterators")
             REQUIRE(elem == idx * 2);
             ++idx;
         }
-    }
-
-    SECTION("matrix::clear")
-    {
-        cortex::matrix<int> m(10, 10, 1);
-
-        m.clear();
-
-        for (auto& elem : m)
-            REQUIRE(elem == 0);
-
-        REQUIRE(m.empty());
-        REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 100);
-
-        REQUIRE_THROWS_AS(m.at(0, 0) = 1, std::out_of_range);
-
-        REQUIRE(m.empty());
-        REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 100);
     }
 }
