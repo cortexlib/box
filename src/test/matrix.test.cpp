@@ -211,6 +211,26 @@ TEST_CASE("Element Modifiers")
             REQUIRE(n[i] == 1);
     }
 
+    SECTION("matrix - std::swap")
+    {
+        cortex::matrix<int> m(2, 3, 1);
+        cortex::matrix<int> n(7, 4, 2);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == 1);
+
+        for (auto i { 0UL }; i < n.size(); ++i)
+            REQUIRE(n[i] == 2);
+
+        std::swap(m, n);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == 2);
+
+        for (auto i { 0UL }; i < n.size(); ++i)
+            REQUIRE(n[i] == 1);
+    }
+
     SECTION("matrix::flatten")
     {
         cortex::matrix<int> m(2, 3, 1);
@@ -241,8 +261,48 @@ TEST_CASE("Element Modifiers")
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
         REQUIRE(m.capacity() == 100);
+        REQUIRE(m.data() != nullptr);
+        REQUIRE(m.data() != decltype(m)::pointer());
+    }
+
+    SECTION("matrix::clear - No allocated recources")
+    {
+        cortex::matrix<int> m;
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 0);
         REQUIRE(m.data() == nullptr);
-        REQUIRE(m.data() == typename decltype(m)::pointer());
+        REQUIRE(m.data() == decltype(m)::pointer());
+
+        m.clear();
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 0);
+        REQUIRE(m.data() == nullptr);
+        REQUIRE(m.data() == decltype(m)::pointer());
+    }
+
+    SECTION("matrix::clear - Uninitialized Resources")
+    {
+        cortex::matrix<int> m(10, 10);
+
+        REQUIRE(!m.empty());
+        REQUIRE(m.size() == 100);
+        REQUIRE(m.capacity() == 100);
+        REQUIRE(m.column_size() == 10);
+        REQUIRE(m.row_size() == 10);
+        REQUIRE(m.data() != nullptr);
+
+        m.clear();
+
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.capacity() == 100);
+        REQUIRE(m.column_size() == 0);
+        REQUIRE(m.row_size() == 0);
+        REQUIRE(m.data() != nullptr);
     }
 
     SECTION("matrix::reserve")
