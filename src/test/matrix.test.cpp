@@ -2,7 +2,6 @@
 #include <matrix.hpp>
 #include <utility>
 #include <string>
-#include <adaptors/enumerate.hpp>
 
 
 TEST_CASE("Constructors of Matrix")
@@ -274,7 +273,7 @@ TEST_CASE("Element Modifiers")
         REQUIRE(m.column_size() == 8);
         REQUIRE(m.row_size() == 4);
 
-        for (auto elem = m.begin(); elem != m.cend(); ++elem)
+        for (auto elem { m.begin() }; elem != m.cend(); ++elem)
         {
             auto dist { static_cast<decltype(m)::size_type>(std::distance(m.begin(), elem)) };
             if (dist < m.size())

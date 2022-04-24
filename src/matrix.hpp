@@ -186,7 +186,23 @@ namespace cortex
         /**
          * @brief Reserves a new memory block for the matrix
          * 
-         * @details matrix::reserve makes no garuntee that the
+         * @details Reserves a new matrix of dimensions new_columns
+         * by new_rows. 
+         * If the new dimensions are smaller than the
+         * current dimensions, no change is made to the matrix's 
+         * capacity but the matrix's dimensions are set to the new 
+         * dimensional values. This effects the access bounds of the 
+         * matrix. 
+         * If the new dimensions are larger than the current dimensions,
+         * then the matrix's capacity is increased to the new capacity 
+         * and the matrix bounds are adjusted accordingly.
+         * A call to matrix::reserve does not preserve the position of the
+         * elements stored within and merely copies the elements to the new 
+         * allocated buffer. 
+         * This means all elements shift to the front of the buffer and the 
+         * new available elements are at the back of the buffer. 
+         * 
+         * matrix::reserve makes no garuntee that the
          * the order is preserved of elements in the matrix after
          * it has been called.
          * 
@@ -208,8 +224,9 @@ namespace cortex
                 else
                     std::uninitialized_copy_n(m_data, m_size, new_data);
 
-                if (m_data != pointer())
-                    _M_deallocate(m_data, m_size);
+                std::destroy_n(m_data, m_capacity);
+                _M_deallocate(m_data, m_capacity);
+
 
                 m_data = new_data;
                 m_capacity = new_capacity;
@@ -271,10 +288,10 @@ namespace cortex
         constexpr bool empty() const noexcept
         { return m_size == 0; }
 
-        constexpr pointer data() noexcept
+        pointer data() noexcept
         { return _M_data_ptr(m_data); }
 
-        constexpr pointer data() const noexcept
+        const_pointer data() const noexcept
         { return _M_data_ptr(m_data); }
 
         /**
@@ -361,7 +378,13 @@ namespace cortex
         { return __n != 0 ? static_cast<pointer>(::operator new(__n * sizeof(value_type))) : pointer(); }
 
         constexpr void _M_deallocate(pointer __p, [[maybe_unused]] size_type __n)
-        { ::operator delete(__p); }
+        { 
+            ::operator delete(__p
+#                       if __cpp_sized_deallocation
+			                , __n * sizeof(_Tp)
+#                       endif
+                            ); 
+        }
 
         constexpr void _M_range_check(size_type __column, size_type __row) const
         {
