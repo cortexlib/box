@@ -381,3 +381,250 @@ TEST_CASE("Iterators")
         }
     }
 }
+
+TEST_CASE("Comparison")
+{
+    SECTION("Equality")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 1);
+
+        REQUIRE(m == m);
+        REQUIRE(m == n);
+    }
+
+    // SECTION("")
+    // {
+    //     std::vector<int> v(10, 1);
+    //     std::vector<int> w(10, 2);
+
+    //     REQUIRE((v <=> w) == std::strong_ordering::less);
+    //     REQUIRE((w <=> v) == std::strong_ordering::greater);
+    // }
+
+    SECTION("Equality - Different size")
+    {
+        cortex::matrix<int> m(5, 8, 1);
+        cortex::matrix<int> n(4, 13, 1);
+
+        REQUIRE(m != n);
+        REQUIRE(n != m);
+    }
+
+    SECTION("Inequality")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(m != n);
+        REQUIRE(n != m);
+    }
+
+    SECTION("Inequality - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m != n);
+        REQUIRE(n != m);
+    }
+
+    SECTION("Inequality - different data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(m != n);
+        REQUIRE(n != m);
+    }
+
+    SECTION("Inequality - different data - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 2);
+
+        REQUIRE(m != n);
+        REQUIRE(n != m);
+    }
+    
+    // Lexigraphical Compare Doesn't Like My Normal Iterator
+    // SECTION("Spaceship - different data")
+    // {
+    //     cortex::matrix<int> m(10, 10, 1);
+    //     cortex::matrix<int> n(10, 10, 2);
+
+    //     REQUIRE((m <=> n) == std::strong_ordering::less);
+    //     REQUIRE((n <=> m) == std::strong_ordering::greater);
+    // }
+
+    // SECTION("Spaceship - different size")
+    // {
+    //     cortex::matrix<int> m(13, 6, 1);
+    //     cortex::matrix<int> n(17, 11, 1);
+
+    //     REQUIRE((m <=> n) == std::strong_ordering::less);
+    //     REQUIRE((n <=> m) == std::strong_ordering::greater);
+    // }
+
+    // SECTION("Spaceship - different data - different size")
+    // {
+    //     cortex::matrix<int> m(13, 6, 1);
+    //     cortex::matrix<int> n(17, 11, 2);
+
+    //     REQUIRE((m <=> n) == std::strong_ordering::less);
+    //     REQUIRE((n <=> m) == std::strong_ordering::greater);
+    // }
+
+    // SECTION("Spaceship - same data")
+    // {
+    //     cortex::matrix<int> m(10, 10, 1);
+    //     cortex::matrix<int> n(10, 10, 1);
+
+    //     REQUIRE((m <=> n) == std::strong_ordering::equal);
+    //     REQUIRE((n <=> m) == std::strong_ordering::equal);
+    // }
+
+    SECTION("Less Than - different data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(m < n);
+        REQUIRE(!(n < m));
+    }
+
+    SECTION("Less Than - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m < n);
+        REQUIRE(!(n < m));
+    }
+
+    SECTION("Less Than - different data - different size")
+    {
+        cortex::matrix<int> m(13, 6, 2);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(!(m < n));
+        REQUIRE(n < m);
+    }
+
+    SECTION("Less Than - same data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 1);
+
+        REQUIRE(!(m < n));
+        REQUIRE(!(n < m));
+    }
+
+    SECTION("Greater Than - different data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(n > m);
+        REQUIRE(!(m > n));
+    }
+
+    SECTION("Greater Than - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(n > m);
+        REQUIRE(!(m > n));
+    }
+
+    SECTION("Greater Than - different data - different size")
+    {
+        cortex::matrix<int> m(13, 6, 2);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m > n);
+        REQUIRE(!(n > m));
+    }
+
+    SECTION("Greater Than - same data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 1);
+
+        REQUIRE(!(n > m));
+        REQUIRE(!(m > n));
+    }
+
+    SECTION("Less Than or Equal - different data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(m <= n);
+        REQUIRE(!(n <= m));
+    }
+
+    SECTION("Less Than or Equal - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m <= n);
+        REQUIRE(!(n <= m));
+    }
+
+    SECTION("Less Than or Equal - different data - different size")
+    {
+        cortex::matrix<int> m(13, 6, 2);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m > n);
+        REQUIRE(n <= m);
+    }
+
+    SECTION("Less Than or Equal - same data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 1);
+
+        REQUIRE(m <= n);
+        REQUIRE(n <= m);
+    }
+
+    SECTION("Greater Than or Equal - different data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 2);
+
+        REQUIRE(n >= m);
+        REQUIRE(!(m >= n));
+    }
+
+    SECTION("Greater Than or Equal - different size")
+    {
+        cortex::matrix<int> m(13, 6, 1);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(n >= m);
+        REQUIRE(!(m >= n));
+    }
+
+    SECTION("Greater Than or Equal - different data - different size")
+    {
+        cortex::matrix<int> m(13, 6, 2);
+        cortex::matrix<int> n(17, 11, 1);
+
+        REQUIRE(m >= n);
+        REQUIRE(!(n >= m));
+    }
+
+    SECTION("Greater Than or Equal - same data")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        cortex::matrix<int> n(10, 10, 1);
+
+        REQUIRE(m >= n);
+        REQUIRE(n >= m);
+    }
+}

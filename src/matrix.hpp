@@ -16,7 +16,7 @@
 #include <iterators/normal.hpp>
 #include <concepts.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 202002L
 
 #include <memory>
 #include <utility>
@@ -24,6 +24,8 @@
 #include <initializer_list>
 #include <cassert>
 #include <vector>
+
+#define lexicographical_compare_bug 1
 
 
 
@@ -214,7 +216,7 @@ namespace cortex
          */
         constexpr matrix& operator=(const matrix& other)
         {
-            // if (*this != other)
+            if (*this != other)
             {
                 m_columns = other.m_columns;
                 m_rows = other.m_rows;
@@ -244,7 +246,7 @@ namespace cortex
          */
         constexpr matrix& operator=(matrix&& other) noexcept
         {
-            // if (*this != other)
+            if (*this != other)
             {
                 m_columns = other.m_columns;
                 m_rows = other.m_rows;
@@ -914,6 +916,87 @@ namespace cortex
 #endif // __cplusplus >= 201103L
 
     };
+
+
+#if __cpp_lib_three_way_comparison && !(lexicographical_compare_bug)
+
+
+    template<typename _ElemL, typename _ElemR>
+        requires requires (_ElemL __lhsE, _ElemR __rhsE)
+        { { __lhsE == __rhsE } -> std::convertible_to<bool>; }
+    constexpr inline bool
+    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+        noexcept ( 
+               noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
+            && noexcept (std::copy(__lhs.begin(), __lhs.end(), __rhs.begin()))
+        )
+    {
+        if (__lhs.row_size() != __rhs.row_size() || __lhs.column_size() != __rhs.column_size())
+            return false;
+        return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
+    }
+
+
+    template<typename _ElemL, typename _ElemR>
+    constexpr inline auto
+    operator<=> (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { 
+        return std::lexicographical_compare_three_way(__lhs.rend(), __lhs.rbegin()
+                                                , __rhs.rend(), __rhs.rbegin()
+                                                , std::compare_three_way{}); 
+    }
+
+#else // !C++20
+
+    template<typename _ElemL, typename _ElemR>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemL __lhsE, _ElemR __rhsE)
+        { { __lhsE == __rhsE } -> std::convertible_to<bool>; }
+    constexpr inline bool
+    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+        noexcept ( 
+               noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
+            && noexcept (std::copy(__lhs.begin(), __lhs.end(), __rhs.begin()))
+        )
+#else
+    inline bool
+    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+#endif 
+    { 
+        if (__lhs.row_size() != __rhs.row_size() || __lhs.column_size() != __rhs.column_size())
+            return false;
+        return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin()); 
+    }
+
+    template<typename _ElemL, typename _ElemR>
+    inline bool
+    operator!= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { return !(__lhs == __rhs); }
+
+    template<typename _ElemL, typename _ElemR>
+    inline bool
+    operator< (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { 
+        return std::lexicographical_compare(__lhs.begin(), __lhs.end()
+                                        , __rhs.begin(), __rhs.end()); 
+    }
+
+    template<typename _ElemL, typename _ElemR>
+    inline bool
+    operator> (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { return __rhs < __lhs; }
+
+    template<typename _ElemL, typename _ElemR>
+    inline bool
+    operator<= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { return !(__rhs < __lhs); }
+
+    template<typename _ElemL, typename _ElemR>
+    inline bool
+    operator>= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    { return !(__lhs < __rhs); }
+
+#endif // three way compare
 
 
 } // namespace cortex
