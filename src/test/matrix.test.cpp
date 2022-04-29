@@ -187,6 +187,17 @@ TEST_CASE("Element Access")
 
         REQUIRE_THROWS_AS(m.at(10, 1), std::out_of_range);
     }
+
+    SECTION("matrix::operator()")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m(0, 1) == 1);
+
+        m(0, 1) = 2;
+        REQUIRE(m(0, 1) == 2);
+
+        REQUIRE_THROWS_AS(m(10, 1), std::out_of_range);
+    }
 }
 
 TEST_CASE("Element Modifiers")
