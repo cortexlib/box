@@ -1,6 +1,6 @@
 {
     name: 'cortex-matrix',
-    version: '0.0.8',
+    version: '0.0.9',
     namespace: 'cortex',
     test_driver: 'Catch-Main',
     depends: [

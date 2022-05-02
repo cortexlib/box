@@ -302,8 +302,8 @@ TEST_CASE("Element Modifiers")
         REQUIRE(!m.empty());
         REQUIRE(m.size() == 100);
         REQUIRE(m.capacity() == 100);
-        REQUIRE(m.column_size() == 10);
         REQUIRE(m.row_size() == 10);
+        REQUIRE(m.column_size() == 10);
         REQUIRE(m.data() != nullptr);
 
         m.clear();
@@ -332,8 +332,8 @@ TEST_CASE("Element Modifiers")
         cortex::matrix<int> m(7, 3, 1);
 
         REQUIRE(m.capacity() == 21);
-        REQUIRE(m.column_size() == 7);
-        REQUIRE(m.row_size() == 3);
+        REQUIRE(m.row_size() == 7);
+        REQUIRE(m.column_size() == 3);
 
         for (auto& elem : m)
             REQUIRE(elem == 1);
@@ -341,8 +341,8 @@ TEST_CASE("Element Modifiers")
         m.reserve(8, 4);
 
         REQUIRE(m.capacity() == 32);
-        REQUIRE(m.column_size() == 8);
-        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.row_size() == 8);
+        REQUIRE(m.column_size() == 4);
 
         for (auto elem { m.begin() }; elem != m.cend(); ++elem)
         {
@@ -637,5 +637,394 @@ TEST_CASE("Comparison")
 
         REQUIRE(m >= n);
         REQUIRE(n >= m);
+    }
+}
+
+TEST_CASE("Arithmatic Operators")
+{
+    SECTION("matrix::add")
+    {
+        SECTION("Same type")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<int> n(10, 10, 2);
+            cortex::matrix<int> rcheck(10, 10, 3);
+
+            auto r { m.add(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : r)
+                REQUIRE(elem == 3);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> n(10, 10, 2.5);
+            cortex::matrix<double> rcheck(10, 10, 3.5);
+
+            auto r { m.add(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2.5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 3.5);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> rcheck(10, 10, 2);
+
+            auto r { m.add(m) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 2);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> mcheck(10, 10, 2);
+
+            m = m.add(m);
+
+            REQUIRE(m == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 2);
+        }
+
+        SECTION("Size Mismatch")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> n(10, 11, 2.5);
+
+            REQUIRE_THROWS_AS(m.add(n), std::invalid_argument);
+        }
+
+        SECTION("Non `Addable` or `AddableWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::matrix<std::string> m(10, 10, "hello"s);
+            cortex::matrix<std::wstring> n(10, 10, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto r { m.add(n) };
+        }
+    }
+
+    SECTION("matrix::sub")
+    {
+        SECTION("Same type")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<int> n(10, 10, 2);
+            cortex::matrix<int> rcheck(10, 10, -1);
+
+            auto r { m.sub(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : r)
+                REQUIRE(elem == -1);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> n(10, 10, 2.5);
+            cortex::matrix<double> rcheck(10, 10, -1.5);
+
+            auto r { m.sub(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2.5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == -1.5);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> rcheck(10, 10, 0);
+
+            auto r { m.sub(m) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::matrix<int> m(10, 10, 1);
+            cortex::matrix<double> mcheck(10, 10, 0);
+
+            m = m.sub(m);
+
+            REQUIRE(m == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Non `Subtractable` or `SubtractableWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::matrix<std::string> m(10, 10, "hello"s);
+            cortex::matrix<std::wstring> n(10, 10, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto r { m.sub(n) };
+        }
+    }
+
+    SECTION("matrix::mul")
+    {
+        SECTION("Same type")
+        {
+            cortex::matrix<int> m(10, 10, 2);
+            cortex::matrix<int> n(10, 10, 5);
+            cortex::matrix<int> rcheck(10, 10, 10);
+
+            auto r { m.mul(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : r)
+                REQUIRE(elem == 10);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::matrix<int> m(10, 10, 7);
+            cortex::matrix<double> n(10, 10, 2.5);
+            cortex::matrix<double> rcheck(10, 10, 17.5);
+
+            auto r { m.mul(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2.5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 17.5);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<double> rcheck(10, 10, 25);
+
+            auto r { m.mul(m) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 25);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<int> mcheck(10, 10, 25);
+
+            m = m.mul(m);
+
+            REQUIRE(m == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 25);
+        }
+
+        SECTION("Non `muliplicible` or `muliplicibleWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::matrix<std::string> m(10, 10, "hello"s);
+            cortex::matrix<std::wstring> n(10, 10, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto r { m.mul(n) };
+        }
+
+        SECTION("Scalar Multiply")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<int> mcheck(10, 10, 35);
+
+            auto r { m.mul(7) };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 35);
+        }
+    }
+
+     SECTION("matrix::div")
+    {
+        SECTION("Same type")
+        {
+            cortex::matrix<int> m(10, 10, 2);
+            cortex::matrix<int> n(10, 10, 5);
+            cortex::matrix<int> rcheck(10, 10, 2 / 5);
+
+            auto r { m.div(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : r)
+                REQUIRE(elem == 2 / 5);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::matrix<int> m(10, 10, 7);
+            cortex::matrix<double> n(10, 10, 2.5);
+            cortex::matrix<double> rcheck(10, 10, 2.8);
+
+            auto r { m.div(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2.5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 2.8);
+        }
+
+        SECTION("Different type - Integer division")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix n(10, 10, 2.);
+            cortex::matrix<double> rcheck(10, 10, 2.5);
+
+            auto r { m.div(n) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : n)
+                REQUIRE(elem == 2);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 2.5);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<double> rcheck(10, 10, 1);
+
+            auto r { m.div(m) };
+
+            REQUIRE(r == rcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 1);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<int> mcheck(10, 10, 1);
+
+            m = m.div(m);
+
+            REQUIRE(m == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 1);
+        }
+
+        SECTION("Non `diviplicible` or `diviplicibleWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::matrix<std::string> m(10, 10, "hello"s);
+            cortex::matrix<std::wstring> n(10, 10, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto r { m.div(n) };
+        }
+
+        SECTION("Scalar Divide")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<double> mcheck(10, 10, 2.5);
+
+            auto r { m.div(2.) };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : r)
+                REQUIRE(elem == 2.5);
+        }
     }
 }

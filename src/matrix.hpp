@@ -3,7 +3,7 @@
 /// @file matrix
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two dimensional array
-/// @version 0.0.1
+/// @version 0.0.9
 /// @date 2022-16-22
 /// 
 /// @copyright Copyright (c) 2021
@@ -23,6 +23,7 @@
 #include <initializer_list>
 #include <cassert>
 #include <vector>
+#include <execution>
 
 #define lexicographical_compare_bug 1
 
@@ -75,8 +76,8 @@ namespace cortex
 
 
     protected: 
-            size_type m_columns;
             size_type m_rows;
+            size_type m_columns;
 
             size_type m_size;
             size_type m_capacity;
@@ -89,8 +90,8 @@ namespace cortex
         /// 
         /// @details Default constructor for matrix.
         constexpr matrix()
-        : m_columns(size_type())
-        , m_rows(size_type())
+        : m_rows(size_type())
+        , m_columns(size_type())
         , m_size(size_type())
         , m_capacity(size_type())
         , m_data(pointer())
@@ -106,10 +107,10 @@ namespace cortex
         /// 
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
-        constexpr matrix(size_type cols, size_type rows)
-        : m_columns(cols)
-        , m_rows(rows)
-        , m_size(cols * rows != 0 ? cols * rows : std::max(cols, rows))
+        constexpr matrix(size_type rows, size_type cols)
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
         , m_capacity(m_size)
         , m_data(_M_allocate(m_size))
         { 
@@ -129,10 +130,10 @@ namespace cortex
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
         /// @param value type: [value_type] | qualifiers: [const] [ref]
-        constexpr matrix(size_type cols, size_type rows, const value_type& value)
-        : m_columns(cols)
-        , m_rows(rows)
-        , m_size(cols * rows != 0 ? cols * rows : std::max(cols, rows))
+        constexpr matrix(size_type rows, size_type cols, const value_type& value)
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
         , m_capacity(m_size)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_fill_n(m_data, m_size, value); }
@@ -145,8 +146,8 @@ namespace cortex
         /// 
         /// @param other type: [matrix] | qualifiers: [const] [ref]
         constexpr matrix(const matrix& other)
-        : m_columns(other.m_columns)
-        , m_rows(other.m_rows)
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
         , m_size(other.m_size)
         , m_capacity(other.m_capacity)
         , m_data(_M_allocate(m_size))
@@ -161,8 +162,8 @@ namespace cortex
         /// 
         /// @param other type: [matrix] | qualifiers: [move]
         constexpr matrix(matrix&& other) noexcept
-        : m_columns(other.m_columns)
-        , m_rows(other.m_rows)
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
         , m_size(other.m_size)
         , m_capacity(other.m_capacity)
         , m_data(other.m_data)
@@ -186,8 +187,8 @@ namespace cortex
         {
             if (*this != other)
             {
-                m_columns = other.m_columns;
                 m_rows = other.m_rows;
+                m_columns = other.m_columns;
                 m_size = other.m_size;
                 m_capacity = other.m_size;
                 m_data = _M_allocate(m_size);
@@ -211,15 +212,15 @@ namespace cortex
         {
             if (*this != other)
             {
-                m_columns = other.m_columns;
                 m_rows = other.m_rows;
+                m_columns = other.m_columns;
                 m_size = other.m_size;
                 m_capacity = other.m_capacity;
                 m_data = other.m_data;
 
                 other.m_data = pointer();
-                other.m_columns = size_type();
                 other.m_rows = size_type();
+                other.m_columns = size_type();
                 other.m_size = size_type();
             }
 
@@ -244,8 +245,8 @@ namespace cortex
                 _M_deallocate(m_data, m_size);
             }
 
-            m_columns = size_type();
             m_rows = size_type();
+            m_columns = size_type();
             m_size = size_type();
             m_capacity = size_type();
         }
@@ -277,9 +278,9 @@ namespace cortex
         /// 
         /// @param new_columns type: [size_type] 
         /// @param new_rows type: [size_type]
-        constexpr void reserve(size_type new_columns, size_type new_rows)
+        constexpr void reserve(size_type new_rows, size_type new_columns)
         {
-            auto new_capacity = new_columns * new_rows != 0 ? new_columns * new_rows : std::max(new_columns, new_rows);
+            auto new_capacity = new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns);
 
             if (new_capacity > m_capacity)
             {
@@ -296,8 +297,8 @@ namespace cortex
 
                 m_data = new_data;
                 m_capacity = new_capacity;
-                m_columns = new_columns;
                 m_rows = new_rows;
+                m_columns = new_columns;
             }
         }
 
@@ -316,8 +317,8 @@ namespace cortex
                 std::destroy_n(m_data, m_size);
             
                 m_size = size_type();
-                m_columns = size_type();
                 m_rows = size_type();
+                m_columns = size_type();
             }         
         }
 
@@ -389,7 +390,7 @@ namespace cortex
         /// @return true 
         /// @return false
         constexpr bool is_square() const noexcept
-        { return m_columns == m_rows; }
+        { return m_rows == m_columns; }
 
 
         /// @brief Checks if the matrix is empty.
@@ -438,9 +439,9 @@ namespace cortex
         /// @param column type: [size_type]
         /// @param row type: [size_type]
         /// @return constexpr reference
-        constexpr reference at(size_type column, size_type row)
+        constexpr reference at(size_type row, size_type column)
         { 
-            _M_range_check(column, row);
+            _M_range_check(row, column);
             return *(m_data + (m_columns * row) + column);
         }
 
@@ -456,9 +457,9 @@ namespace cortex
         /// @param column type: [size_type]
         /// @param row type: [size_type]
         /// @return constexpr const_reference 
-        constexpr const_reference at(size_type column, size_type row) const
+        constexpr const_reference at(size_type row, size_type column) const
         { 
-            _M_range_check(column, row);
+            _M_range_check(row, column);
             return *(m_data + (m_columns * row) + column); 
         }
 
@@ -473,8 +474,8 @@ namespace cortex
         /// @param column type: [size_type]
         /// @param row type: [size_type]
         /// @return constexpr reference
-        constexpr reference operator() (size_type column, size_type row) 
-        { return this->at(column, row); }
+        constexpr reference operator() (size_type row, size_type column) 
+        { return this->at(row, column); }
 
 
         /// @brief Point Access Operator.
@@ -487,8 +488,8 @@ namespace cortex
         /// @param column type: [size_type]
         /// @param row type: [size_type]
         /// @return constexpr const_reference 
-        constexpr const_reference operator() (size_type column, size_type row) const
-        { return this->at(column, row); }
+        constexpr const_reference operator() (size_type row, size_type column) const
+        { return this->at(row, column); }
 
 
         /// @brief Returns a reference to the front element 
@@ -621,6 +622,208 @@ namespace cortex
         { return const_reverse_iterator(begin()); }
 
 
+        /// @brief Adds the elements of one matrix by another.
+        ///
+        /// @details Performs an element-wise addition 
+        /// between matrices. Matrices are `Addable` iff the 
+        /// type of this matrix's elements satisfies the 
+        /// concept of `Addable` and satisfies the concept
+        /// `AddableWith` with type of the elemnts of the 
+        /// passed matrix. A new matrix is created and returned. 
+        ///
+        /// @requires The type of this matrix's elements are `Addable` 
+        /// @requires The type of this matrix's elements and the type
+        /// of the passed matrix's element types satisfy `AddableWith`.
+        /// 
+        /// @tparam _ElemT 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @return constexpr auto : A matrix whose element's type 
+        /// is the sum of the two input matrices element types. 
+        template<Addable _ElemT>
+            requires AddableWith<value_type, _ElemT>
+        constexpr auto add(const matrix<_ElemT>& other)
+            -> matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
+        {
+            if (this->dimensions() != other.dimensions())
+                throw std::invalid_argument("In matrix::add - dimensions do not match");
+
+            matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem + other_elem; });
+
+            return result;
+        }
+
+
+        /// @brief Substracts the elements of one matrix from another.
+        ///
+        /// @details Performs an element-wise subtraction 
+        /// between matrices. Matrices are `Subtractable` 
+        /// iff the type of this matrix's elements satisfies 
+        /// the concept of `Subtractable` and satisfies the 
+        /// concept `SubtractableWith` with type of the elemnts 
+        /// of the passed matrix. A new matrix is created and 
+        /// returned. 
+        ///
+        /// @requires The type of this matrix's elements are `Subtractable` 
+        /// @requires The type of this matrix's elements and the type
+        /// of the passed matrix's element types satisfy `SubtractableWith`.
+        /// 
+        /// @tparam _ElemT 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @return constexpr auto : A matrix whose element type 
+        /// is the difference of the two input matrices element types.
+        template<Subtractable _ElemT>
+            requires SubtractableWith<value_type, _ElemT>
+        constexpr auto sub(const matrix<_ElemT>& other)
+            -> matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
+        {
+            if (this->dimensions() != other.dimensions())
+                throw std::invalid_argument("In matrix::sub - dimensions do not match");
+
+            matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem - other_elem; });
+
+            return result;
+        }
+
+
+        /// @brief Multiplies the elements of one matrix by another..
+        ///
+        /// @details Performs an element-wise multiplication 
+        /// between matrices. Matrices are `Multiplicible` 
+        /// iff the type of this matrix's elements satisfies 
+        /// the concept of `Multiplicable` and satisfies the 
+        /// concept `MultiplicableWith` with type of the elemnts 
+        /// of the passed matrix. A new matrix is created and 
+        /// returned. 
+        ///
+        /// @requires The type of this matrix's elements are `Multiplicable` 
+        /// @requires The type of this matrix's elements and the type
+        /// of the passed matrix's element types satisfy `MultiplicableWith`.
+        /// 
+        /// @tparam _ElemT 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @return constexpr auto : A matrix whose element type 
+        /// is the product of the two input matrices element types.
+        template<Multiplicable _ElemT>
+            requires MultiplicableWith<value_type, _ElemT>
+        constexpr auto mul(const matrix<_ElemT>& other)
+            -> matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
+        {
+            if (this->dimensions() != other.dimensions())
+                throw std::invalid_argument("In matrix::mult - dimensions do not match");
+
+            matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem * other_elem; });
+
+            return result;
+        }
+
+
+        /// @brief Scalar Matrix Multiplication.
+        ///
+        /// @details Performs an element-wise multiplication of the matrix
+        /// by a 'scalar' value. 
+        ///
+        /// @requires The type of this matrix's elements are `MultiplicableWith`
+        /// the type denoted _ScalarT. 
+        /// @requires The type denoted _ScalarT be `Multiplicable`.
+        ///
+        /// 
+        /// @tparam _ScalarT 
+        /// @param scalar type: _ScalarT | qualifiers: [const] [ref]
+        /// @return matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> 
+        template<Multiplicable _ScalarT>
+            requires MultiplicableWith<value_type, _ScalarT>
+        constexpr auto mul(const _ScalarT& scalar)
+            -> matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
+        {
+            if (this->empty())
+                throw std::invalid_argument("In matrix::mul - scalar multiplication on empty matrix");
+
+            matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), result.begin(), [&](auto& elem) { return elem * scalar; });
+
+            return result;
+        }
+
+
+        /// @brief Divides the elements of one matrix by another.
+        ///
+        /// @details Performs an element-wise division 
+        /// between matrices. Matrices are `Divisible` 
+        /// iff the type of this matrix's elements satisfies 
+        /// the concept of `Divisible` and satisfies the 
+        /// concept `MultiplicibleWith` with type of the elemnts 
+        /// of the passed matrix. A new matrix is created and 
+        /// returned. 
+        ///
+        /// @requires The type of this matrix's elements are `Divisible` 
+        /// @requires The type of this matrix's elements and the type
+        /// of the passed matrix's element types satisfy `DivisibleWith`.
+        ///
+        /// @note When dividing two matrices, if both matrices elements 
+        /// are integrals, the division is performed as integer division.
+        /// due to C++ rounding rules.
+        /// 
+        /// @tparam _ElemT 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @return constexpr auto : A matrix whose element type 
+        /// is the quotient of the two input matrices element types.
+        template<Divisible _ElemT>
+            requires DivisibleWith<value_type, _ElemT>
+        constexpr auto div(const matrix<_ElemT>& other)
+            -> matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
+        {
+            if (this->dimensions() != other.dimensions())
+                throw std::invalid_argument("In matrix::div - dimensions do not match");
+
+            matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem / other_elem; });
+
+            return result;
+        }
+
+
+        /// @brief Scalar Matrix Division
+        ///
+        /// @details Performs an element-wise division of the matrix
+        /// by a 'scalar' value. 
+        ///
+        /// @requires The type of this matrix's elements are `DivisibleWith`
+        /// the type denoted _ScalarT. 
+        /// @requires The type denoted _ScalarT be `Divisible`.
+        ///
+        /// @note When dividing two matrices, if both matrices elements 
+        /// are integrals, the division is performed as integer division.
+        /// due to C++ rounding rules.
+        /// 
+        /// @tparam _ScalarT 
+        /// @param scalar type: _ScalarT | qualifiers: [const] [ref]
+        /// @return matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> 
+        template<Divisible _ScalarT>
+            requires DivisibleWith<value_type, _ScalarT>
+        constexpr auto div(const _ScalarT& scalar)
+            -> matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
+        {
+            if (this->empty())
+                throw std::invalid_argument("In matrix::div - scalar division on empty matrix");
+            if (scalar == 0)
+                throw std::invalid_argument("In matrix::div - scalar is zero");
+
+            matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
+
+            std::transform(this->begin(), this->end(), result.begin(), [&](auto& elem) { return elem / scalar; });
+
+            return result;
+        }
+
+
     private:
 
         /// @brief Allocates Matrix Recources
@@ -660,9 +863,9 @@ namespace cortex
         /// 
         /// @param __column type: [size_type]
         /// @param __row type: [size_type]
-        constexpr void _M_range_check(size_type __column, size_type __row) const
+        constexpr void _M_range_check(size_type __row, size_type __column) const
         {
-            if (__column >= this->column_size() || __row >= this->row_size())
+            if (__row >= this->row_size() or __column >= this->column_size())
                 throw std::out_of_range("matrix::_M_range_check - index out of range.");
         }
 
