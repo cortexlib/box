@@ -50,7 +50,7 @@ TEST_CASE("Constructors of Matrix")
     {
         cortex::matrix<int> m(10, 10, 1);
 
-        for (int i = 0; i < 100; ++i)
+        for (auto i { 0UL }; i < 100; ++i)
             REQUIRE(m[i] == 1);
 
         cortex::matrix<int> n(std::move(m));
@@ -61,6 +61,22 @@ TEST_CASE("Constructors of Matrix")
 
         for (auto i { 0UL }; i < m.size(); ++i)
             REQUIRE(n[i] == 1);
+    }
+
+    SECTION("Initializer List Constructor")
+    {
+        cortex::matrix<int> m { { 1, 2 }
+                              , { 3, 4 }
+                              , { 5, 6 }
+                              , { 7, 8 }
+                              , { 9, 10 }};
+
+        REQUIRE(m.row_size() == 5);
+        REQUIRE(m.column_size() == 2);
+        REQUIRE(m.size() == 10);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == static_cast<int>(i + 1));
     }
 
     SECTION("Copy assignment")
@@ -100,6 +116,22 @@ TEST_CASE("Constructors of Matrix")
 
         for (auto i { 0UL }; i < m.size(); ++i)
             REQUIRE(n[i] == 1);
+    }
+
+    SECTION("Initializer List Assignment")
+    {
+        cortex::matrix<int> m  = { { 1, 2 }
+                                 , { 3, 4 }
+                                 , { 5, 6 }
+                                 , { 7, 8 }
+                                 , { 9, 10 }};
+
+        REQUIRE(m.row_size() == 5);
+        REQUIRE(m.column_size() == 2);
+        REQUIRE(m.size() == 10);
+
+        for (auto i { 0UL }; i < m.size(); ++i)
+            REQUIRE(m[i] == static_cast<int>(i + 1));
     }
 }
 
@@ -1025,6 +1057,331 @@ TEST_CASE("Arithmatic Operators")
 
             for (auto& elem : r)
                 REQUIRE(elem == 2.5);
+        }
+    }
+}
+
+TEST_CASE("Boolean Mask")
+{
+    SECTION("equality")
+    {
+        SECTION("equal - all equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r { m == 5 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("eqaul - all unequal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m == 6 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("equal - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] == 2;
+            }
+
+            auto r { m == 2 };
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    SECTION("inequality")
+    {
+        SECTION("inequal - all unequal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r { m != 6 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("ineqaul - all equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m != 5 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("inequal - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] != 2;
+            }
+
+            auto r { m != 2 };
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    SECTION("less than")
+    {
+        SECTION("less than - all less than")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r { m < 6 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("greater than - all equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m < 5 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("less than - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] < 2;
+            }
+
+            auto r { m < 2 };
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    SECTION("greater than")
+    {
+        SECTION("greater than - all greater than")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r { m > 4 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("greater than - all equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m > 5 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("greater than - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] > 2;
+            }
+
+            auto r { m > 2 };
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    SECTION("less than or equal")
+    {
+        SECTION("less than or equal - all less than or equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r1 { m <= 5 };
+            auto r2 { m <= 6 };
+
+            REQUIRE(r1 == mcheck);
+            REQUIRE(r2 == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r1)
+                REQUIRE(elem == true);
+            
+            for (auto& elem : r2)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("less than or equal - all greater")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m <= 4 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("less than or equal - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] <= 2;
+            }
+
+            auto r { m <= 2 };
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    SECTION("greater than or equal")
+    {
+        SECTION("greater than or equal - all greater than or equal")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, true);
+
+            auto r1 { m >= 5 };
+            auto r2 { m >= 4 };
+
+            REQUIRE(r1 == mcheck);
+            REQUIRE(r2 == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r1)
+                REQUIRE(elem == true);
+            
+            for (auto& elem : r2)
+                REQUIRE(elem == true);
+        }
+
+        SECTION("greater than or equal - all less")
+        {
+            cortex::matrix<int> m(10, 10, 5);
+            cortex::matrix<bool> mcheck(10, 10, false);
+
+            auto r { m >= 6 };
+
+            REQUIRE(r == mcheck);
+
+            for (auto& elem : m)
+                REQUIRE(elem == 5);
+
+            for (auto& elem : r)
+                REQUIRE(elem == false);
+        }
+
+        SECTION("greater than or equal - mismatched")
+        {
+            std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
+            cortex::matrix<int> m(5, 2);
+            cortex::matrix<bool> mcheck(5, 2);
+
+            for (auto i { 0UL }; i < v.size(); ++i)
+            {
+                m[i] = v[i];
+                mcheck[i] = v[i] >= 2;
+            }
+
+            auto r { m >= 2 };
+
+            REQUIRE(r == mcheck);
         }
     }
 }

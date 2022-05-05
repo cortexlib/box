@@ -21,6 +21,7 @@
 #include <utility>
 #include <iterator>
 #include <initializer_list>
+#include <iostream>
 #include <cassert>
 #include <vector>
 #include <execution>
@@ -42,11 +43,11 @@ namespace cortex
     /// 
     /// @todo Add support for iterators ✔️
     /// @todo Add support for range based for loops ✔️
-    /// @todo Add support for basic arithmatic
+    /// @todo Add support for basic arithmatic ✔️
     /// @todo Add support for matrix operations
     /// @todo Add support for operator overloads
     /// @todo Add support for std::allocator
-    /// @todo Add support for std::initializer_list
+    /// @todo Add support for std::initializer_list ✔️
     /// @todo Add support for std::swap
     /// @todo Add support for swaps of different matrix types
     /// @todo Add support for flatten ✔️
@@ -56,6 +57,8 @@ namespace cortex
     /// @todo Add support for reserve ⚙️
     /// @todo Add support for shrink_to_fit
     /// @todo Add invokation operator support ✔️
+    /// @todo Comparison operators between matrices ✔️
+    /// @todo Comparison operators between scalars ✔️
     /// 
     /// @tparam _Tp 
     template<typename _Tp>
@@ -149,7 +152,7 @@ namespace cortex
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_size(other.m_size)
-        , m_capacity(other.m_capacity)
+        , m_capacity(other.m_size)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
 
@@ -175,6 +178,30 @@ namespace cortex
         }
 
 
+        /// @brief Initialiser List Constructor
+        ///
+        /// @details Uses std::initializer_list to create a matrix 
+        /// from an initializer list of initializer lists. Elements 
+        /// ownership is moved to the matrix's memory.
+        constexpr matrix(std::initializer_list<std::initializer_list<value_type>> list)
+        : m_rows(list.size())
+        , m_columns(list.begin()->size())
+        , m_size(m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns))
+        , m_capacity(m_size)
+        , m_data(_M_allocate(m_size))
+        {
+            using init_iter = typename decltype(list)::iterator;
+            auto offset { 0 };
+            for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
+            {
+                if (row->size() not_eq this->m_columns)
+                    throw std::invalid_argument("Columns must be all the same size");
+                std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
+                offset += 2;
+            }
+        }
+
+
         /// @brief Copy Assignment
         /// 
         /// @details Copies the contents of another matrix into
@@ -194,7 +221,6 @@ namespace cortex
                 m_data = _M_allocate(m_size);
                 std::uninitialized_copy_n(other.m_data, m_size, m_data);
             }
-
             return *this;
         }
 
@@ -223,10 +249,35 @@ namespace cortex
                 other.m_columns = size_type();
                 other.m_size = size_type();
             }
-
             return *this;
         }
 
+
+        /// @brief Initialiser List Assignment
+        ///
+        /// @details Uses std::initializer_list to create a matrix 
+        /// from an initializer list of initializer lists. Elements 
+        /// ownership is moved to the matrix's memory.
+        constexpr matrix& operator= (std::initializer_list<std::initializer_list<value_type>> list)
+        {   
+            m_rows = list.size();
+            m_columns = list.begin()->size();
+            m_size = (m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns));
+            m_capacity = m_size;
+            m_data = _M_allocate(m_size);
+
+            using init_iter = typename decltype(list)::iterator;
+            auto offset { 0 };
+            for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
+            {
+                if (row->size() not_eq this->m_columns)
+                    throw std::invalid_argument("Columns must be all the same size");
+                std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
+                offset += 2;
+            }
+
+            return *this;
+        }
 
         
         /// @brief Destructor
@@ -649,7 +700,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem + other_elem; });
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::plus{});
 
             return result;
         }
@@ -683,7 +734,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem - other_elem; });
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::minus{});
 
             return result;
         }
@@ -717,7 +768,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem * other_elem; });
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::multiplies{});
 
             return result;
         }
@@ -784,7 +835,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem / other_elem; });
+            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::divides{});
 
             return result;
         }
@@ -911,46 +962,51 @@ namespace cortex
 
     };
 
+    /// @brief Compares two matrices for equality.
+    ///
+    /// @details Uses std::equal to compare the matrices.
+    /// Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
+    ///
+    /// @requires Matrix elements support equality comparison
+    /// that converts to a bool
+    ///
+    /// @exception Operation is has no exception iff the comparison
+    /// between matrix elements is noexcept and std::equal is
+    /// noexcept across the range
+    ///
+    /// @tparam _ElemL
+    /// @tparam _ElemR
+    /// @rparam lhsE type: [_ElemL]
+    /// @rparam rhsE type: [_ElemR]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @return true
+    /// @return false
+    template<typename _ElemL, typename _ElemR>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemL lhsE, _ElemR rhsE)
+        { { lhsE == rhsE } -> std::convertible_to<bool>; }
+    constexpr inline bool
+    operator== (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+        noexcept ( 
+               noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
+            && noexcept (std::equal(lhs.begin(), lhs.end(), rhs.begin()))
+        )
+#else
+    inline bool
+    operator== (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+#endif 
+    { 
+        if (lhs.dimensions() not_eq rhs.dimensions())
+            return false;
+        return std::equal(lhs.begin(), lhs.end(), rhs.begin()); 
+    }
+
 /// Current bug with GCC-11.1 with lexicographical_compare_three_way
 /// causes cortex::matrix to not compile. Issue: PR
 /// Current bug with Clang++-12 with lexicographical_compare_three_way
 /// cause cortex::matrix to be compared on matrix size over value precidence
 #if __cpp_lib_three_way_comparison && !(lexicographical_compare_bug)
-
-
-    /// @brief Compares two matrices for equality.
-    /// 
-    /// @details Uses std::equal to compare the matrices.
-    /// Takes at least O(n) where n = columns x rows = __lhs.end() - __lhs.begin()
-    /// 
-    /// @requires Matrix elements support equality comparison
-    /// that converts to a bool
-    /// 
-    /// @exception Operation is has no exception iff the comparison
-    /// between matrix elements is noexcept and std::copy is 
-    /// noexcept across the range
-    /// 
-    /// @tparam _ElemL 
-    /// @tparam _ElemR 
-    /// @rparam __lhsE type: [_ElemL]
-    /// @rparam __rhsE type: [_ElemR]
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
-    /// @return constexpr inline bool
-    template<typename _ElemL, typename _ElemR>
-        requires requires (_ElemL __lhsE, _ElemR __rhsE)
-        { { __lhsE == __rhsE } -> std::convertible_to<bool>; }
-    constexpr inline bool
-    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-        noexcept ( 
-               noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
-            && noexcept (std::copy(__lhs.begin(), __lhs.end(), __rhs.begin()))
-        )
-    {
-        if (__lhs.row_size() != __rhs.row_size() || __lhs.column_size() != __rhs.column_size())
-            return false;
-        return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
-    }
 
     /// @brief Spaceship Operator for matrices.
     ///
@@ -960,60 +1016,19 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
     /// @return constexpr inline auto
     template<typename _ElemL, typename _ElemR>
     constexpr inline auto
-    operator<=> (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    operator<=> (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
     { 
-        return std::lexicographical_compare_three_way(__lhs.rend(), __lhs.rbegin()
-                                                , __rhs.rend(), __rhs.rbegin()
+        return std::lexicographical_compare_three_way(lhs.rend(), lhs.rbegin()
+                                                , rhs.rend(), rhs.rbegin()
                                                 , std::compare_three_way{}); 
     }
 
 #else // !C++20
-
-    /// @brief Compares two matrices for equality.
-    ///
-    /// @details Uses std::equal to compare the matrices.
-    /// Takes at least O(n) where n = columns x rows = __lhs.end() - __lhs.begin()
-    ///
-    /// @requires Matrix elements support equality comparison
-    /// that converts to a bool
-    ///
-    /// @exception Operation is has no exception iff the comparison
-    /// between matrix elements is noexcept and std::copy is
-    /// noexcept across the range
-    ///
-    /// @tparam _ElemL
-    /// @tparam _ElemR
-    /// @rparam __lhsE type: [_ElemL]
-    /// @rparam __rhsE type: [_ElemR]
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
-    /// @return true
-    /// @return false
-    template<typename _ElemL, typename _ElemR>
-#if __cpluscplus >= 202002L 
-        requires requires (_ElemL __lhsE, _ElemR __rhsE)
-        { { __lhsE == __rhsE } -> std::convertible_to<bool>; }
-    constexpr inline bool
-    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-        noexcept ( 
-               noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
-            && noexcept (std::copy(__lhs.begin(), __lhs.end(), __rhs.begin()))
-        )
-#else
-    inline bool
-    operator== (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-#endif 
-    { 
-        if (__lhs.row_size() != __rhs.row_size() || __lhs.column_size() != __rhs.column_size())
-            return false;
-        return std::equal(__lhs.begin(), __lhs.end(), __rhs.begin()); 
-    }
-
 
     /// @brief Compares two matrices for inequality.
     ///
@@ -1022,14 +1037,14 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator!= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-    { return !(__lhs == __rhs); }
+    operator!= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    { return !(lhs == rhs); }
 
 
     /// @brief Compares if a matrix is lexicographically 
@@ -1037,16 +1052,16 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator< (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
+    operator< (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
     { 
-        return std::lexicographical_compare(__lhs.begin(), __lhs.end()
-                                        , __rhs.begin(), __rhs.end()); 
+        return std::lexicographical_compare(lhs.begin(), lhs.end()
+                                        , rhs.begin(), rhs.end()); 
     }
 
 
@@ -1058,34 +1073,34 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator> (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-    { return __rhs < __lhs; }
+    operator> (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    { return rhs < lhs; }
 
 
     /// @brief Compares if a matrix is lexicographically
     /// less than or equal to another. 
     ///
     /// @details Uses less than comparison and swaps the
-    /// order of the arguments. If the __rhs matrix is less
-    /// than the __lhs matrix, then the __lhs matrix cannot
-    /// be less then or equal to the __rhs matrix.  
+    /// order of the arguments. If the rhs matrix is less
+    /// than the lhs matrix, then the lhs matrix cannot
+    /// be less then or equal to the rhs matrix.  
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator<= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-    { return !(__rhs < __lhs); }
+    operator<= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    { return !(rhs < lhs); }
 
 
     /// @brief Compares if a matrix is lexicographically
@@ -1096,16 +1111,144 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param __lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param __rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator>= (const matrix<_ElemL>& __lhs, const matrix<_ElemR>& __rhs)
-    { return !(__lhs < __rhs); }
+    operator>= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    { return !(lhs < rhs); }
 
 #endif // three way compare
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE == rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator== (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() == std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator== (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE == elem; });
+        return result;
+    }
+
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE != rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator!= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() != std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator!= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE != elem; });
+        return result;
+    }
+
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE < rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator< (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() < std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator< (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE < elem; });
+        return result;
+    }
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE > rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator> (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator> (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE > elem; });
+        return result;
+    }
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE <= rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator<= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator<= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE <= elem; });
+        return result;
+    }
+
+
+    template<typename _ElemT>
+#if __cpluscplus >= 202002L 
+        requires requires (_ElemT lhsE, _ElemT rhsE)
+        { { lhsE >= rhsE } -> std::convertible_to<bool>; }
+    constexpr inline auto
+    operator>= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+        noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
+        -> matrix<bool>
+#else
+    inline auto
+    operator>= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+        -> matrix<bool>
+#endif 
+    { 
+        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
+        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
+                        [elem](const _ElemT& mtxE) { return mtxE >= elem; });
+        return result;
+    }
 
 } // namespace cortex
 
