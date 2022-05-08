@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 #include <matrix.hpp>
 #include <utility>
+#include <memory>
 #include <string>
 
 
@@ -14,7 +15,17 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(m.column_size() == 0);
     }
 
-    SECTION("Constructor with size")
+    SECTION("Allocator Constructor")
+    {
+        std::allocator<int> alloc;
+        cortex::matrix<int> m(alloc);
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.row_size() == 0);
+        REQUIRE(m.column_size() == 0);
+        REQUIRE(m.get_allocator() == alloc);
+    }
+
+    SECTION("Size Constructor")
     {
         cortex::matrix<int> m(10, 10);
         REQUIRE(m.size() == 100);
@@ -22,7 +33,7 @@ TEST_CASE("Constructors of Matrix")
         REQUIRE(m.column_size() == 10);
     }
 
-    SECTION("Constructor with size and value")
+    SECTION("Size and Value Constructor")
     {
         cortex::matrix<int> m(10, 10, 1);
         REQUIRE(m.size() == 100);
@@ -120,15 +131,13 @@ TEST_CASE("Constructors of Matrix")
 
     SECTION("Initializer List Assignment")
     {
-        cortex::matrix<int> m  = { { 1, 2 }
-                                 , { 3, 4 }
-                                 , { 5, 6 }
-                                 , { 7, 8 }
-                                 , { 9, 10 }};
+        cortex::matrix<int> m = { { 1, 2, 3 }
+                                , { 4, 5, 6 }
+                                , { 7, 8, 9 }};
 
-        REQUIRE(m.row_size() == 5);
-        REQUIRE(m.column_size() == 2);
-        REQUIRE(m.size() == 10);
+        REQUIRE(m.row_size() == 3);
+        REQUIRE(m.column_size() == 3);
+        REQUIRE(m.size() == 9);
 
         for (auto i { 0UL }; i < m.size(); ++i)
             REQUIRE(m[i] == static_cast<int>(i + 1));
@@ -145,8 +154,9 @@ TEST_CASE("Matrix Meta-Data Access")
 
     SECTION("matrix::max_size")
     {
-        cortex::matrix<int> m(10, 10);
-        REQUIRE(m.row_size() == 10);
+        std::allocator<int> alloc;
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m.max_size() == std::allocator_traits<decltype(alloc)>::max_size(alloc));
     }
 
     SECTION("matrix::row_size")
@@ -180,6 +190,12 @@ TEST_CASE("Matrix Meta-Data Access")
     {
         cortex::matrix<int> m(10, 10, 1);
         REQUIRE(!m.empty());
+    }
+
+    SECTION("matrix::get_allocator")
+    {
+        cortex::matrix<int> m(10, 10, 1);
+        REQUIRE(m.get_allocator() == std::allocator<int>());
     }
 }
 

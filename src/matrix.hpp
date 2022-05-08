@@ -19,7 +19,6 @@
 
 #include <memory>
 #include <utility>
-#include <iterator>
 #include <initializer_list>
 #include <iostream>
 #include <cassert>
@@ -46,32 +45,38 @@ namespace cortex
     /// @todo Add support for basic arithmatic ✔️
     /// @todo Add support for matrix operations
     /// @todo Add support for operator overloads
-    /// @todo Add support for std::allocator
+    /// @todo Add support for std::allocator ✔️
     /// @todo Add support for std::initializer_list ✔️
-    /// @todo Add support for std::swap
-    /// @todo Add support for swaps of different matrix types
+    /// @todo Add support for std::swap ✔️
+    /// @todo Add support for swaps of different matrix types ❌ not possible
     /// @todo Add support for flatten ✔️
     /// @todo Add support for assign
     /// @todo Add support for clear ✔️
     /// @todo Add support for resize
-    /// @todo Add support for reserve ⚙️
+    /// @todo Add support for reserve 🗑️ (scraped)
     /// @todo Add support for shrink_to_fit
     /// @todo Add invokation operator support ✔️
     /// @todo Comparison operators between matrices ✔️
     /// @todo Comparison operators between scalars ✔️
+    /// @todo Projection method
+    /// @todo allocator constructors ✔️
+    /// @todo use memory algorithms from ranges
+    /// @todo using pointers to start and end over size and capacity
     /// 
     /// @tparam _Tp 
-    template<typename _Tp>
+    template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
     class matrix
     {
     public:
         using value_type                    = _Tp;
         using size_type                     = std::size_t;
         using difference_type               = std::ptrdiff_t;
+        using allocator_type                = _Alloc;
+        using alloc_traits                  = typename std::allocator_traits<_Alloc>;
         using reference                     = _Tp&;
         using const_reference               = const _Tp&;
-        using pointer                       = _Tp*;
-        using const_pointer                 = const _Tp*;
+        using pointer                       = typename alloc_traits::pointer;
+        using const_pointer                 = typename alloc_traits::pointer;
         using iterator                      = cortex::normal_iterator<pointer, matrix<value_type>>;
         using const_iterator                = cortex::normal_iterator<const_pointer, matrix<value_type>>;
         using reverse_iterator              = std::reverse_iterator<iterator>;
@@ -85,6 +90,7 @@ namespace cortex
             size_type m_size;
             size_type m_capacity;
 
+            allocator_type m_allocator;
             pointer m_data;
 
     public:
@@ -92,11 +98,28 @@ namespace cortex
         /// @brief Default Constructor
         /// 
         /// @details Default constructor for matrix.
-        constexpr matrix()
+        constexpr matrix() noexcept
         : m_rows(size_type())
         , m_columns(size_type())
         , m_size(size_type())
         , m_capacity(size_type())
+        , m_allocator(allocator_type())
+        , m_data(pointer())
+        { }
+
+        
+        /// @brief Allocator Constructor
+        ///
+        /// @details Default Constructs a matrix with a 
+        /// given allocator. 
+        ///
+        /// @param alloc type: allocator_type | qualifiers: [const], [ref]
+        constexpr explicit matrix(const allocator_type& alloc) noexcept
+        : m_rows(size_type())
+        , m_columns(size_type())
+        , m_size(size_type())
+        , m_capacity(size_type())
+        , m_allocator(alloc)
         , m_data(pointer())
         { }
 
@@ -110,11 +133,13 @@ namespace cortex
         /// 
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
-        constexpr matrix(size_type rows, size_type cols)
+        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        constexpr explicit matrix(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
         , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
         , m_capacity(m_size)
+        , m_allocator(alloc)
         , m_data(_M_allocate(m_size))
         { 
             if constexpr (std::is_default_constructible_v<value_type>)
@@ -132,12 +157,14 @@ namespace cortex
         /// 
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
-        /// @param value type: [value_type] | qualifiers: [const] [ref]
-        constexpr matrix(size_type rows, size_type cols, const value_type& value)
+        /// @param value type: [value_type] | qualifiers: [const], [ref]
+        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        constexpr matrix(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
         , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
         , m_capacity(m_size)
+        , m_allocator(alloc)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_fill_n(m_data, m_size, value); }
 
@@ -147,12 +174,30 @@ namespace cortex
         /// @details Constructs a matrix that is a copy of
         /// another matrix of the same underlying type.
         /// 
-        /// @param other type: [matrix] | qualifiers: [const] [ref]
+        /// @param other type: [matrix] | qualifiers: [const], [ref]
         constexpr matrix(const matrix& other)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_size(other.m_size)
         , m_capacity(other.m_size)
+        , m_allocator(other.m_allocator)
+        , m_data(_M_allocate(m_size))
+        { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
+
+
+        /// @brief Copy Constructor with Alternative Allocator
+        /// 
+        /// @details Constructs a matrix that is a copy of
+        /// another matrix of the same underlying type.
+        /// 
+        /// @param other type: [matrix] | qualifiers: [const], [ref]
+        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        constexpr matrix(const matrix& other, const allocator_type& alloc)
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_size(other.m_size)
+        , m_capacity(other.m_size)
+        , m_allocator(alloc)
         , m_data(_M_allocate(m_size))
         { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
 
@@ -169,12 +214,38 @@ namespace cortex
         , m_columns(other.m_columns)
         , m_size(other.m_size)
         , m_capacity(other.m_capacity)
+        , m_allocator(std::move(other.m_allocator))
         , m_data(other.m_data)
         { 
             other.m_data = pointer();
-            other.m_columns = size_type();
+            other.m_allocator = allocator_type();
             other.m_rows = size_type();
-            other.m_size = size_type(); 
+            other.m_columns = size_type();
+            other.m_size = size_type();
+        }
+
+
+        /// @brief Move Constructor with Alternative Allocator
+        /// 
+        /// @details Moves ownership of an existing matrix's
+        /// resources to this matrix and leaves the other matrix
+        /// in a default constructed state.
+        /// 
+        /// @param other type: [matrix] | qualifiers: [move]
+        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        constexpr matrix(matrix&& other, const allocator_type& alloc) noexcept
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_size(other.m_size)
+        , m_capacity(other.m_capacity)
+        , m_allocator(alloc)
+        , m_data(other.m_data)
+        { 
+            other.m_data = pointer();
+            other.m_allocator = allocator_type();
+            other.m_rows = size_type();
+            other.m_columns = size_type();
+            other.m_size = size_type();
         }
 
 
@@ -183,21 +254,25 @@ namespace cortex
         /// @details Uses std::initializer_list to create a matrix 
         /// from an initializer list of initializer lists. Elements 
         /// ownership is moved to the matrix's memory.
-        constexpr matrix(std::initializer_list<std::initializer_list<value_type>> list)
+        ///
+        /// @param init_list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
+        constexpr matrix(std::initializer_list<std::initializer_list<value_type>> list
+                        , const allocator_type& alloc = allocator_type())
         : m_rows(list.size())
         , m_columns(list.begin()->size())
         , m_size(m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns))
         , m_capacity(m_size)
+        , m_allocator(alloc)
         , m_data(_M_allocate(m_size))
         {
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0 };
+            auto offset { 0UL };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
                 std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
-                offset += 2;
+                offset += this->m_columns;
             }
         }
 
@@ -208,7 +283,7 @@ namespace cortex
         /// this matrix and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         /// 
-        /// @param other type: [matrix] | qualifiers: [const] [ref]
+        /// @param other type: [matrix] | qualifiers: [const], [ref]
         /// @return constexpr matrix& 
         constexpr matrix& operator=(const matrix& other)
         {
@@ -218,6 +293,7 @@ namespace cortex
                 m_columns = other.m_columns;
                 m_size = other.m_size;
                 m_capacity = other.m_size;
+                m_allocator = other.m_allocator;
                 m_data = _M_allocate(m_size);
                 std::uninitialized_copy_n(other.m_data, m_size, m_data);
             }
@@ -242,9 +318,11 @@ namespace cortex
                 m_columns = other.m_columns;
                 m_size = other.m_size;
                 m_capacity = other.m_capacity;
+                m_allocator = std::move(other.m_allocator);
                 m_data = other.m_data;
 
                 other.m_data = pointer();
+                other.m_allocator = allocator_type();
                 other.m_rows = size_type();
                 other.m_columns = size_type();
                 other.m_size = size_type();
@@ -258,8 +336,12 @@ namespace cortex
         /// @details Uses std::initializer_list to create a matrix 
         /// from an initializer list of initializer lists. Elements 
         /// ownership is moved to the matrix's memory.
+        ///
+        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
+        /// @return constexpr matrix&
         constexpr matrix& operator= (std::initializer_list<std::initializer_list<value_type>> list)
         {   
+            m_allocator = allocator_type();
             m_rows = list.size();
             m_columns = list.begin()->size();
             m_size = (m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns));
@@ -267,13 +349,13 @@ namespace cortex
             m_data = _M_allocate(m_size);
 
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0 };
+            auto offset { 0UL };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
                 std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
-                offset += 2;
+                offset += this->m_columns;
             }
 
             return *this;
@@ -300,6 +382,7 @@ namespace cortex
             m_columns = size_type();
             m_size = size_type();
             m_capacity = size_type();
+            m_allocator = allocator_type();
         }
 
 
@@ -329,29 +412,29 @@ namespace cortex
         /// 
         /// @param new_columns type: [size_type] 
         /// @param new_rows type: [size_type]
-        constexpr void reserve(size_type new_rows, size_type new_columns)
-        {
-            auto new_capacity = new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns);
+        // constexpr void reserve(size_type new_rows, size_type new_columns)
+        // {
+        //     auto new_capacity = new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns);
 
-            if (new_capacity > m_capacity)
-            {
-                auto new_data = _M_allocate(new_capacity);
+        //     if (new_capacity > m_capacity)
+        //     {
+        //         auto new_data = _M_allocate(new_capacity);
 
-                if constexpr (std::is_move_constructible_v<value_type>)                    
-                    std::uninitialized_move_n(m_data, m_size, new_data);
-                else
-                    std::uninitialized_copy_n(m_data, m_size, new_data);
+        //         if constexpr (std::is_move_constructible_v<value_type>)                    
+        //             std::uninitialized_move_n(m_data, m_size, new_data);
+        //         else
+        //             std::uninitialized_copy_n(m_data, m_size, new_data);
 
-                std::destroy_n(m_data, m_capacity);
-                _M_deallocate(m_data, m_capacity);
+        //         std::destroy_n(m_data, m_capacity);
+        //         _M_deallocate(m_data, m_capacity);
 
 
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_rows = new_rows;
-                m_columns = new_columns;
-            }
-        }
+        //         m_data = new_data;
+        //         m_capacity = new_capacity;
+        //         m_rows = new_rows;
+        //         m_columns = new_columns;
+        //     }
+        // }
 
 
         /// @brief Clears the matrix elements
@@ -387,6 +470,11 @@ namespace cortex
             other = std::move(*this);
            *this = std::move(tmp);
         }
+
+
+
+        constexpr allocator_type get_allocator() const noexcept
+        { return m_allocator; }
         
 
         /// @brief Returns the overall size of the matrix.
@@ -415,7 +503,7 @@ namespace cortex
         /// 
         /// @return constexpr size_type 
         constexpr size_type max_size() const noexcept
-        { return m_size; }
+        { return alloc_traits::max_size(m_allocator); }
 
 
         /// @brief Returns the overall capacity of the matrix.
@@ -687,7 +775,7 @@ namespace cortex
         /// of the passed matrix's element types satisfy `AddableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
         /// @return constexpr auto : A matrix whose element's type 
         /// is the sum of the two input matrices element types. 
         template<Addable _ElemT>
@@ -721,7 +809,7 @@ namespace cortex
         /// of the passed matrix's element types satisfy `SubtractableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
         /// @return constexpr auto : A matrix whose element type 
         /// is the difference of the two input matrices element types.
         template<Subtractable _ElemT>
@@ -755,7 +843,7 @@ namespace cortex
         /// of the passed matrix's element types satisfy `MultiplicableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
         /// @return constexpr auto : A matrix whose element type 
         /// is the product of the two input matrices element types.
         template<Multiplicable _ElemT>
@@ -785,7 +873,7 @@ namespace cortex
         ///
         /// 
         /// @tparam _ScalarT 
-        /// @param scalar type: _ScalarT | qualifiers: [const] [ref]
+        /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> 
         template<Multiplicable _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
@@ -822,7 +910,7 @@ namespace cortex
         /// due to C++ rounding rules.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const] [ref] 
+        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
         /// @return constexpr auto : A matrix whose element type 
         /// is the quotient of the two input matrices element types.
         template<Divisible _ElemT>
@@ -855,7 +943,7 @@ namespace cortex
         /// due to C++ rounding rules.
         /// 
         /// @tparam _ScalarT 
-        /// @param scalar type: _ScalarT | qualifiers: [const] [ref]
+        /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> 
         template<Divisible _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
@@ -880,28 +968,33 @@ namespace cortex
         /// @brief Allocates Matrix Recources
         /// 
         /// @details Allocates the memory for the matrix 
-        /// using ::operator new.
+        /// using the allocator of the container. Uses 
+        /// std::allocator_traits to get the allocators
+        /// relevant methods. 
+        ///
+        /// @note Default allocator is std::allocator<value_type>.
         /// 
         /// @param __n type: [size_type]
         /// @return constexpr pointer 
         constexpr pointer _M_allocate(size_type __n)
-        { return __n != 0 ? static_cast<pointer>(::operator new(__n * sizeof(value_type))) : pointer(); }
+        { return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer(); }
 
 
         /// @brief Dellocates Matrix Recources
         /// 
         /// @details Dellocates the memory for the matrix 
-        /// using ::operator delete.
+        /// using the allocator of the container. Uses 
+        /// std::allocator_traits to get the allocators
+        /// relevant methods. 
+        ///
+        /// @note Default allocator is std::allocator<value_type>.
         /// 
         /// @param __p type: [pointer]
         /// @param __n type: [size_type] | attr: [[maybe_unused]]
         constexpr void _M_deallocate(pointer __p, [[maybe_unused]] size_type __n)
         { 
-            ::operator delete(__p
-#                       if __cpp_sized_deallocation
-			                , __n * sizeof(_Tp)
-#                       endif
-                            ); 
+            if (__p)
+                alloc_traits::deallocate(m_allocator, __p, __n);
         }
 
 
@@ -978,8 +1071,8 @@ namespace cortex
     /// @tparam _ElemR
     /// @rparam lhsE type: [_ElemL]
     /// @rparam rhsE type: [_ElemR]
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true
     /// @return false
     template<typename _ElemL, typename _ElemR>
@@ -1016,8 +1109,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
     /// @return constexpr inline auto
     template<typename _ElemL, typename _ElemR>
     constexpr inline auto
@@ -1037,8 +1130,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
@@ -1052,8 +1145,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
@@ -1073,8 +1166,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
@@ -1093,8 +1186,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
@@ -1111,8 +1204,8 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const] [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const] [ref]
+    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
@@ -1123,130 +1216,233 @@ namespace cortex
 #endif // three way compare
 
 
+    /// @brief Scalar Equality Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are equal as true and the everything else as false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// equality comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the inequlity comparison 
+    /// between the scalar and the matrix element's types is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE == rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator== (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator== (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() == std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator== (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator== (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE == elem; });
+                        [&](const _ElemT& mtxE) { return mtxE == scalar; });
         return result;
     }
 
 
-
+    /// @brief Scalar Inequality Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are inequal as true and the everything else as false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// inequality comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the inequlity comparison 
+    /// between the scalar and the matrix element's types is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool>
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE != rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator!= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator!= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() != std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator!= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator!= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE != elem; });
+                        [&](const _ElemT& mtxE) { return mtxE != scalar; });
         return result;
     }
 
 
-
+    /// @brief Scalar Less-Then Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are less-than as true and the everything else as false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// less-than comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the less-than comparison 
+    /// between the scalar and the matrix element's types is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE < rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator< (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator< (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() < std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator< (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator< (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE < elem; });
+                        [&](const _ElemT& mtxE) { return mtxE < scalar; });
         return result;
     }
 
 
+    /// @brief Scalar Greater-Then Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are greater-than as true and the everything else as false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// greater-than comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the greater-than comparison 
+    /// between the scalar and the matrix element's types is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE > rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator> (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator> (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator> (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator> (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE > elem; });
+                        [&](const _ElemT& mtxE) { return mtxE > scalar; });
         return result;
     }
 
 
+    /// @brief Scalar Less-Then-Equal Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are less-than-eqaul as true and the everything else as 
+    /// false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// less-than comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the less-than-equal comparison 
+    /// between the scalar and the matrix element's types is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE <= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator<= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator<= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator<= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator<= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE <= elem; });
+                        [&](const _ElemT& mtxE) { return mtxE <= scalar; });
         return result;
     }
 
 
+    /// @brief Scalar Greater-Then-Equal Comparison 
+    /// 
+    /// @details Compares each value within the matrix to a given
+    /// scalar. Creates a bit mask (or boolean mask) of the values 
+    /// that are greater-than-equal as true and the everything else 
+    /// as false.
+    ///
+    /// @requires Comparison of scalar type and matrix type support 
+    /// greater-than-equal comparison that results in a bool.
+    ///
+    /// @exception Operation is noexcept iff the greater-than-equal 
+    /// comparison between the scalar and the matrix element's types 
+    /// is noexcept.
+    ///
+    /// @tparam _ElemT 
+    ///
+    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @return matrix<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE >= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator>= (const matrix<_ElemT>& __mtx, const _ElemT& __elem)
+    operator>= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
         -> matrix<bool>
 #else
     inline auto
-    operator>= (const matrix<_ElemT>& mtx, const _ElemT& elem)
+    operator>= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
         -> matrix<bool>
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
         std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [elem](const _ElemT& mtxE) { return mtxE >= elem; });
+                        [&](const _ElemT& mtxE) { return mtxE >= scalar; });
         return result;
     }
 
@@ -1262,13 +1458,13 @@ namespace std
     /// @exception std::swap is noexcept if __x.swap(__y) is noexcept.
     /// 
     /// @tparam _Tp 
-    /// @param __x type: [cortex::matrix<_Tp>] | qualifiers: [const] [ref]
-    /// @param __y type: [cortex::matrix<_Tp>] | qualifiers: [const] [ref]
+    /// @param __x type: [cortex::matrix<_Tp>] | qualifiers: [const], [ref]
+    /// @param __y type: [cortex::matrix<_Tp>] | qualifiers: [const], [ref]
     /// @return inline void
     template<typename _Tp>
-    inline void swap(cortex::matrix<_Tp>& __x, cortex::matrix<_Tp>& __y)
-        noexcept( noexcept(__x.swap(__y)) )
-    { __x.swap(__y); }
+    inline void swap(cortex::matrix<_Tp>& x, cortex::matrix<_Tp>& y)
+        noexcept( noexcept(x.swap(y)) )
+    { x.swap(y); }
 }
 
 #endif // __cplusplus >= 201703L
