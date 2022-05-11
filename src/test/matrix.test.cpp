@@ -313,13 +313,11 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 100);
 
         REQUIRE_THROWS_AS(m.at(0, 0) = 1, std::out_of_range);
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 100);
         REQUIRE(m.data() != nullptr);
         REQUIRE(m.data() != decltype(m)::pointer());
     }
@@ -330,7 +328,6 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 0);
         REQUIRE(m.data() == nullptr);
         REQUIRE(m.data() == decltype(m)::pointer());
 
@@ -338,7 +335,6 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 0);
         REQUIRE(m.data() == nullptr);
         REQUIRE(m.data() == decltype(m)::pointer());
     }
@@ -349,7 +345,6 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(!m.empty());
         REQUIRE(m.size() == 100);
-        REQUIRE(m.capacity() == 100);
         REQUIRE(m.row_size() == 10);
         REQUIRE(m.column_size() == 10);
         REQUIRE(m.data() != nullptr);
@@ -358,49 +353,98 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.capacity() == 100);
         REQUIRE(m.column_size() == 0);
         REQUIRE(m.row_size() == 0);
         REQUIRE(m.data() != nullptr);
     }
 
-    SECTION("matrix::reserve")
+    SECTION("matrix::resize - Reallocation")
     {
-        cortex::matrix<int> m(7, 3, 1);
+        cortex::matrix<int> m(2, 5, 1);
 
-        REQUIRE(m.capacity() == 21);
-
-        m.reserve(8, 4);
-
-        REQUIRE(m.capacity() == 32);
-    }
-
-    SECTION("matrix::reserve - column and row order preservation")
-    {
-        cortex::matrix<int> m(7, 3, 1);
-
-        REQUIRE(m.capacity() == 21);
-        REQUIRE(m.row_size() == 7);
-        REQUIRE(m.column_size() == 3);
+        REQUIRE(!m.empty());
+        REQUIRE(m.size() == 10);
+        REQUIRE(m.row_size() == 2);
+        REQUIRE(m.column_size() == 5);
+        REQUIRE(m.data() != nullptr);
 
         for (auto& elem : m)
             REQUIRE(elem == 1);
 
-        m.reserve(8, 4);
+        m.resize(4, 6);
 
-        REQUIRE(m.capacity() == 32);
-        REQUIRE(m.row_size() == 8);
-        REQUIRE(m.column_size() == 4);
+        REQUIRE(!m.empty());
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+        REQUIRE(m.data() != nullptr);
 
-        for (auto elem { m.begin() }; elem != m.cend(); ++elem)
-        {
-            auto dist { static_cast<decltype(m)::size_type>(std::distance(m.begin(), elem)) };
-            if (dist < m.size())
-                REQUIRE(*elem == 1);
-            else
-                REQUIRE(*elem == 0);
-        }
+        for (auto& elem : m)
+            REQUIRE(elem != 1);
     }
+
+    // SECTION("matrix::resize - Smaller Size")
+    // {
+    //     cortex::matrix<int> m(2, 5, 1);
+
+    //     REQUIRE(!m.empty());
+    //     REQUIRE(m.size() == 10);
+    //     REQUIRE(m.row_size() == 2);
+    //     REQUIRE(m.column_size() == 5);
+    //     REQUIRE(m.data() != nullptr);
+
+    //     for (auto& elem : m)
+    //         REQUIRE(elem == 1);
+
+    //     m.resize(1, 4);
+
+    //     REQUIRE(!m.empty());
+    //     REQUIRE(m.size() == 4);
+    //     REQUIRE(m.row_size() == 1);
+    //     REQUIRE(m.column_size() == 4);
+    //     REQUIRE(m.data() != nullptr);
+
+    //     for (auto& elem : m)
+    //         REQUIRE(elem == 1);
+    // }
+
+    // SECTION("matrix::reserve")
+    // {
+    //     cortex::matrix<int> m(7, 3, 1);
+
+    //     REQUIRE(m.capacity() == 21);
+
+    //     m.reserve(8, 4);
+
+    //     REQUIRE(m.capacity() == 32);
+    // }
+
+    // SECTION("matrix::reserve - column and row order preservation")
+    // {
+    //     cortex::matrix<int> m(7, 3, 1);
+
+    //     REQUIRE(m.capacity() == 21);
+    //     REQUIRE(m.row_size() == 7);
+    //     REQUIRE(m.column_size() == 3);
+
+    //     for (auto& elem : m)
+    //         REQUIRE(elem == 1);
+
+    //     m.reserve(8, 4);
+
+    //     REQUIRE(m.capacity() == 32);
+    //     REQUIRE(m.row_size() == 8);
+    //     REQUIRE(m.column_size() == 4);
+
+    //     for (auto elem { m.begin() }; elem != m.cend(); ++elem)
+    //     {
+    //         auto dist { static_cast<decltype(m)::size_type>(std::distance(m.begin(), elem)) };
+    //         if (dist < m.size())
+    //             REQUIRE(*elem == 1);
+    //         else
+    //             REQUIRE(*elem == 0);
+    //     }
+    // }
 }
 
 TEST_CASE("Iterators")

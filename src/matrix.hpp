@@ -6,7 +6,7 @@
 /// @version 0.0.9
 /// @date 2022-16-22
 /// 
-/// @copyright Copyright (c) 2021
+/// @copyright Copyright (c) 2022
 
 
 #ifndef CORTEX_MATRIX_H
@@ -22,6 +22,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <cassert>
+#include <ranges>
 #include <vector>
 #include <execution>
 
@@ -48,20 +49,22 @@ namespace cortex
     /// @todo Add support for std::allocator ✔️
     /// @todo Add support for std::initializer_list ✔️
     /// @todo Add support for std::swap ✔️
-    /// @todo Add support for swaps of different matrix types ❌ not possible
+    /// @todo Add support for swaps of different matrix types ❌ (not possible)
     /// @todo Add support for flatten ✔️
     /// @todo Add support for assign
     /// @todo Add support for clear ✔️
-    /// @todo Add support for resize
+    /// @todo Add support for resize ✔️
+    /// @todo Add support for erase
     /// @todo Add support for reserve 🗑️ (scraped)
-    /// @todo Add support for shrink_to_fit
+    /// @todo Add support for shrink_to_fit 🗑️ (scraped)
     /// @todo Add invokation operator support ✔️
     /// @todo Comparison operators between matrices ✔️
     /// @todo Comparison operators between scalars ✔️
     /// @todo Projection method
     /// @todo allocator constructors ✔️
-    /// @todo use memory algorithms from ranges
-    /// @todo using pointers to start and end over size and capacity
+    /// @todo use memory algorithms from ranges ✔️
+    /// @todo using pointers to start and end over size ✔️
+    /// @todo the reshape method
     /// 
     /// @tparam _Tp 
     template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -87,11 +90,9 @@ namespace cortex
             size_type m_rows;
             size_type m_columns;
 
-            size_type m_size;
-            size_type m_capacity;
-
             allocator_type m_allocator;
-            pointer m_data;
+            pointer m_start;
+            pointer m_finish;
 
     public:
 
@@ -101,10 +102,9 @@ namespace cortex
         constexpr matrix() noexcept
         : m_rows(size_type())
         , m_columns(size_type())
-        , m_size(size_type())
-        , m_capacity(size_type())
         , m_allocator(allocator_type())
-        , m_data(pointer())
+        , m_start(pointer())
+        , m_finish(pointer())
         { }
 
         
@@ -117,10 +117,9 @@ namespace cortex
         constexpr explicit matrix(const allocator_type& alloc) noexcept
         : m_rows(size_type())
         , m_columns(size_type())
-        , m_size(size_type())
-        , m_capacity(size_type())
         , m_allocator(alloc)
-        , m_data(pointer())
+        , m_start(pointer())
+        , m_finish(pointer())
         { }
 
 
@@ -137,15 +136,14 @@ namespace cortex
         constexpr explicit matrix(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
-        , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
-        , m_capacity(m_size)
         , m_allocator(alloc)
-        , m_data(_M_allocate(m_size))
+        , m_start(_M_allocate(_M_size()))
+        , m_finish(m_start + _M_size())
         { 
             if constexpr (std::is_default_constructible_v<value_type>)
-                std::uninitialized_default_construct_n(m_data, m_size);
+                std::ranges::uninitialized_default_construct(*this);
             else
-                std::uninitialized_fill_n(m_data, m_size, value_type());
+                std::ranges::uninitialized_fill(*this, value_type());
         }
 
 
@@ -162,11 +160,10 @@ namespace cortex
         constexpr matrix(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
-        , m_size(rows * cols != 0 ? rows * cols : std::max(rows, cols))
-        , m_capacity(m_size)
         , m_allocator(alloc)
-        , m_data(_M_allocate(m_size))
-        { std::uninitialized_fill_n(m_data, m_size, value); }
+        , m_start(_M_allocate(_M_size()))
+        , m_finish(m_start + _M_size())
+        { std::ranges::uninitialized_fill(*this, value); }
 
 
         /// @brief Copy Constructor
@@ -178,11 +175,10 @@ namespace cortex
         constexpr matrix(const matrix& other)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
-        , m_size(other.m_size)
-        , m_capacity(other.m_size)
         , m_allocator(other.m_allocator)
-        , m_data(_M_allocate(m_size))
-        { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
+        , m_start(_M_allocate(_M_size()))
+        , m_finish(m_start + _M_size())
+        { std::ranges::uninitialized_copy(other, *this); }
 
 
         /// @brief Copy Constructor with Alternative Allocator
@@ -195,11 +191,10 @@ namespace cortex
         constexpr matrix(const matrix& other, const allocator_type& alloc)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
-        , m_size(other.m_size)
-        , m_capacity(other.m_size)
         , m_allocator(alloc)
-        , m_data(_M_allocate(m_size))
-        { std::uninitialized_copy_n(other.m_data, m_size, m_data); }
+        , m_start(_M_allocate(_M_size()))
+        , m_finish(m_start + _M_size())
+        { std::ranges::uninitialized_copy(other, *this); }
 
 
         /// @brief Move Constructor
@@ -212,16 +207,15 @@ namespace cortex
         constexpr matrix(matrix&& other) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
-        , m_size(other.m_size)
-        , m_capacity(other.m_capacity)
         , m_allocator(std::move(other.m_allocator))
-        , m_data(other.m_data)
+        , m_start(other.m_start)
+        , m_finish(other.m_finish)
         { 
-            other.m_data = pointer();
+            other.m_start = pointer();
+            other.m_finish = pointer();
             other.m_allocator = allocator_type();
             other.m_rows = size_type();
             other.m_columns = size_type();
-            other.m_size = size_type();
         }
 
 
@@ -236,12 +230,12 @@ namespace cortex
         constexpr matrix(matrix&& other, const allocator_type& alloc) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
-        , m_size(other.m_size)
-        , m_capacity(other.m_capacity)
         , m_allocator(alloc)
-        , m_data(other.m_data)
+        , m_start(other.m_start)
+        , m_finish(other.m_finish)
         { 
-            other.m_data = pointer();
+            other.m_start = pointer();
+            other.m_finish = pointer();
             other.m_allocator = allocator_type();
             other.m_rows = size_type();
             other.m_columns = size_type();
@@ -260,10 +254,9 @@ namespace cortex
                         , const allocator_type& alloc = allocator_type())
         : m_rows(list.size())
         , m_columns(list.begin()->size())
-        , m_size(m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns))
-        , m_capacity(m_size)
         , m_allocator(alloc)
-        , m_data(_M_allocate(m_size))
+        , m_start(_M_allocate(_M_size()))
+        , m_finish(m_start + _M_size())
         {
             using init_iter = typename decltype(list)::iterator;
             auto offset { 0UL };
@@ -271,7 +264,7 @@ namespace cortex
             {
                 if (row->size() not_eq this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
-                std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
+                std::uninitialized_move_n(row->begin(), this->m_columns, m_start + offset);
                 offset += this->m_columns;
             }
         }
@@ -291,11 +284,10 @@ namespace cortex
             {
                 m_rows = other.m_rows;
                 m_columns = other.m_columns;
-                m_size = other.m_size;
-                m_capacity = other.m_size;
                 m_allocator = other.m_allocator;
-                m_data = _M_allocate(m_size);
-                std::uninitialized_copy_n(other.m_data, m_size, m_data);
+                m_start = _M_allocate(_M_size());
+                m_finish = m_start + _M_size();
+                std::ranges::uninitialized_copy(other, *this);
             }
             return *this;
         }
@@ -316,16 +308,15 @@ namespace cortex
             {
                 m_rows = other.m_rows;
                 m_columns = other.m_columns;
-                m_size = other.m_size;
-                m_capacity = other.m_capacity;
                 m_allocator = std::move(other.m_allocator);
-                m_data = other.m_data;
+                m_start = other.m_start;
+                m_finish = other.m_finish;
 
-                other.m_data = pointer();
+                other.m_start = pointer();
+                other.m_finish = pointer();
                 other.m_allocator = allocator_type();
                 other.m_rows = size_type();
                 other.m_columns = size_type();
-                other.m_size = size_type();
             }
             return *this;
         }
@@ -344,9 +335,8 @@ namespace cortex
             m_allocator = allocator_type();
             m_rows = list.size();
             m_columns = list.begin()->size();
-            m_size = (m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns));
-            m_capacity = m_size;
-            m_data = _M_allocate(m_size);
+            m_start = _M_allocate(_M_size());
+            m_finish = m_start + _M_size();
 
             using init_iter = typename decltype(list)::iterator;
             auto offset { 0UL };
@@ -354,7 +344,7 @@ namespace cortex
             {
                 if (row->size() not_eq this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
-                std::uninitialized_move_n(row->begin(), this->m_columns, m_data + offset);
+                std::uninitialized_move_n(row->begin(), this->m_columns, m_start + offset);
                 offset += this->m_columns;
             }
 
@@ -372,16 +362,16 @@ namespace cortex
         ~matrix()
     #endif
         {
-            if (m_data)
+            if (m_start)
             {
-                std::destroy_n(m_data, m_size);
-                _M_deallocate(m_data, m_size);
+                std::ranges::destroy(*this);
+                _M_deallocate(m_start, _M_size());
             }
 
             m_rows = size_type();
             m_columns = size_type();
-            m_size = size_type();
-            m_capacity = size_type();
+            m_start = pointer();
+            m_finish = pointer();
             m_allocator = allocator_type();
         }
 
@@ -437,6 +427,78 @@ namespace cortex
         // }
 
 
+        /// @brief Resizes the matrix to dimensions new_rows x new_columns.
+        ///
+        /// @details Resizes the matrix to dimensions new_rows x new_columns, 
+        /// the resize might result in a new memory block being allocated
+        /// if the new dimensions are larger than the current dimensions or
+        /// the matrix is resized to a smaller size. Reallocation or destruction
+        /// of elements causes iterators and references to be invalidated. 
+        /// 
+        /// @param new_rows type: [size_type]
+        /// @param new_columns type: [size_type]
+        constexpr void resize(size_type new_rows, size_type new_columns)
+        {
+            auto old_size { _M_size() };
+            auto new_size { new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
+
+            if (new_size > alloc_traits::max_size(m_allocator))
+                throw std::length_error("Matrix resize too large");
+            else if (old_size < new_size)
+            {
+                auto new_start { _M_allocate(new_size) };
+                // auto old_finish_pos { new_start + old_size };
+                auto new_finish { new_start + new_size };
+
+                std::ranges::uninitialized_default_construct(new_start, new_finish);
+
+                std::ranges::destroy_n(m_start, _M_size());
+                _M_deallocate(m_start, _M_size());
+                m_start = new_start;
+                m_finish = new_finish;
+                m_rows = new_rows;
+                m_columns = new_columns;
+            }
+            // else if (old_size > new_size)
+            // {
+            //     auto new_finish { m_start + new_size };
+
+            //     auto n { m_finish - new_finish };
+                
+            //     if (n)
+            //         std::ranges::destroy_n(new_finish, n); 
+                               
+            //     _M_deallocate(new_finish, n);
+            //     m_finish = new_finish;
+            //     m_rows = new_rows;
+            //     m_columns = new_columns;
+            // }
+        }
+
+
+        constexpr iterator erase(const_iterator position)
+        {
+            // auto pos { begin() + (position - cbegin()) };
+
+            std::ranges::destroy_at(std::addressof(*position));
+            std::ranges::uninitialized_fill(position, position + 1, value_type());
+
+            return position;
+        }
+
+
+        constexpr iterator erase(const_iterator first, const_iterator last)
+        {
+            // auto start { begin() + (first - cbegin()) };
+            // auto finish { begin() + (last - cbegin()) };
+
+            std::ranges::destroy(first, last);
+            std::ranges::uninitialized_fill(first, last, value_type());
+
+            return first;
+        }
+
+
         /// @brief Clears the matrix elements
         /// 
         /// @details The elements of the matrix are destroyed and
@@ -446,13 +508,13 @@ namespace cortex
         /// to zero.
         constexpr void clear() noexcept
         {
-            if (m_size)
+            if (_M_size())
             {
-                std::destroy_n(m_data, m_size);
+                erase(begin(), end());
             
-                m_size = size_type();
                 m_rows = size_type();
                 m_columns = size_type();
+                m_finish = m_start;
             }         
         }
 
@@ -481,7 +543,7 @@ namespace cortex
         /// 
         /// @return constexpr size_type
         constexpr size_type size() const noexcept
-        { return m_size; }
+        { return this->empty() ? size_type(0) : _M_size(); }
 
 
         /// @brief Returns the number of the rows of the matrix.
@@ -504,13 +566,6 @@ namespace cortex
         /// @return constexpr size_type 
         constexpr size_type max_size() const noexcept
         { return alloc_traits::max_size(m_allocator); }
-
-
-        /// @brief Returns the overall capacity of the matrix.
-        /// 
-        /// @return constexpr size_type
-        constexpr size_type capacity() const noexcept
-        { return m_capacity; }
 
 
         /// @brief Returns a structured binding of the matrix's 
@@ -537,21 +592,21 @@ namespace cortex
         /// @return true 
         /// @return false
         constexpr bool empty() const noexcept
-        { return m_size == 0; }
+        { return m_start == m_finish; }
 
 
         /// @brief Returns the underlying data pointer.
         /// 
         /// @return pointer 
         pointer data() noexcept
-        { return _M_data_ptr(m_data); }
+        { return _M_data_ptr(m_start); }
 
 
         /// @brief Returns the underlying data pointer.
         /// 
         /// @return const_pointer
         const_pointer data() const noexcept
-        { return _M_data_ptr(m_data); }
+        { return _M_data_ptr(m_start); }
 
 
         /// @brief Subscript Operator.
@@ -564,7 +619,7 @@ namespace cortex
         /// @param step type: [size_type]
         /// @return constexpr reference
         constexpr reference operator[](size_type step) 
-        { return *(m_data + step); }
+        { return *(m_start + step); }
 
 
         /// @brief Two Dimensional Element Access (Point Access).
@@ -581,7 +636,7 @@ namespace cortex
         constexpr reference at(size_type row, size_type column)
         { 
             _M_range_check(row, column);
-            return *(m_data + (m_columns * row) + column);
+            return *(m_start + (m_columns * row) + column);
         }
 
 
@@ -599,7 +654,7 @@ namespace cortex
         constexpr const_reference at(size_type row, size_type column) const
         { 
             _M_range_check(row, column);
-            return *(m_data + (m_columns * row) + column); 
+            return *(m_start + (m_columns * row) + column); 
         }
 
 
@@ -636,7 +691,7 @@ namespace cortex
         /// 
         /// @return constexpr reference 
         constexpr reference front() noexcept
-        { return *m_data; }
+        { return *(this->begin()); }
 
 
         /// @brief Returns a reference to the front element 
@@ -644,7 +699,7 @@ namespace cortex
         /// 
         /// @return constexpr const_reference
         constexpr const_reference front() const noexcept
-        { return *m_data; }
+        { return *(this->begin()); }
 
 
         /// @brief Returns a reference to the back element 
@@ -652,7 +707,7 @@ namespace cortex
         /// 
         /// @return constexpr reference
         constexpr reference back() noexcept
-        { return *(m_data + m_size - 1); }
+        { return *(this->end() - 1); }
 
 
         /// @brief Returns a reference to the back element 
@@ -660,7 +715,7 @@ namespace cortex
         /// 
         /// @return constexpr const_reference
         constexpr const_reference back() const noexcept
-        { return *(m_data + m_size - 1); }
+        { return *(this->end() - 1); }
 
 
         /// @brief Flattens the matrix into a std::vector.
@@ -671,8 +726,8 @@ namespace cortex
         /// @return constexpr std::vector<value_type>
         constexpr std::vector<value_type> flatten() noexcept
         {
-            std::vector<value_type> vec(m_size);
-            std::copy_n(m_data, m_size, vec.begin());
+            std::vector<value_type> vec(_M_size());
+            std::ranges::copy(*this, std::begin(vec));
             return vec;
         }
 
@@ -681,21 +736,21 @@ namespace cortex
         /// 
         /// @return constexpr iterator
         constexpr iterator begin() noexcept
-        { return iterator(m_data); }
+        { return iterator(m_start); }
 
 
         /// @brief Constant iterator to the beginning of the matrix.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator begin() const noexcept
-        { return const_iterator(m_data); }
+        { return const_iterator(m_start); }
 
 
         /// @brief Constant iterator to the beginning of the matrix.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator cbegin() const noexcept
-        { return const_iterator(m_data); }
+        { return const_iterator(m_start); }
 
 
         /// @brief Reverse iterator to the end of the matrix.
@@ -723,21 +778,21 @@ namespace cortex
         /// 
         /// @return constexpr iterator 
         constexpr iterator end() noexcept
-        { return iterator(m_data + m_size); }
+        { return iterator(m_finish); }
 
         
         /// @brief Constant iterator to the end of the matrix.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator end() const noexcept
-        { return const_iterator(m_data + m_size); }
+        { return const_iterator(m_finish); }
 
 
         /// @brief Constant iterator to the end of the matrix.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator cend() const noexcept
-        { return const_iterator(m_data + m_size); }
+        { return const_iterator(m_finish); }
 
 
         /// @brief Reverse iterator to the beginning of the matrix.
@@ -1012,6 +1067,10 @@ namespace cortex
             if (__row >= this->row_size() or __column >= this->column_size())
                 throw std::out_of_range("matrix::_M_range_check - index out of range.");
         }
+
+
+        constexpr size_type _M_size() const noexcept
+        { return m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns); }
 
 
         /// @brief Returns the pointer passed to it.
