@@ -430,10 +430,13 @@ namespace cortex
         /// @brief Resizes the matrix to dimensions new_rows x new_columns.
         ///
         /// @details Resizes the matrix to dimensions new_rows x new_columns, 
-        /// the resize might result in a new memory block being allocated
-        /// if the new dimensions are larger than the current dimensions or
-        /// the matrix is resized to a smaller size. Reallocation or destruction
-        /// of elements causes iterators and references to be invalidated. 
+        /// the resize will result in a new memory block being allocated
+        /// if the new dimensions are larger or smaller than the current dimensions. 
+        /// Reallocation or destruction of elements causes iterators and references 
+        /// to be invalidated. If new dimensions don't change the overall size, only
+        /// the view over the data (ie. the dimension sizes) are changed, elements 
+        /// of the matrix remain unchanged, however, this is unchecked. For a checked  
+        /// change that can only changes the dimension sizes, use matrix::reshape. 
         /// 
         /// @param new_rows type: [size_type]
         /// @param new_columns type: [size_type]
@@ -444,39 +447,108 @@ namespace cortex
 
             if (new_size > alloc_traits::max_size(m_allocator))
                 throw std::length_error("Matrix resize too large");
-            else if (old_size < new_size)
+            else
             {
                 auto new_start { _M_allocate(new_size) };
-                // auto old_finish_pos { new_start + old_size };
+                auto old_finish_pos_in_new { new_start + old_size };
                 auto new_finish { new_start + new_size };
 
-                std::ranges::uninitialized_default_construct(new_start, new_finish);
+                if (old_size < new_size)
+                {
+                    if (m_start)
+                    {
+                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, old_finish_pos_in_new);
+                        std::ranges::uninitialized_default_construct(old_finish_pos_in_new, new_finish);
+                    }
+                    else
+                        std::ranges::uninitialized_default_construct(new_start, new_finish); 
+                }
+                else if (old_size > new_size)
+                {
+                    if (m_start)
+                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, new_finish);
+                    else
+                        std::ranges::uninitialized_default_construct(old_finish_pos_in_new, new_finish);
+                }
+                
+                std::ranges::destroy(*this);
+                _M_deallocate(m_start, old_size);
 
-                std::ranges::destroy_n(m_start, _M_size());
-                _M_deallocate(m_start, _M_size());
                 m_start = new_start;
                 m_finish = new_finish;
-                m_rows = new_rows;
-                m_columns = new_columns;
             }
-            // else if (old_size > new_size)
-            // {
-            //     auto new_finish { m_start + new_size };
 
-            //     auto n { m_finish - new_finish };
-                
-            //     if (n)
-            //         std::ranges::destroy_n(new_finish, n); 
-                               
-            //     _M_deallocate(new_finish, n);
-            //     m_finish = new_finish;
-            //     m_rows = new_rows;
-            //     m_columns = new_columns;
-            // }
+            m_rows = new_rows;
+            m_columns = new_columns;
         }
 
 
-        constexpr iterator erase(const_iterator position)
+        /// @brief Resizes the matrix to dimensions new_rows x new_columns with default value
+        ///
+        /// @details Resizes the matrix to dimensions new_rows x new_columns, 
+        /// the resize will result in a new memory block being allocated
+        /// if the new dimensions are larger or smaller than the current dimensions. 
+        /// Reallocation or destruction of elements causes iterators and references 
+        /// to be invalidated. The new matrix is initialised with value. If new dimensions 
+        /// don't change the overall size, only the view over the data (ie. the dimension 
+        /// sizes) are changed, elements of the matrix remain unchanged, however, this is 
+        /// unchecked. For a checked change that can only changes the dimension sizes, use 
+        /// matrix::reshape. 
+        /// 
+        /// @param new_rows type: [size_type]
+        /// @param new_columns type: [size_type]
+        /// @param value type: [value_type] | qualifiers: [const], [ref]
+        constexpr void resize(size_type new_rows, size_type new_columns, const value_type& value)
+        {
+            auto old_size { _M_size() };
+            auto new_size { new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
+
+            if (new_size > alloc_traits::max_size(m_allocator))
+                throw std::length_error("Matrix resize too large");
+            else
+            {
+                auto new_start { _M_allocate(new_size) };
+                auto old_finish_pos_in_new { new_start + old_size };
+                auto new_finish { new_start + new_size };
+
+                if (old_size < new_size)
+                {
+                    if (!empty())
+                    {
+                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, old_finish_pos_in_new);
+                        std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, value);
+                    }
+                    else
+                        std::ranges::uninitialized_fill(new_start, new_finish, value); 
+                }
+                else if (old_size > new_size)
+                {
+                    if (!empty())
+                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, new_finish);
+                    else
+                        std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, value);
+                }
+                
+                std::ranges::destroy(*this);
+                _M_deallocate(m_start, old_size);
+
+                m_start = new_start;
+                m_finish = new_finish;
+            }
+
+            m_rows = new_rows;
+            m_columns = new_columns;
+        }
+
+        /// @brief Erases element indicated by position
+        ///
+        /// @details Erases the value of the matrix at position
+        /// and resets it to value_type().
+        /// 
+        /// @param position type: [const_iterator]
+        /// @return constexpr iterator - attr: [[maybe_unused]] 
+        /// :>> Returns the iterator to the erased position 
+        [[maybe_unused]] constexpr iterator erase(const_iterator position)
         {
             // auto pos { begin() + (position - cbegin()) };
 
@@ -486,8 +558,16 @@ namespace cortex
             return position;
         }
 
-
-        constexpr iterator erase(const_iterator first, const_iterator last)
+        /// @brief Erases value between first and last
+        /// 
+        /// @details Elements between first and last and then
+        /// resets memory to value_type() 
+        /// 
+        /// @param first type: [const_iterator]
+        /// @param last type: [const_iterator]
+        /// @return constexpr iterator - attr: [[maybe_unused]] 
+        /// :>> Returns the iterator indicated the start of the erase 
+        [[maybe_unused]] constexpr iterator erase(const_iterator first, const_iterator last)
         {
             // auto start { begin() + (first - cbegin()) };
             // auto finish { begin() + (last - cbegin()) };
@@ -502,20 +582,40 @@ namespace cortex
         /// @brief Clears the matrix elements
         /// 
         /// @details The elements of the matrix are destroyed and
-        /// the memory is left in an uninitialized state. 
-        /// Capacity of the matrix is left unchanged. 
-        /// The dimensions of the matrix and overall size is set 
-        /// to zero.
-        constexpr void clear() noexcept
+        /// the memory is deallocated entirely. The matrix is however,
+        /// left in a state where it could be re-initialised or 
+        /// destructed which is up to user descretion. matrix::resize
+        /// has to be used to allocate storage for the new elements.
+        constexpr void clear()
         {
             if (_M_size())
             {
                 erase(begin(), end());
-            
+
+                _M_deallocate(m_start, _M_size());
                 m_rows = size_type();
                 m_columns = size_type();
-                m_finish = m_start;
-            }         
+                m_finish = m_start = pointer();
+            }
+        }
+
+
+        /// @brief Reshape current matrix elements to new dimensions
+        ///
+        /// @details Reshapes the current matrix's dimensisons while 
+        /// guranteeing that now reallocation occurs. Elements are 
+        /// preserved.
+        /// 
+        /// @param new_rows type: [size_type]
+        /// @param new_columns type: [size_type]
+        constexpr void reshape(size_type new_rows, size_type new_columns)
+        {
+            auto new_size { new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
+
+            if (new_size != _M_size())
+                throw std::length_error("Cannot reshape matrix that has different total size");
+            else
+                resize(new_rows, new_columns);
         }
 
 
@@ -543,7 +643,7 @@ namespace cortex
         /// 
         /// @return constexpr size_type
         constexpr size_type size() const noexcept
-        { return this->empty() ? size_type(0) : _M_size(); }
+        { return empty() ? size_type(0) : _M_size(); }
 
 
         /// @brief Returns the number of the rows of the matrix.
@@ -843,7 +943,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::plus{});
+            std::ranges::transform(*this, other, result.begin(), std::plus{});
 
             return result;
         }
@@ -877,7 +977,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::minus{});
+            std::ranges::transform(*this, other, result.begin(), std::minus{});
 
             return result;
         }
@@ -911,7 +1011,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::multiplies{});
+            std::ranges::transform(*this, other, result.begin(), std::multiplies{});
 
             return result;
         }
@@ -940,7 +1040,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), result.begin(), [&](auto& elem) { return elem * scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem * scalar; });
 
             return result;
         }
@@ -978,7 +1078,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), other.begin(), result.begin(), std::divides{});
+            std::ranges::transform(*this, other, result.begin(), std::divides{});
 
             return result;
         }
@@ -1012,7 +1112,7 @@ namespace cortex
 
             matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
 
-            std::transform(this->begin(), this->end(), result.begin(), [&](auto& elem) { return elem / scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem / scalar; });
 
             return result;
         }
@@ -1142,7 +1242,7 @@ namespace cortex
     operator== (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
         noexcept ( 
                noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
-            && noexcept (std::equal(lhs.begin(), lhs.end(), rhs.begin()))
+            && noexcept (std::ranges::equal(lhs, rhs);)
         )
 #else
     inline bool
@@ -1151,7 +1251,7 @@ namespace cortex
     { 
         if (lhs.dimensions() not_eq rhs.dimensions())
             return false;
-        return std::equal(lhs.begin(), lhs.end(), rhs.begin()); 
+        return std::ranges::equal(lhs, rhs); 
     }
 
 /// Current bug with GCC-11.1 with lexicographical_compare_three_way
@@ -1175,9 +1275,9 @@ namespace cortex
     constexpr inline auto
     operator<=> (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
     { 
-        return std::lexicographical_compare_three_way(lhs.rend(), lhs.rbegin()
-                                                , rhs.rend(), rhs.rbegin()
-                                                , std::compare_three_way{}); 
+        return std::lexicographical_compare_three_way(lhs.begin(), lhs.end()
+                                                  , rhs.begin(), rhs.end()
+                                                  , std::compare_three_way{}); 
     }
 
 #else // !C++20
@@ -1212,8 +1312,7 @@ namespace cortex
     inline bool
     operator< (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
     { 
-        return std::lexicographical_compare(lhs.begin(), lhs.end()
-                                        , rhs.begin(), rhs.end()); 
+        return std::ranges::lexicographical_compare(lhs, rhs); 
     }
 
 
@@ -1307,8 +1406,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE == scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE == scalar; });
         return result;
     }
 
@@ -1345,8 +1443,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE != scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE != scalar; });
         return result;
     }
 
@@ -1383,8 +1480,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE < scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE < scalar; });
         return result;
     }
 
@@ -1421,8 +1517,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE > scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE > scalar; });
         return result;
     }
 
@@ -1460,8 +1555,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE <= scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE <= scalar; });
         return result;
     }
 
@@ -1500,8 +1594,7 @@ namespace cortex
 #endif 
     { 
         matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::transform(mtx.cbegin(), mtx.cend(), result.begin(), 
-                        [&](const _ElemT& mtxE) { return mtxE >= scalar; });
+        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE >= scalar; });
         return result;
     }
 

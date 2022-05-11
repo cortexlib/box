@@ -3,6 +3,7 @@
 #include <utility>
 #include <memory>
 #include <string>
+#include <any>
 
 
 TEST_CASE("Constructors of Matrix")
@@ -318,8 +319,8 @@ TEST_CASE("Element Modifiers")
 
         REQUIRE(m.empty());
         REQUIRE(m.size() == 0);
-        REQUIRE(m.data() != nullptr);
-        REQUIRE(m.data() != decltype(m)::pointer());
+        REQUIRE(m.data() == nullptr);
+        REQUIRE(m.data() == decltype(m)::pointer());
     }
 
     SECTION("matrix::clear - No allocated recources")
@@ -355,33 +356,37 @@ TEST_CASE("Element Modifiers")
         REQUIRE(m.size() == 0);
         REQUIRE(m.column_size() == 0);
         REQUIRE(m.row_size() == 0);
-        REQUIRE(m.data() != nullptr);
+        REQUIRE(m.data() == nullptr);
     }
 
-    SECTION("matrix::resize - Reallocation")
-    {
-        cortex::matrix<int> m(2, 5, 1);
+    // SECTION("matrix::resize - Reallocation")
+    // {
+    //     cortex::matrix<int> m(2, 5, 1);
 
-        REQUIRE(!m.empty());
-        REQUIRE(m.size() == 10);
-        REQUIRE(m.row_size() == 2);
-        REQUIRE(m.column_size() == 5);
-        REQUIRE(m.data() != nullptr);
+    //     REQUIRE(!m.empty());
+    //     REQUIRE(m.size() == 10);
+    //     REQUIRE(m.row_size() == 2);
+    //     REQUIRE(m.column_size() == 5);
+    //     REQUIRE(m.data() != nullptr);
 
-        for (auto& elem : m)
-            REQUIRE(elem == 1);
+    //     for (auto& elem : m)
+    //         REQUIRE(elem == 1);
 
-        m.resize(4, 6);
+    //     m.resize(4, 6);
 
-        REQUIRE(!m.empty());
-        REQUIRE(m.size() == 24);
-        REQUIRE(m.row_size() == 4);
-        REQUIRE(m.column_size() == 6);
-        REQUIRE(m.data() != nullptr);
+    //     REQUIRE(!m.empty());
+    //     REQUIRE(m.size() == 24);
+    //     REQUIRE(m.row_size() == 4);
+    //     REQUIRE(m.column_size() == 6);
+    //     REQUIRE(m.data() != nullptr);
 
-        for (auto& elem : m)
-            REQUIRE(elem != 1);
-    }
+    //     auto count { 0 };
+    //     for (auto& elem : m)
+    //         if (count++ < 10)
+    //             REQUIRE(elem == 1);
+    //         else
+    //             REQUIRE(elem != 1);
+    // }
 
     // SECTION("matrix::resize - Smaller Size")
     // {
@@ -408,43 +413,118 @@ TEST_CASE("Element Modifiers")
     //         REQUIRE(elem == 1);
     // }
 
-    // SECTION("matrix::reserve")
-    // {
-    //     cortex::matrix<int> m(7, 3, 1);
+    SECTION("matrix::resize - After clear")
+    {
+        using namespace std::literals;
 
-    //     REQUIRE(m.capacity() == 21);
+        /// std::string was used as it is not trivially constructuble 
+        /// and thus matrix<std::string>::resize will actually initialise 
+        /// the variable to an empty string (unlike ints)
+        cortex::matrix<std::string> m(2, 5, "h");
 
-    //     m.reserve(8, 4);
+        REQUIRE(!m.empty());
+        REQUIRE(m.size() == 10);
+        REQUIRE(m.row_size() == 2);
+        REQUIRE(m.column_size() == 5);
+        REQUIRE(m.data() != nullptr);
 
-    //     REQUIRE(m.capacity() == 32);
-    // }
+        for (auto& elem : m)
+            REQUIRE(elem == "h"s);
 
-    // SECTION("matrix::reserve - column and row order preservation")
-    // {
-    //     cortex::matrix<int> m(7, 3, 1);
+        m.clear();
 
-    //     REQUIRE(m.capacity() == 21);
-    //     REQUIRE(m.row_size() == 7);
-    //     REQUIRE(m.column_size() == 3);
+        REQUIRE(m.empty());
+        REQUIRE(m.size() == 0);
+        REQUIRE(m.row_size() == 0);
+        REQUIRE(m.column_size() == 0);
+        REQUIRE(m.data() == nullptr);
 
-    //     for (auto& elem : m)
-    //         REQUIRE(elem == 1);
+        m.resize(6, 4);
 
-    //     m.reserve(8, 4);
+        REQUIRE(!m.empty());
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 6);
+        REQUIRE(m.column_size() == 4);
+        REQUIRE(m.data() != nullptr);
 
-    //     REQUIRE(m.capacity() == 32);
-    //     REQUIRE(m.row_size() == 8);
-    //     REQUIRE(m.column_size() == 4);
+        for (auto& elem : m)
+            REQUIRE(elem == ""s);
+    }
 
-    //     for (auto elem { m.begin() }; elem != m.cend(); ++elem)
-    //     {
-    //         auto dist { static_cast<decltype(m)::size_type>(std::distance(m.begin(), elem)) };
-    //         if (dist < m.size())
-    //             REQUIRE(*elem == 1);
-    //         else
-    //             REQUIRE(*elem == 0);
-    //     }
-    // }
+    SECTION("matrix::reshape - correct reshape")
+    {
+        cortex::matrix<int> m(4, 6, 1);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+
+        m.reshape(3, 8);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 3);
+        REQUIRE(m.column_size() == 8);
+    }
+
+    SECTION("matrix::reshape - larger reshape")
+    {
+        cortex::matrix<int> m(4, 6, 1);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+
+        REQUIRE_THROWS_AS(m.reshape(4, 8), std::length_error);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+    }
+
+    SECTION("matrix::reshape - smaller reshape")
+    {
+        cortex::matrix<int> m(4, 6, 1);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+
+        REQUIRE_THROWS_AS(m.reshape(3, 5), std::length_error);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+    }
+
+    SECTION("matrix::reshape - reshape column vector")
+    {
+        cortex::matrix<int> m(4, 6, 1);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+
+        m.reshape(24, 0);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 24);
+        REQUIRE(m.column_size() == 0);
+    }
+
+    SECTION("matrix::reshape - reshape column vector")
+    {
+        cortex::matrix<int> m(4, 6, 1);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 4);
+        REQUIRE(m.column_size() == 6);
+
+        m.reshape(0, 24);
+
+        REQUIRE(m.size() == 24);
+        REQUIRE(m.row_size() == 0);
+        REQUIRE(m.column_size() == 24);
+    }
 }
 
 TEST_CASE("Iterators")
