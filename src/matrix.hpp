@@ -1035,7 +1035,7 @@ namespace cortex
         constexpr auto mul(const _ScalarT& scalar)
             -> matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         {
-            if (this->empty())
+            if (empty())
                 throw std::invalid_argument("In matrix::mul - scalar multiplication on empty matrix");
 
             matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
@@ -1105,7 +1105,7 @@ namespace cortex
         constexpr auto div(const _ScalarT& scalar)
             -> matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         {
-            if (this->empty())
+            if (empty())
                 throw std::invalid_argument("In matrix::div - scalar division on empty matrix");
             if (scalar == 0)
                 throw std::invalid_argument("In matrix::div - scalar is zero");
@@ -1113,6 +1113,133 @@ namespace cortex
             matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem / scalar; });
+
+            return result;
+        }
+
+        /// @brief Matrix Transpose
+        ///
+        /// @details Performs a matrix transpose.
+        /// 
+        /// @return constexpr matrix<value_type> 
+        constexpr matrix<value_type> transpose()
+        {
+            matrix<value_type> result(this->column_size(), this->row_size());
+
+            for (auto row { 0u }; row < this->row_size(); ++row)
+                for (auto col { 0u }; col < this->column_size(); ++col)
+                    result.at(col, row) = this->at(row, col);
+            return result;
+        }
+
+
+        /// @brief Matrix Determinate
+        ///
+        /// @details Returns the determinate of the matrix. 
+        ///
+        /// @exception std::invalid_argument Thrown if the matrix is 
+        /// not a square matrix.
+        /// @exception std::invalid_argument Thrown if the matrix is 
+        /// empty.
+        /// @exception std::invalid_argument Thrown if the matrix is 
+        /// not a 2x2 matrix.
+        /// 
+        /// @note Only 2x2 matrices work for now
+        /// 
+        /// @return constexpr auto 
+        // constexpr auto det()
+        // {
+        //     static_assert(Number<value_type>, "In matrix::det - value_type of matrix must satisfy cortex::Number");
+
+        //     if (not is_square())
+        //         throw std::invalid_argument("In matrix::det - matrix is not square");
+
+        //     if (dimensions() == std::tuple(size_type(0), size_type(0)))
+        //         throw std::invalid_argument("In matrix::det - matrix is empty");
+            
+        //     if (dimensions() == std::tuple(size_type(1), size_type(1)))
+        //         return at(0, 0);
+
+        //     if (dimensions() not_eq std::tuple(size_type(2), size_type(2)))
+        //         throw std::invalid_argument("In matrix::det - matrix is not 2x2");
+        //     else
+        //         return at(0, 0) * at(1, 1) - at(0, 1) * at(1, 0) };
+        // }
+
+
+        // constexpr auto adjugate()
+        // {
+        //     if (not is_square())
+        //         throw std::invalid_argument("In matrix::adjugate - matrix is not square");
+
+        //     if (dimensions() == std::tuple(size_type(0), size_type(0)))
+        //         throw std::invalid_argument("In matrix::adjugate - matrix is empty");
+            
+        //     if (dimensions() == std::tuple(size_type(1), size_type(1)))
+        //         throw std::invalid_argument("In matrix::adjugate - matrix has one element");
+
+        //     if (dimensions() not_eq std::tuple(size_type(2), size_type(2)))
+        //         throw std::invalid_argument("In matrix::adjugate - matrix is not 2x2");
+        //     else
+        //         return matrix<value_type> { { at(1, 1), -at(1, 0) }
+        //                                   , { -at(0, 1), at(0, 0) } };
+        // }
+
+
+        // /// @brief Matrix Inversion
+        // ///
+        // /// @details Inverts a matrix by dividing elements by the
+        // /// determinate.
+        // ///
+        // /// @exception noexcept iff call to matrix::det() is noexcept
+        // ///
+        // /// @return constexpr auto
+        // constexpr auto inverse()
+        //     noexcept( noexcept(this->det()) )
+        // { 
+        //     auto determinate { det() }
+
+        //     if determinate not_eq 0
+        //         return adjugate().div(determinate);
+        //     else
+        //         throw std::invalid_argument("matrix::inverse - Non inversible matrix, determinate is 0");
+        // }
+
+
+        /// @brief Dot Product (Matrix Multiplication)
+        ///
+        /// @details Performs a matrix multiplication between two matrices.
+        /// The left matrix must have the same number of columns as the
+        /// right matrix has rows. This is a naive algorithm that takes
+        /// O(n^3) time and O(n^2) auxilary space. 
+        ///
+        /// @requires The type of the passed matrix's element types 
+        /// must be `AddableWith` the type of this matrix's elements.
+        /// @requires The type of the passed matrix's element types 
+        /// must be `MultiplicableWith` the type of this matrix's elements.
+        ///
+        /// @exception std::invalid_argument if the number of columns of the left matrix
+        /// is not equal to the number of rows of the right matrix.
+        /// 
+        /// @tparam _ElemT 
+        /// @param other 
+        /// @return matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> 
+        template<typename _ElemT>
+            requires AddableWith<value_type, _ElemT>
+                  && MultiplicableWith<value_type, _ElemT> 
+        constexpr auto dot(const matrix<_ElemT>& other)
+            -> matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
+        {
+            if (this->column_size() != other.row_size())
+                throw std::invalid_argument("In matrix::dot - The number of columns of this matrix must equal the number of rows of the other matrix");
+
+            using out_type = decltype(std::declval<value_type>() * std::declval<_ElemT>());
+            matrix<out_type> result(this->row_size(), other.column_size(), out_type());
+            
+            for (auto this_row { 0u }; this_row < this->row_size(); ++this_row)
+                for (auto other_col { 0u }; other_col < other.column_size(); ++other_col)
+                    for (auto this_col { 0u }; this_col < this->column_size(); ++this_col)
+                        result.at(this_row, other_col) += this->at(this_row, this_col) * other.at(this_col, other_col);
 
             return result;
         }
@@ -1170,7 +1297,7 @@ namespace cortex
 
 
         constexpr size_type _M_size() const noexcept
-        { return m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns); }
+        { return m_rows * m_columns != 0 ? m_rows * m_columns : std::max(m_rows, m_columns); }    
 
 
         /// @brief Returns the pointer passed to it.
@@ -1196,7 +1323,7 @@ namespace cortex
         template<typename _Ptr>
         typename std::pointer_traits<_Ptr>::element_type* 
         _M_data_ptr(_Ptr __ptr) const
-        { return this->empty() ? nullptr : std::to_address(*__ptr); }
+        { return empty() ? nullptr : std::to_address(*__ptr); }
 #else
 
         /// @brief Returns the given pointer

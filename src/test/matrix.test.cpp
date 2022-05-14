@@ -1201,6 +1201,326 @@ TEST_CASE("Arithmatic Operators")
     }
 }
 
+TEST_CASE("Matrix Methods")
+{
+    SECTION("matrix::transpose")
+    {
+        SECTION("matrix::transpose - Normal")
+        {
+            cortex::matrix<int> m = { { 0, 1 }
+                                    , { 2, 3 }
+                                    , { 4, 5 }
+                                    , { 7, 6 }
+                                    , { 8, 9 } };
+
+            cortex::matrix<int> mcheck = { { 0, 2, 4, 7, 8 }
+                                        , { 1, 3, 5, 6, 9 } };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            auto r { m.transpose() };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            REQUIRE(r.size() == 10);
+            REQUIRE(r.row_size() == 2);
+            REQUIRE(r.column_size() == 5);
+
+            REQUIRE(r == mcheck);
+        }
+
+        SECTION("matrix::transpose - Double transpose")
+        {
+            cortex::matrix<int> m = { { 0, 1 }
+                                    , { 2, 3 }
+                                    , { 4, 5 }
+                                    , { 7, 6 }
+                                    , { 8, 9 } };
+
+            cortex::matrix<int> mcheck = { { 0, 2, 4, 7, 8 }
+                                        , { 1, 3, 5, 6, 9 } };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            auto r { m.transpose() };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            REQUIRE(r.size() == 10);
+            REQUIRE(r.row_size() == 2);
+            REQUIRE(r.column_size() == 5);
+
+            REQUIRE(r == mcheck);
+
+            auto rr { r.transpose() };
+
+            REQUIRE(r.size() == 10);
+            REQUIRE(r.row_size() == 2);
+            REQUIRE(r.column_size() == 5);
+
+            REQUIRE(rr == m);
+        }
+
+        SECTION("matrix::transpose - Double transpose in-place")
+        {
+            cortex::matrix<int> m = { { 0, 1 }
+                                    , { 2, 3 }
+                                    , { 4, 5 }
+                                    , { 7, 6 }
+                                    , { 8, 9 } };
+
+            cortex::matrix<int> mcheck = { { 0, 2, 4, 7, 8 }
+                                        , { 1, 3, 5, 6, 9 } };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            auto r { m.transpose().transpose() };
+
+            REQUIRE(r.size() == 10);
+            REQUIRE(r.row_size() == 5);
+            REQUIRE(r.column_size() == 2);
+
+            REQUIRE(r == m);
+        }
+
+        SECTION("matrix::transpose - Empty")
+        {
+            cortex::matrix<int> m;
+
+            REQUIRE(m.empty());
+            REQUIRE(m.size() == 0);
+            REQUIRE(m.row_size() == 0);
+            REQUIRE(m.column_size() == 0);
+
+            auto r { m.transpose() };
+
+            REQUIRE(r.size() == 0);
+            REQUIRE(r.row_size() == 0);
+            REQUIRE(r.column_size() == 0);
+
+            REQUIRE(r == m);
+        }
+
+        SECTION("matrix::transpose - Column to Row")
+        {
+            cortex::matrix<int> m = { { 5, 1 } };
+
+            cortex::matrix<int> mcheck = { { 5 }
+                                         , { 1 } };
+
+            REQUIRE(m.size() == 2);
+            REQUIRE(m.row_size() == 1);
+            REQUIRE(m.column_size() == 2);
+
+            auto r { m.transpose() };
+
+            REQUIRE(r.size() == 2);
+            REQUIRE(r.row_size() == 2);
+            REQUIRE(r.column_size() == 1);
+
+            REQUIRE(r == mcheck);
+        }
+
+        SECTION("matrix::transpose - Row to Column")
+        {
+            cortex::matrix<int> m = { { 54 }
+                                    , { 73 } 
+                                    , { 12 } };
+
+            cortex::matrix<int> mcheck = { { 54, 73, 12} };
+
+            REQUIRE(m.size() == 3);
+            REQUIRE(m.row_size() == 3);
+            REQUIRE(m.column_size() == 1);
+
+            auto r { m.transpose() };
+
+            REQUIRE(r.size() == 3);
+            REQUIRE(r.row_size() == 1);
+            REQUIRE(r.column_size() == 3);
+
+            REQUIRE(r == mcheck);
+        }
+        SECTION("matrix::transpose - Single Element")
+        {
+            cortex::matrix<int> m = { { 5 } };
+
+            REQUIRE(m.size() == 1);
+            REQUIRE(m.row_size() == 1);
+            REQUIRE(m.column_size() == 1);
+
+            auto r { m.transpose() };
+
+            REQUIRE(r.size() == 1);
+            REQUIRE(r.row_size() == 1);
+            REQUIRE(r.column_size() == 1);
+
+            REQUIRE(r == m);
+        }
+    }
+
+    SECTION("matrix::dot")
+    {
+        SECTION("matrix::dot - Normal")
+        {
+            cortex::matrix<int> m = { { 0, 1 }
+                                    , { 2, 3 }
+                                    , { 4, 5 }
+                                    , { 7, 6 }
+                                    , { 8, 9 } };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            cortex::matrix<int> n = { { 0, 2, 4, 7, 8 }
+                                    , { 1, 3, 5, 6, 9 } };
+
+            REQUIRE(m.size() == 10);
+            REQUIRE(m.row_size() == 5);
+            REQUIRE(m.column_size() == 2);
+
+            cortex::matrix<int> mcheck = { { 1, 3, 5, 6, 9 }
+                                         , { 3, 13, 23, 32, 43 }
+                                         , { 5, 23, 41, 58, 77 }
+                                         , { 6, 32, 58, 85, 110 } 
+                                         , { 9, 43, 77, 110, 145 } };
+
+            auto r { m.dot(n) };
+
+            REQUIRE(r.size() == 25);
+            REQUIRE(r.row_size() == 5);
+            REQUIRE(r.column_size() == 5);
+
+            REQUIRE(r == mcheck);
+        }
+    }
+
+    // SECTION("matrix::det")
+    // {
+    //     SECTION("matrix::det - Normal 2x2")
+    //     {
+    //         cortex::matrix<int> m = { { 0, 1 }
+    //                                 , { 2, 3 } };
+
+    //         REQUIRE(m.size() == 4);
+    //         REQUIRE(m.row_size() == 2);
+    //         REQUIRE(m.column_size() == 2);
+
+    //         auto r { m.det() };
+
+    //         REQUIRE(r == -2);
+    //     }
+
+    //     SECTION("matrix::det - Not 2x2")
+    //     {
+    //         cortex::matrix<int> m = { { 0, 1, 2 }
+    //                                 , { 3, 4, 5 }
+    //                                 , { 6, 7, 8 } };
+
+    //         REQUIRE(m.size() == 9);
+    //         REQUIRE(m.row_size() == 3);
+    //         REQUIRE(m.column_size() == 3);
+
+    //         REQUIRE_THROWS_AS(m.det(), std::invalid_argument);
+    //     }
+
+    //     SECTION("matrix::det - Single Element")
+    //     {
+    //         cortex::matrix<int> m = { { 5 } };
+
+    //         REQUIRE(m.size() == 1);
+    //         REQUIRE(m.row_size() == 1);
+    //         REQUIRE(m.column_size() == 1);
+
+    //         auto r { m.det() };
+
+    //         REQUIRE(r == 5);
+    //     }
+
+    //     SECTION("matrix::det - Empty")
+    //     {
+    //         cortex::matrix<int> m;
+
+    //         REQUIRE(m.empty());
+    //         REQUIRE(m.size() == 0);
+    //         REQUIRE(m.row_size() == 0);
+    //         REQUIRE(m.column_size() == 0);
+
+    //         REQUIRE_THROWS_AS(m.det(), std::invalid_argument);
+    //     }
+
+    //     SECTION("matrix::det - Non-Square")
+    //     {
+    //         cortex::matrix<int> m = { { 0, 1, 2 }
+    //                                 , { 3, 4, 5 } };
+
+    //         REQUIRE(m.size() == 6);
+    //         REQUIRE(m.row_size() == 2);
+    //         REQUIRE(m.column_size() == 3);
+
+    //         REQUIRE_THROWS_AS(m.det(), std::invalid_argument);
+    //     }
+    // }
+
+    // SECTION("matrix::inverse")
+    // {
+    //     SECTION("matrix::inverse - Normal 2x2")
+    //     {
+    //         cortex::matrix<double> m = { { 0., 1. }
+    //                            , { 2., 3. } };
+
+    //         REQUIRE(m.size() == 4);
+    //         REQUIRE(m.row_size() == 2);
+    //         REQUIRE(m.column_size() == 2);
+
+    //         cortex::matrix mcheck = { { -1.5, 1.0 }
+    //                                 , { 0.5, 0. } };
+
+    //         auto r { m.inverse() };
+
+    //         REQUIRE(r.size() == 4);
+    //         REQUIRE(r.row_size() == 2);
+    //         REQUIRE(r.column_size() == 2);
+
+    //         REQUIRE(r == mcheck);
+    //     }
+
+    //     SECTION("matrix::inverse - Identity Check")
+    //     {
+    //         cortex::matrix<double> m = { { 0., 1. }
+    //                            , { 2., 3. } };
+
+    //         REQUIRE(m.size() == 4);
+    //         REQUIRE(m.row_size() == 2);
+    //         REQUIRE(m.column_size() == 2);
+
+    //         cortex::matrix<double> mcheck = { { 0.5, 0. }
+    //                                 , { -1.5, 2.0 } };
+
+    //         auto i { m.inverse() };
+
+    //         REQUIRE(i.size() == 4);
+    //         REQUIRE(i.row_size() == 2);
+    //         REQUIRE(i.column_size() == 2);
+
+    //         auto r { m.dot(i) };
+
+    //         REQUIRE(r == mcheck);
+    //     }
+    // }
+}
+
 TEST_CASE("Boolean Mask")
 {
     SECTION("equality")
