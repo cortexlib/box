@@ -1,5 +1,5 @@
 {
-    name: 'cortex-matrix',
+    name: 'cortex-box',
     version: '0.2.0',
     namespace: 'cortex',
     test_driver: 'Catch-Main',

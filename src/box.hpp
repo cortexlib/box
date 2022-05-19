@@ -1,8 +1,8 @@
-/// -*- C++ -*- Header compatibility <matrix.hpp>
+/// -*- C++ -*- Header compatibility <box.hpp>
 
-/// @file matrix
+/// @file box
 /// @author Tyler Swann (oraqlle@github.com)
-/// @brief Two dimensional array
+/// @brief Two Dimensional Access To Contiguous Data
 /// @version 0.0.9
 /// @date 2022-16-22
 /// 
@@ -32,43 +32,44 @@
 
 namespace cortex
 {
-    /// @brief Matrix - Two Dimensional Array
+    /// @brief Box - Two Dimensional Array
     /// 
-    /// @details Matrix is a two dimensional array that 
+    /// @details Box is a two dimensional array that 
     /// stores elements sequentially in memory but is 
-    /// viewed as a series of rows and columns. Matrix
-    /// supports standard mathematical operations as long 
-    /// as the underlying data type supports them. This is 
-    /// checked at compile time through the use of concepts.
+    /// viewed as a series of rows and columns. M
     /// 
-    /// @todo Add support for iterators ✔️
-    /// @todo Add support for range based for loops ✔️
-    /// @todo Add support for basic arithmatic ✔️
-    /// @todo Add support for matrix operations
-    /// @todo Add support for operator overloads
-    /// @todo Add support for std::allocator ✔️
-    /// @todo Add support for std::initializer_list ✔️
-    /// @todo Add support for std::swap ✔️
-    /// @todo Add support for swaps of different matrix types ❌ (not possible)
-    /// @todo Add support for flatten ✔️
-    /// @todo Add support for assign
-    /// @todo Add support for clear ✔️
-    /// @todo Add support for resize ✔️
-    /// @todo Add support for erase
-    /// @todo Add support for reserve 🗑️ (scraped)
-    /// @todo Add support for shrink_to_fit 🗑️ (scraped)
-    /// @todo Add invokation operator support ✔️
-    /// @todo Comparison operators between matrices ✔️
-    /// @todo Comparison operators between scalars ✔️
-    /// @todo Projection method
-    /// @todo allocator constructors ✔️
-    /// @todo use memory algorithms from ranges ✔️
-    /// @todo using pointers to start and end over size ✔️
-    /// @todo the reshape method
+    /// @todo Add support for iterators -------------------------------------- ✔️
+    /// @todo Add support for range based for loops -------------------------- ✔️
+    /// @todo Add support for basic arithmatic ------------------------------- ✔️
+    /// @todo Add support for std::allocator --------------------------------- ✔️
+    /// @todo Add support for std::initializer_list -------------------------- ✔️
+    /// @todo Add support for std::swap -------------------------------------- ✔️
+    /// @todo Add support for flatten ---------------------------------------- ✔️
+    /// @todo Add support for clear ------------------------------------------ ✔️
+    /// @todo Add support for resize ----------------------------------------- ✔️
+    /// @todo Add invokation operator support -------------------------------- ✔️
+    /// @todo Comparison operators between boxes ----------------------------- ✔️
+    /// @todo Comparison operators between scalars --------------------------- ✔️
+    /// @todo allocator constructors ----------------------------------------- ✔️
+    /// @todo use memory algorithms from ranges ------------------------------ ✔️
+    /// @todo using pointers to start and end over size ---------------------- ✔️
+    /// @todo the reshape method --------------------------------------------- ✔️
+    /// @todo Add support for matrix operations ------------------------------ 🗑️ (scraped)
+    /// @todo Add support for shrink_to_fit ---------------------------------- 🗑️ (scraped)
+    /// @todo Add support for reserve ---------------------------------------- 🗑️ (scraped)
+    /// @todo Add support for swaps of different box types ------------------- ❌ (not possible)
+    /// @todo Add support for operator overloads ----------------------------- 
+    /// @todo Add support for assign ----------------------------------------- 
+    /// @todo Add support for erase ------------------------------------------ 
+    /// @todo Projection method ---------------------------------------------- 
+    /// @todo Add support for iterator constrcutors -------------------------- 
+    /// @todo Add flips ------------------------------------------------------ 
+    /// @todo Add rotates ----------------------------------------------------
+    /// @todo Add other modification methods (mod, xor etc.) ----------------- 
     /// 
     /// @tparam _Tp 
     template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
-    class matrix
+    class box
     {
     public:
         using value_type                    = _Tp;
@@ -80,8 +81,8 @@ namespace cortex
         using const_reference               = const _Tp&;
         using pointer                       = typename alloc_traits::pointer;
         using const_pointer                 = typename alloc_traits::pointer;
-        using iterator                      = cortex::normal_iterator<pointer, matrix<value_type>>;
-        using const_iterator                = cortex::normal_iterator<const_pointer, matrix<value_type>>;
+        using iterator                      = cortex::normal_iterator<pointer, box<value_type>>;
+        using const_iterator                = cortex::normal_iterator<const_pointer, box<value_type>>;
         using reverse_iterator              = std::reverse_iterator<iterator>;
         using const_reverse_iterator        = std::reverse_iterator<const_iterator>;
 
@@ -98,8 +99,8 @@ namespace cortex
 
         /// @brief Default Constructor
         /// 
-        /// @details Default constructor for matrix.
-        constexpr matrix() noexcept
+        /// @details Default constructor for box.
+        constexpr box() noexcept
         : m_rows(size_type())
         , m_columns(size_type())
         , m_allocator(allocator_type())
@@ -110,11 +111,11 @@ namespace cortex
         
         /// @brief Allocator Constructor
         ///
-        /// @details Default Constructs a matrix with a 
+        /// @details Default Constructs a box with a 
         /// given allocator. 
         ///
         /// @param alloc type: allocator_type | qualifiers: [const], [ref]
-        constexpr explicit matrix(const allocator_type& alloc) noexcept
+        constexpr explicit box(const allocator_type& alloc) noexcept
         : m_rows(size_type())
         , m_columns(size_type())
         , m_allocator(alloc)
@@ -125,15 +126,15 @@ namespace cortex
 
         /// @brief Size Constructor
         /// 
-        /// @details Constructs a matrix with dimensions of 
+        /// @details Constructs a box with dimensions of 
         /// cols x rows. Values are default constructed or 
         /// fill constructed depending on the default constructiblity
-        /// qualification.
+        /// qualificationbx.
         /// 
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr explicit matrix(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
+        constexpr explicit box(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
         , m_allocator(alloc)
@@ -149,7 +150,7 @@ namespace cortex
 
         /// @brief Size + Value Constructor
         /// 
-        /// @details Constructs a matrix with dimensions of
+        /// @details Constructs a box with dimensions of
         /// cols x rows. Values are constructed from the a 
         /// const reference to a provided value.
         /// 
@@ -157,7 +158,7 @@ namespace cortex
         /// @param rows type: [size_type]
         /// @param value type: [value_type] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr matrix(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
+        constexpr box(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
         , m_allocator(alloc)
@@ -168,11 +169,11 @@ namespace cortex
 
         /// @brief Copy Constructor
         /// 
-        /// @details Constructs a matrix that is a copy of
-        /// another matrix of the same underlying type.
+        /// @details Constructs a box that is a copy of
+        /// another box of the same underlying type.
         /// 
-        /// @param other type: [matrix] | qualifiers: [const], [ref]
-        constexpr matrix(const matrix& other)
+        /// @param other type: [box] | qualifiers: [const], [ref]
+        constexpr box(const box& other)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_allocator(other.m_allocator)
@@ -183,12 +184,12 @@ namespace cortex
 
         /// @brief Copy Constructor with Alternative Allocator
         /// 
-        /// @details Constructs a matrix that is a copy of
-        /// another matrix of the same underlying type.
+        /// @details Constructs a box that is a copy of
+        /// another box of the same underlying type.
         /// 
-        /// @param other type: [matrix] | qualifiers: [const], [ref]
+        /// @param other type: [box] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr matrix(const matrix& other, const allocator_type& alloc)
+        constexpr box(const box& other, const allocator_type& alloc)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_allocator(alloc)
@@ -199,12 +200,12 @@ namespace cortex
 
         /// @brief Move Constructor
         /// 
-        /// @details Moves ownership of an existing matrix's
-        /// resources to this matrix and leaves the other matrix
+        /// @details Moves ownership of an existing box's
+        /// resources to this box and leaves the other box
         /// in a default constructed state.
         /// 
-        /// @param other type: [matrix] | qualifiers: [move]
-        constexpr matrix(matrix&& other) noexcept
+        /// @param other type: [box] | qualifiers: [move]
+        constexpr box(box&& other) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_allocator(std::move(other.m_allocator))
@@ -221,13 +222,13 @@ namespace cortex
 
         /// @brief Move Constructor with Alternative Allocator
         /// 
-        /// @details Moves ownership of an existing matrix's
-        /// resources to this matrix and leaves the other matrix
+        /// @details Moves ownership of an existing box's
+        /// resources to this box and leaves the other box
         /// in a default constructed state.
         /// 
-        /// @param other type: [matrix] | qualifiers: [move]
+        /// @param other type: [box] | qualifiers: [move]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr matrix(matrix&& other, const allocator_type& alloc) noexcept
+        constexpr box(box&& other, const allocator_type& alloc) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
         , m_allocator(alloc)
@@ -245,12 +246,12 @@ namespace cortex
 
         /// @brief Initialiser List Constructor
         ///
-        /// @details Uses std::initializer_list to create a matrix 
+        /// @details Uses std::initializer_list to create a box 
         /// from an initializer list of initializer lists. Elements 
-        /// ownership is moved to the matrix's memory.
+        /// ownership is moved to the box's memory.
         ///
         /// @param init_list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
-        constexpr matrix(std::initializer_list<std::initializer_list<value_type>> list
+        constexpr box(std::initializer_list<std::initializer_list<value_type>> list
                         , const allocator_type& alloc = allocator_type())
         : m_rows(list.size())
         , m_columns(list.begin()->size())
@@ -259,7 +260,7 @@ namespace cortex
         , m_finish(m_start + _M_size())
         {
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0UL };
+            auto offset { 0ul };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
@@ -272,13 +273,13 @@ namespace cortex
 
         /// @brief Copy Assignment
         /// 
-        /// @details Copies the contents of another matrix into
-        /// this matrix and returns///this. If self assignment occurs
+        /// @details Copies the contents of another box into
+        /// this box and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         /// 
-        /// @param other type: [matrix] | qualifiers: [const], [ref]
-        /// @return constexpr matrix& 
-        constexpr matrix& operator=(const matrix& other)
+        /// @param other type: [box] | qualifiers: [const], [ref]
+        /// @return constexpr box& 
+        constexpr box& operator=(const box& other)
         {
             if (*this != other)
             {
@@ -296,13 +297,13 @@ namespace cortex
         /// @brief Move Assignment
         /// 
         /// @details Moves the ownership of other's resources to
-        /// this matrix and leaves the other matrix in a default
+        /// this box and leaves the other box in a default
         /// constructed state. Returns///this. If self assignment 
         /// occurs then///this is returned immediately.
         /// 
-        /// @param other type: [matrix] | qualifiers: [move]
-        /// @return constexpr matrix&
-        constexpr matrix& operator=(matrix&& other) noexcept
+        /// @param other type: [box] | qualifiers: [move]
+        /// @return constexpr box&
+        constexpr box& operator=(box&& other) noexcept
         {
             if (*this != other)
             {
@@ -324,13 +325,13 @@ namespace cortex
 
         /// @brief Initialiser List Assignment
         ///
-        /// @details Uses std::initializer_list to create a matrix 
+        /// @details Uses std::initializer_list to create a box 
         /// from an initializer list of initializer lists. Elements 
-        /// ownership is moved to the matrix's memory.
+        /// ownership is moved to the box's memory.
         ///
         /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
-        /// @return constexpr matrix&
-        constexpr matrix& operator= (std::initializer_list<std::initializer_list<value_type>> list)
+        /// @return constexpr box&
+        constexpr box& operator= (std::initializer_list<std::initializer_list<value_type>> list)
         {   
             m_allocator = allocator_type();
             m_rows = list.size();
@@ -339,7 +340,7 @@ namespace cortex
             m_finish = m_start + _M_size();
 
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0UL };
+            auto offset { 0ul };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
@@ -354,12 +355,12 @@ namespace cortex
         
         /// @brief Destructor
         /// 
-        /// @details Releases the resources of this matrix
-        /// and leaves the matrix in an uninitialized state. 
+        /// @details Releases the resources of this box
+        /// and leaves the box in an uninitialized state. 
     #if __cplusplus >= 202202L
-        constexpr ~matrix()
+        constexpr ~box()
     #else
-        ~matrix()
+        ~box()
     #endif
         {
             if (m_start)
@@ -376,26 +377,26 @@ namespace cortex
         }
 
 
-        /// @brief Reserves a new memory block for the matrix
+        /// @brief Reserves a new memory block for the box
         /// 
-        /// @details Reserves a new matrix of dimensions new_columns
+        /// @details Reserves a new box of dimensions new_columns
         /// by new_rows. 
         /// If the new dimensions are smaller than the
-        /// current dimensions, no change is made to the matrix's 
-        /// capacity but the matrix's dimensions are set to the new 
+        /// current dimensions, no change is made to the box's 
+        /// capacity but the box's dimensions are set to the new 
         /// dimensional values. This effects the access bounds of the 
-        /// matrix. 
+        /// box. 
         /// If the new dimensions are larger than the current dimensions,
-        /// then the matrix's capacity is increased to the new capacity 
-        /// and the matrix bounds are adjusted accordingly.
-        /// A call to matrix::reserve does not preserve the position of the
+        /// then the box's capacity is increased to the new capacity 
+        /// and the box bounds are adjusted accordingly.
+        /// A call to box::reserve does not preserve the position of the
         /// elements stored within and merely copies the elements to the new 
         /// allocated buffer. 
         /// This means all elements shift to the front of the buffer and the 
         /// new available elements are at the back of the buffer. 
         /// 
-        /// matrix::reserve makes no garuntee that the
-        /// the order is preserved of elements in the matrix after
+        /// box::reserve makes no garuntee that the
+        /// the order is preserved of elements in the box after
         /// it has been called.
         /// 
         /// @todo Ensure that the element's order is preserved. 
@@ -427,16 +428,16 @@ namespace cortex
         // }
 
 
-        /// @brief Resizes the matrix to dimensions new_rows x new_columns.
+        /// @brief Resizes the box to dimensions new_rows x new_columns.
         ///
-        /// @details Resizes the matrix to dimensions new_rows x new_columns, 
+        /// @details Resizes the box to dimensions new_rows x new_columns, 
         /// the resize will result in a new memory block being allocated
         /// if the new dimensions are larger or smaller than the current dimensions. 
         /// Reallocation or destruction of elements causes iterators and references 
         /// to be invalidated. If new dimensions don't change the overall size, only
         /// the view over the data (ie. the dimension sizes) are changed, elements 
-        /// of the matrix remain unchanged, however, this is unchecked. For a checked  
-        /// change that can only changes the dimension sizes, use matrix::reshape. 
+        /// of the box remain unchanged, however, this is unchecked. For a checked  
+        /// change that can only changes the dimension sizes, use box::reshape. 
         /// 
         /// @param new_rows type: [size_type]
         /// @param new_columns type: [size_type]
@@ -483,17 +484,17 @@ namespace cortex
         }
 
 
-        /// @brief Resizes the matrix to dimensions new_rows x new_columns with default value
+        /// @brief Resizes the box to dimensions new_rows x new_columns with default value
         ///
-        /// @details Resizes the matrix to dimensions new_rows x new_columns, 
+        /// @details Resizes the box to dimensions new_rows x new_columns, 
         /// the resize will result in a new memory block being allocated
         /// if the new dimensions are larger or smaller than the current dimensions. 
         /// Reallocation or destruction of elements causes iterators and references 
-        /// to be invalidated. The new matrix is initialised with value. If new dimensions 
+        /// to be invalidated. The new box is initialised with value. If new dimensions 
         /// don't change the overall size, only the view over the data (ie. the dimension 
-        /// sizes) are changed, elements of the matrix remain unchanged, however, this is 
+        /// sizes) are changed, elements of the box remain unchanged, however, this is 
         /// unchecked. For a checked change that can only changes the dimension sizes, use 
-        /// matrix::reshape. 
+        /// box::reshape. 
         /// 
         /// @param new_rows type: [size_type]
         /// @param new_columns type: [size_type]
@@ -542,7 +543,7 @@ namespace cortex
 
         /// @brief Erases element indicated by position
         ///
-        /// @details Erases the value of the matrix at position
+        /// @details Erases the value of the box at position
         /// and resets it to value_type().
         /// 
         /// @param position type: [const_iterator]
@@ -579,12 +580,12 @@ namespace cortex
         }
 
 
-        /// @brief Clears the matrix elements
+        /// @brief Clears the box elements
         /// 
-        /// @details The elements of the matrix are destroyed and
-        /// the memory is deallocated entirely. The matrix is however,
+        /// @details The elements of the box are destroyed and
+        /// the memory is deallocated entirely. The box is however,
         /// left in a state where it could be re-initialised or 
-        /// destructed which is up to user descretion. matrix::resize
+        /// destructed which is up to user descretionbx. box::resize
         /// has to be used to allocate storage for the new elements.
         constexpr void clear()
         {
@@ -600,9 +601,9 @@ namespace cortex
         }
 
 
-        /// @brief Reshape current matrix elements to new dimensions
+        /// @brief Reshape current box elements to new dimensions
         ///
-        /// @details Reshapes the current matrix's dimensisons while 
+        /// @details Reshapes the current box's dimensisons while 
         /// guranteeing that now reallocation occurs. Elements are 
         /// preserved.
         /// 
@@ -613,7 +614,7 @@ namespace cortex
             auto new_size { new_rows * new_columns != 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
 
             if (new_size != _M_size())
-                throw std::length_error("Cannot reshape matrix that has different total size");
+                throw std::length_error("Cannot reshape box that has different total size");
             else
                 resize(new_rows, new_columns);
         }
@@ -625,10 +626,10 @@ namespace cortex
         /// which they are the same type. The swap is performed
         /// by moving ownership of the matrices resources. 
         /// 
-        /// @param other type: [matrix] | qualifiers: [ref]
-        void swap(matrix& other) noexcept
+        /// @param other type: [box] | qualifiers: [ref]
+        void swap(box& other) noexcept
         {
-            matrix tmp = std::move(other);
+            box tmp = std::move(other);
             other = std::move(*this);
            *this = std::move(tmp);
         }
@@ -639,47 +640,47 @@ namespace cortex
         { return m_allocator; }
         
 
-        /// @brief Returns the overall size of the matrix.
+        /// @brief Returns the overall size of the box.
         /// 
         /// @return constexpr size_type
         constexpr size_type size() const noexcept
         { return empty() ? size_type(0) : _M_size(); }
 
 
-        /// @brief Returns the number of the rows of the matrix.
+        /// @brief Returns the number of the rows of the box.
         /// 
         /// @return constexpr size_type
-        constexpr size_type row_size() const noexcept
+        constexpr size_type rows() const noexcept
         { return m_rows; } 
 
 
-        /// @brief Returns the the number of columns in the matrix.
+        /// @brief Returns the the number of columns in the box.
         /// 
         /// @return constexpr size_type
-        constexpr size_type column_size() const noexcept
+        constexpr size_type columns() const noexcept
         { return m_columns; }
 
 
         /// @brief Returns the maximum number of elements that
-        /// can be stored in the matrix.
+        /// can be stored in the box.
         /// 
         /// @return constexpr size_type 
         constexpr size_type max_size() const noexcept
         { return alloc_traits::max_size(m_allocator); }
 
 
-        /// @brief Returns a structured binding of the matrix's 
+        /// @brief Returns a structured binding of the box's 
         /// dimensions.
         /// 
         /// @return constexpr auto : (structured binding)
         constexpr auto dimensions() const noexcept
-        { return std::tie(m_columns, m_rows); }
+        { return std::tie(m_rows, m_columns); }
 
 
-        /// @brief Checks whether the matrix is square.
+        /// @brief Checks whether the box is square.
         /// 
         /// @details If the number of rows and columns are equal,
-        /// the matrix is square.
+        /// the box is square.
         /// 
         /// @return true 
         /// @return false
@@ -687,7 +688,7 @@ namespace cortex
         { return m_rows == m_columns; }
 
 
-        /// @brief Checks if the matrix is empty.
+        /// @brief Checks if the box is empty.
         /// 
         /// @return true 
         /// @return false
@@ -713,7 +714,7 @@ namespace cortex
         /// 
         /// @details Returns a reference to the element that 
         /// is at the position indicated by the pointer 
-        /// m_data + step. Offers linear access to the matrix's
+        /// m_data + step. Offers linear access to the box's
         /// elements.
         /// 
         /// @param step type: [size_type]
@@ -726,7 +727,7 @@ namespace cortex
         /// 
         /// @details Returns a reference to the element that
         /// is at the point position (column, row) of the 
-        /// matrix. 
+        /// box. 
         /// 
         /// @exception std::out_of_range
         /// 
@@ -744,7 +745,7 @@ namespace cortex
         /// 
         /// @details Returns a reference to the element that
         /// is at the point position (column, row) of the 
-        /// matrix.  
+        /// box.  
         /// 
         /// @exception std::out_of_range
         /// 
@@ -760,7 +761,7 @@ namespace cortex
 
         /// @brief Point Access Operator.
         /// 
-        /// @details Provides point access to matrix's elements.
+        /// @details Provides point access to box's elements.
         /// Overloads the invokation operator. Utilises the at() method. 
         /// 
         /// @exception std::out_of_range
@@ -774,7 +775,7 @@ namespace cortex
 
         /// @brief Point Access Operator.
         /// 
-        /// @details Provides point access to matrix's elements.
+        /// @details Provides point access to box's elements.
         /// Overloads the invokation operator. Utilises the at() method. 
         /// 
         /// @exception std::out_of_range 
@@ -787,7 +788,7 @@ namespace cortex
 
 
         /// @brief Returns a reference to the front element 
-        /// of the matrix. 
+        /// of the box. 
         /// 
         /// @return constexpr reference 
         constexpr reference front() noexcept
@@ -795,7 +796,7 @@ namespace cortex
 
 
         /// @brief Returns a reference to the front element 
-        /// of the matrix.
+        /// of the box.
         /// 
         /// @return constexpr const_reference
         constexpr const_reference front() const noexcept
@@ -803,7 +804,7 @@ namespace cortex
 
 
         /// @brief Returns a reference to the back element 
-        /// of the matrix.
+        /// of the box.
         /// 
         /// @return constexpr reference
         constexpr reference back() noexcept
@@ -811,16 +812,16 @@ namespace cortex
 
 
         /// @brief Returns a reference to the back element 
-        /// of the matrix.
+        /// of the box.
         /// 
         /// @return constexpr const_reference
         constexpr const_reference back() const noexcept
         { return *(this->end() - 1); }
 
 
-        /// @brief Flattens the matrix into a std::vector.
+        /// @brief Flattens the box into a std::vector.
         /// 
-        /// @details Creates a vector of the matrix's elements
+        /// @details Creates a vector of the box's elements
         /// in row major order.
         /// 
         /// @return constexpr std::vector<value_type>
@@ -832,116 +833,116 @@ namespace cortex
         }
 
 
-        /// @brief Iterator to the beginning of the matrix. 
+        /// @brief Iterator to the beginning of the box. 
         /// 
         /// @return constexpr iterator
         constexpr iterator begin() noexcept
         { return iterator(m_start); }
 
 
-        /// @brief Constant iterator to the beginning of the matrix.
+        /// @brief Constant iterator to the beginning of the box.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator begin() const noexcept
         { return const_iterator(m_start); }
 
 
-        /// @brief Constant iterator to the beginning of the matrix.
+        /// @brief Constant iterator to the beginning of the box.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator cbegin() const noexcept
         { return const_iterator(m_start); }
 
 
-        /// @brief Reverse iterator to the end of the matrix.
+        /// @brief Reverse iterator to the end of the box.
         /// 
         /// @return constexpr reverse_iterator
         constexpr reverse_iterator rbegin() noexcept
         { return reverse_iterator(end()); }
 
 
-        /// @brief Constant reverse iterator to the end of the matrix.
+        /// @brief Constant reverse iterator to the end of the box.
         /// 
         /// @return constexpr const_reverse_iterator 
         constexpr const_reverse_iterator rbegin() const noexcept
         { return const_reverse_iterator(end()); }
 
 
-        /// @brief Constant reverse iterator to the end of the matrix.
+        /// @brief Constant reverse iterator to the end of the box.
         /// 
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator crbegin() const noexcept
         { return const_reverse_iterator(end()); }
 
 
-        /// @brief Iterator to the end of the matrix.
+        /// @brief Iterator to the end of the box.
         /// 
         /// @return constexpr iterator 
         constexpr iterator end() noexcept
         { return iterator(m_finish); }
 
         
-        /// @brief Constant iterator to the end of the matrix.
+        /// @brief Constant iterator to the end of the box.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator end() const noexcept
         { return const_iterator(m_finish); }
 
 
-        /// @brief Constant iterator to the end of the matrix.
+        /// @brief Constant iterator to the end of the box.
         /// 
         /// @return constexpr const_iterator
         constexpr const_iterator cend() const noexcept
         { return const_iterator(m_finish); }
 
 
-        /// @brief Reverse iterator to the beginning of the matrix.
+        /// @brief Reverse iterator to the beginning of the box.
         /// 
         /// @return constexpr reverse_iterator 
         constexpr reverse_iterator rend() noexcept
         { return reverse_iterator(begin()); }
 
 
-        /// @brief Constant reverse iterator to the beginning of the matrix.
+        /// @brief Constant reverse iterator to the beginning of the box.
         /// 
         /// @return constexpr const_reverse_iterator 
         constexpr const_reverse_iterator rend() const noexcept
         { return const_reverse_iterator(begin()); }
 
 
-        /// @brief Constant reverse iterator to the beginning of the matrix.
+        /// @brief Constant reverse iterator to the beginning of the box.
         /// 
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator crend() const noexcept
         { return const_reverse_iterator(begin()); }
 
 
-        /// @brief Adds the elements of one matrix by another.
+        /// @brief Adds the elements of one box by another.
         ///
         /// @details Performs an element-wise addition 
         /// between matrices. Matrices are `Addable` iff the 
-        /// type of this matrix's elements satisfies the 
+        /// type of this box's elements satisfies the 
         /// concept of `Addable` and satisfies the concept
         /// `AddableWith` with type of the elemnts of the 
-        /// passed matrix. A new matrix is created and returned. 
+        /// passed box. A new box is created and returned. 
         ///
-        /// @requires The type of this matrix's elements are `Addable` 
-        /// @requires The type of this matrix's elements and the type
-        /// of the passed matrix's element types satisfy `AddableWith`.
+        /// @requires The type of this box's elements are `Addable` 
+        /// @requires The type of this box's elements and the type
+        /// of the passed box's element types satisfy `AddableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
-        /// @return constexpr auto : A matrix whose element's type 
+        /// @param other type: box<_ElemT> | qualifiers: [const], [ref] 
+        /// @return constexpr auto : A box whose element's type 
         /// is the sum of the two input matrices element types. 
         template<Addable _ElemT>
             requires AddableWith<value_type, _ElemT>
-        constexpr auto add(const matrix<_ElemT>& other)
-            -> matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
+        constexpr auto add(const box<_ElemT>& other)
+            -> box<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
         {
             if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In matrix::add - dimensions do not match");
+                throw std::invalid_argument("In box::add - dimensions do not match");
 
-            matrix<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::plus{});
 
@@ -949,33 +950,33 @@ namespace cortex
         }
 
 
-        /// @brief Substracts the elements of one matrix from another.
+        /// @brief Substracts the elements of one box from another.
         ///
         /// @details Performs an element-wise subtraction 
         /// between matrices. Matrices are `Subtractable` 
-        /// iff the type of this matrix's elements satisfies 
+        /// iff the type of this box's elements satisfies 
         /// the concept of `Subtractable` and satisfies the 
         /// concept `SubtractableWith` with type of the elemnts 
-        /// of the passed matrix. A new matrix is created and 
+        /// of the passed box. A new box is created and 
         /// returned. 
         ///
-        /// @requires The type of this matrix's elements are `Subtractable` 
-        /// @requires The type of this matrix's elements and the type
-        /// of the passed matrix's element types satisfy `SubtractableWith`.
+        /// @requires The type of this box's elements are `Subtractable` 
+        /// @requires The type of this box's elements and the type
+        /// of the passed box's element types satisfy `SubtractableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
-        /// @return constexpr auto : A matrix whose element type 
+        /// @param other type: box<_ElemT> | qualifiers: [const], [ref] 
+        /// @return constexpr auto : A box whose element type 
         /// is the difference of the two input matrices element types.
         template<Subtractable _ElemT>
             requires SubtractableWith<value_type, _ElemT>
-        constexpr auto sub(const matrix<_ElemT>& other)
-            -> matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
+        constexpr auto sub(const box<_ElemT>& other)
+            -> box<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
         {
             if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In matrix::sub - dimensions do not match");
+                throw std::invalid_argument("In box::sub - dimensions do not match");
 
-            matrix<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::minus{});
 
@@ -983,33 +984,33 @@ namespace cortex
         }
 
 
-        /// @brief Multiplies the elements of one matrix by another..
+        /// @brief Multiplies the elements of one box by another..
         ///
         /// @details Performs an element-wise multiplication 
         /// between matrices. Matrices are `Multiplicible` 
-        /// iff the type of this matrix's elements satisfies 
+        /// iff the type of this box's elements satisfies 
         /// the concept of `Multiplicable` and satisfies the 
         /// concept `MultiplicableWith` with type of the elemnts 
-        /// of the passed matrix. A new matrix is created and 
+        /// of the passed box. A new box is created and 
         /// returned. 
         ///
-        /// @requires The type of this matrix's elements are `Multiplicable` 
-        /// @requires The type of this matrix's elements and the type
-        /// of the passed matrix's element types satisfy `MultiplicableWith`.
+        /// @requires The type of this box's elements are `Multiplicable` 
+        /// @requires The type of this box's elements and the type
+        /// of the passed box's element types satisfy `MultiplicableWith`.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
-        /// @return constexpr auto : A matrix whose element type 
+        /// @param other type: box<_ElemT> | qualifiers: [const], [ref] 
+        /// @return constexpr auto : A box whose element type 
         /// is the product of the two input matrices element types.
         template<Multiplicable _ElemT>
             requires MultiplicableWith<value_type, _ElemT>
-        constexpr auto mul(const matrix<_ElemT>& other)
-            -> matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
+        constexpr auto mul(const box<_ElemT>& other)
+            -> box<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
         {
             if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In matrix::mult - dimensions do not match");
+                throw std::invalid_argument("In box::mult - dimensions do not match");
 
-            matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::multiplies{});
 
@@ -1017,28 +1018,28 @@ namespace cortex
         }
 
 
-        /// @brief Scalar Matrix Multiplication.
+        /// @brief Scalar Matrix Multiplicationbx.
         ///
-        /// @details Performs an element-wise multiplication of the matrix
+        /// @details Performs an element-wise multiplication of the box
         /// by a 'scalar' value. 
         ///
-        /// @requires The type of this matrix's elements are `MultiplicableWith`
+        /// @requires The type of this box's elements are `MultiplicableWith`
         /// the type denoted _ScalarT. 
         /// @requires The type denoted _ScalarT be `Multiplicable`.
         ///
         /// 
         /// @tparam _ScalarT 
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
-        /// @return matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> 
+        /// @return box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> 
         template<Multiplicable _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
         constexpr auto mul(const _ScalarT& scalar)
-            -> matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
+            -> box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         {
             if (empty())
-                throw std::invalid_argument("In matrix::mul - scalar multiplication on empty matrix");
+                throw std::invalid_argument("In box::mul - scalar multiplication on empty box");
 
-            matrix<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem * scalar; });
 
@@ -1046,37 +1047,37 @@ namespace cortex
         }
 
 
-        /// @brief Divides the elements of one matrix by another.
+        /// @brief Divides the elements of one box by another.
         ///
         /// @details Performs an element-wise division 
         /// between matrices. Matrices are `Divisible` 
-        /// iff the type of this matrix's elements satisfies 
+        /// iff the type of this box's elements satisfies 
         /// the concept of `Divisible` and satisfies the 
         /// concept `MultiplicibleWith` with type of the elemnts 
-        /// of the passed matrix. A new matrix is created and 
+        /// of the passed box. A new box is created and 
         /// returned. 
         ///
-        /// @requires The type of this matrix's elements are `Divisible` 
-        /// @requires The type of this matrix's elements and the type
-        /// of the passed matrix's element types satisfy `DivisibleWith`.
+        /// @requires The type of this box's elements are `Divisible` 
+        /// @requires The type of this box's elements and the type
+        /// of the passed box's element types satisfy `DivisibleWith`.
         ///
         /// @note When dividing two matrices, if both matrices elements 
-        /// are integrals, the division is performed as integer division.
+        /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         /// 
         /// @tparam _ElemT 
-        /// @param other type: matrix<_ElemT> | qualifiers: [const], [ref] 
-        /// @return constexpr auto : A matrix whose element type 
+        /// @param other type: box<_ElemT> | qualifiers: [const], [ref] 
+        /// @return constexpr auto : A box whose element type 
         /// is the quotient of the two input matrices element types.
         template<Divisible _ElemT>
             requires DivisibleWith<value_type, _ElemT>
-        constexpr auto div(const matrix<_ElemT>& other)
-            -> matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
+        constexpr auto div(const box<_ElemT>& other)
+            -> box<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
         {
             if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In matrix::div - dimensions do not match");
+                throw std::invalid_argument("In box::div - dimensions do not match");
 
-            matrix<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::divides{});
 
@@ -1086,31 +1087,31 @@ namespace cortex
 
         /// @brief Scalar Matrix Division
         ///
-        /// @details Performs an element-wise division of the matrix
+        /// @details Performs an element-wise division of the box
         /// by a 'scalar' value. 
         ///
-        /// @requires The type of this matrix's elements are `DivisibleWith`
+        /// @requires The type of this box's elements are `DivisibleWith`
         /// the type denoted _ScalarT. 
         /// @requires The type denoted _ScalarT be `Divisible`.
         ///
         /// @note When dividing two matrices, if both matrices elements 
-        /// are integrals, the division is performed as integer division.
+        /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         /// 
         /// @tparam _ScalarT 
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
-        /// @return matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> 
+        /// @return box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> 
         template<Divisible _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
         constexpr auto div(const _ScalarT& scalar)
-            -> matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
+            -> box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         {
             if (empty())
-                throw std::invalid_argument("In matrix::div - scalar division on empty matrix");
+                throw std::invalid_argument("In box::div - scalar division on empty box");
             if (scalar == 0)
-                throw std::invalid_argument("In matrix::div - scalar is zero");
+                throw std::invalid_argument("In box::div - scalar is zero");
 
-            matrix<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->row_size(), this->column_size());
+            box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem / scalar; });
 
@@ -1119,128 +1120,16 @@ namespace cortex
 
         /// @brief Matrix Transpose
         ///
-        /// @details Performs a matrix transpose.
+        /// @details Performs a box transpose.
         /// 
-        /// @return constexpr matrix<value_type> 
-        constexpr matrix<value_type> transpose()
+        /// @return constexpr box<value_type> 
+        constexpr box<value_type> transpose()
         {
-            matrix<value_type> result(this->column_size(), this->row_size());
+            box<value_type> result(this->columns(), this->rows());
 
-            for (auto row { 0u }; row < this->row_size(); ++row)
-                for (auto col { 0u }; col < this->column_size(); ++col)
+            for (auto row { 0u }; row < this->rows(); ++row)
+                for (auto col { 0u }; col < this->columns(); ++col)
                     result.at(col, row) = this->at(row, col);
-            return result;
-        }
-
-
-        /// @brief Matrix Determinate
-        ///
-        /// @details Returns the determinate of the matrix. 
-        ///
-        /// @exception std::invalid_argument Thrown if the matrix is 
-        /// not a square matrix.
-        /// @exception std::invalid_argument Thrown if the matrix is 
-        /// empty.
-        /// @exception std::invalid_argument Thrown if the matrix is 
-        /// not a 2x2 matrix.
-        /// 
-        /// @note Only 2x2 matrices work for now
-        /// 
-        /// @return constexpr auto 
-        // constexpr auto det()
-        // {
-        //     static_assert(Number<value_type>, "In matrix::det - value_type of matrix must satisfy cortex::Number");
-
-        //     if (not is_square())
-        //         throw std::invalid_argument("In matrix::det - matrix is not square");
-
-        //     if (dimensions() == std::tuple(size_type(0), size_type(0)))
-        //         throw std::invalid_argument("In matrix::det - matrix is empty");
-            
-        //     if (dimensions() == std::tuple(size_type(1), size_type(1)))
-        //         return at(0, 0);
-
-        //     if (dimensions() not_eq std::tuple(size_type(2), size_type(2)))
-        //         throw std::invalid_argument("In matrix::det - matrix is not 2x2");
-        //     else
-        //         return at(0, 0) * at(1, 1) - at(0, 1) * at(1, 0) };
-        // }
-
-
-        // constexpr auto adjugate()
-        // {
-        //     if (not is_square())
-        //         throw std::invalid_argument("In matrix::adjugate - matrix is not square");
-
-        //     if (dimensions() == std::tuple(size_type(0), size_type(0)))
-        //         throw std::invalid_argument("In matrix::adjugate - matrix is empty");
-            
-        //     if (dimensions() == std::tuple(size_type(1), size_type(1)))
-        //         throw std::invalid_argument("In matrix::adjugate - matrix has one element");
-
-        //     if (dimensions() not_eq std::tuple(size_type(2), size_type(2)))
-        //         throw std::invalid_argument("In matrix::adjugate - matrix is not 2x2");
-        //     else
-        //         return matrix<value_type> { { at(1, 1), -at(1, 0) }
-        //                                   , { -at(0, 1), at(0, 0) } };
-        // }
-
-
-        // /// @brief Matrix Inversion
-        // ///
-        // /// @details Inverts a matrix by dividing elements by the
-        // /// determinate.
-        // ///
-        // /// @exception noexcept iff call to matrix::det() is noexcept
-        // ///
-        // /// @return constexpr auto
-        // constexpr auto inverse()
-        //     noexcept( noexcept(this->det()) )
-        // { 
-        //     auto determinate { det() }
-
-        //     if determinate not_eq 0
-        //         return adjugate().div(determinate);
-        //     else
-        //         throw std::invalid_argument("matrix::inverse - Non inversible matrix, determinate is 0");
-        // }
-
-
-        /// @brief Dot Product (Matrix Multiplication)
-        ///
-        /// @details Performs a matrix multiplication between two matrices.
-        /// The left matrix must have the same number of columns as the
-        /// right matrix has rows. This is a naive algorithm that takes
-        /// O(n^3) time and O(n^2) auxilary space. 
-        ///
-        /// @requires The type of the passed matrix's element types 
-        /// must be `AddableWith` the type of this matrix's elements.
-        /// @requires The type of the passed matrix's element types 
-        /// must be `MultiplicableWith` the type of this matrix's elements.
-        ///
-        /// @exception std::invalid_argument if the number of columns of the left matrix
-        /// is not equal to the number of rows of the right matrix.
-        /// 
-        /// @tparam _ElemT 
-        /// @param other 
-        /// @return matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())> 
-        template<typename _ElemT>
-            requires AddableWith<value_type, _ElemT>
-                  && MultiplicableWith<value_type, _ElemT> 
-        constexpr auto dot(const matrix<_ElemT>& other)
-            -> matrix<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
-        {
-            if (this->column_size() != other.row_size())
-                throw std::invalid_argument("In matrix::dot - The number of columns of this matrix must equal the number of rows of the other matrix");
-
-            using out_type = decltype(std::declval<value_type>() * std::declval<_ElemT>());
-            matrix<out_type> result(this->row_size(), other.column_size(), out_type());
-            
-            for (auto this_row { 0u }; this_row < this->row_size(); ++this_row)
-                for (auto other_col { 0u }; other_col < other.column_size(); ++other_col)
-                    for (auto this_col { 0u }; this_col < this->column_size(); ++this_col)
-                        result.at(this_row, other_col) += this->at(this_row, this_col) * other.at(this_col, other_col);
-
             return result;
         }
 
@@ -1249,7 +1138,7 @@ namespace cortex
 
         /// @brief Allocates Matrix Recources
         /// 
-        /// @details Allocates the memory for the matrix 
+        /// @details Allocates the memory for the box 
         /// using the allocator of the container. Uses 
         /// std::allocator_traits to get the allocators
         /// relevant methods. 
@@ -1264,7 +1153,7 @@ namespace cortex
 
         /// @brief Dellocates Matrix Recources
         /// 
-        /// @details Dellocates the memory for the matrix 
+        /// @details Dellocates the memory for the box 
         /// using the allocator of the container. Uses 
         /// std::allocator_traits to get the allocators
         /// relevant methods. 
@@ -1280,10 +1169,10 @@ namespace cortex
         }
 
 
-        /// @brief Checks index's are in the bounds of the matrix
+        /// @brief Checks index's are in the bounds of the box
         /// 
         /// @details Checks if __column and __row are withing 
-        /// the matrix's bounds. 
+        /// the box's bounds. 
         /// 
         /// @exception std::out_of_range
         /// 
@@ -1291,8 +1180,8 @@ namespace cortex
         /// @param __row type: [size_type]
         constexpr void _M_range_check(size_type __row, size_type __column) const
         {
-            if (__row >= this->row_size() or __column >= this->column_size())
-                throw std::out_of_range("matrix::_M_range_check - index out of range.");
+            if (__row >= this->rows() or __column >= this->columns())
+                throw std::out_of_range("box::_M_range_check - index out of range.");
         }
 
 
@@ -1350,15 +1239,15 @@ namespace cortex
     /// that converts to a bool
     ///
     /// @exception Operation is has no exception iff the comparison
-    /// between matrix elements is noexcept and std::equal is
+    /// between box elements is noexcept and std::equal is
     /// noexcept across the range
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
     /// @rparam lhsE type: [_ElemL]
     /// @rparam rhsE type: [_ElemR]
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true
     /// @return false
     template<typename _ElemL, typename _ElemR>
@@ -1366,14 +1255,14 @@ namespace cortex
         requires requires (_ElemL lhsE, _ElemR rhsE)
         { { lhsE == rhsE } -> std::convertible_to<bool>; }
     constexpr inline bool
-    operator== (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator== (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
         noexcept ( 
                noexcept (std::declval<_ElemL>() == std::declval<_ElemR>()) 
             && noexcept (std::ranges::equal(lhs, rhs);)
         )
 #else
     inline bool
-    operator== (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator== (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
 #endif 
     { 
         if (lhs.dimensions() not_eq rhs.dimensions())
@@ -1382,9 +1271,9 @@ namespace cortex
     }
 
 /// Current bug with GCC-11.1 with lexicographical_compare_three_way
-/// causes cortex::matrix to not compile. Issue: PR
+/// causes cortex::box to not compile. Issue: PR
 /// Current bug with Clang++-12 with lexicographical_compare_three_way
-/// cause cortex::matrix to be compared on matrix size over value precidence
+/// cause cortex::box to be compared on box size over value precidence
 #if __cpp_lib_three_way_comparison && !(lexicographical_compare_bug)
 
     /// @brief Spaceship Operator for matrices.
@@ -1395,12 +1284,12 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
     /// @return constexpr inline auto
     template<typename _ElemL, typename _ElemR>
     constexpr inline auto
-    operator<=> (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator<=> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { 
         return std::lexicographical_compare_three_way(lhs.begin(), lhs.end()
                                                   , rhs.begin(), rhs.end()
@@ -1416,34 +1305,34 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator!= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator!= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { return !(lhs == rhs); }
 
 
-    /// @brief Compares if a matrix is lexicographically 
+    /// @brief Compares if a box is lexicographically 
     /// less than another. 
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator< (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator< (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { 
         return std::ranges::lexicographical_compare(lhs, rhs); 
     }
 
 
-    /// @brief Compares if a matrix is lexicographically
+    /// @brief Compares if a box is lexicographically
     /// greater than another.
     ///
     /// @details Uses less than comparison and swaps the
@@ -1451,37 +1340,37 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator> (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { return rhs < lhs; }
 
 
-    /// @brief Compares if a matrix is lexicographically
+    /// @brief Compares if a box is lexicographically
     /// less than or equal to another. 
     ///
     /// @details Uses less than comparison and swaps the
-    /// order of the arguments. If the rhs matrix is less
-    /// than the lhs matrix, then the lhs matrix cannot
-    /// be less then or equal to the rhs matrix.  
+    /// order of the arguments. If the rhs box is less
+    /// than the lhs box, then the lhs box cannot
+    /// be less then or equal to the rhs box.  
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator<= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator<= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { return !(rhs < lhs); }
 
 
-    /// @brief Compares if a matrix is lexicographically
+    /// @brief Compares if a box is lexicographically
     /// greater than or equal to another.
     ///
     /// @details Inverts the result of a less than comparison
@@ -1489,13 +1378,13 @@ namespace cortex
     /// 
     /// @tparam _ElemL 
     /// @tparam _ElemR 
-    /// @param lhs type: [matrix<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [matrix<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
     /// @return true 
     /// @return false 
     template<typename _ElemL, typename _ElemR>
     inline bool
-    operator>= (const matrix<_ElemL>& lhs, const matrix<_ElemR>& rhs)
+    operator>= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     { return !(lhs < rhs); }
 
 #endif // three way compare
@@ -1503,225 +1392,225 @@ namespace cortex
 
     /// @brief Scalar Equality Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are equal as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// equality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison 
-    /// between the scalar and the matrix element's types is noexcept.
+    /// between the scalar and the box element's types is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool> 
+    /// @return box<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE == rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator== (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator== (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() == std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator== (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator== (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE == scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE == scalar; });
         return result;
     }
 
 
     /// @brief Scalar Inequality Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are inequal as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// inequality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison 
-    /// between the scalar and the matrix element's types is noexcept.
+    /// between the scalar and the box element's types is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool>
+    /// @return box<bool>
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE != rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator!= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator!= (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() != std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator!= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator!= (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE != scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE != scalar; });
         return result;
     }
 
 
     /// @brief Scalar Less-Then Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are less-than as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than comparison 
-    /// between the scalar and the matrix element's types is noexcept.
+    /// between the scalar and the box element's types is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool> 
+    /// @return box<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE < rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator< (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator< (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() < std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator< (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator< (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE < scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE < scalar; });
         return result;
     }
 
 
     /// @brief Scalar Greater-Then Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are greater-than as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// greater-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than comparison 
-    /// between the scalar and the matrix element's types is noexcept.
+    /// between the scalar and the box element's types is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool> 
+    /// @return box<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE > rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator> (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator> (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator> (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator> (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE > scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE > scalar; });
         return result;
     }
 
 
     /// @brief Scalar Less-Then-Equal Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are less-than-eqaul as true and the everything else as 
     /// false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than-equal comparison 
-    /// between the scalar and the matrix element's types is noexcept.
+    /// between the scalar and the box element's types is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool> 
+    /// @return box<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE <= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator<= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator<= (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator<= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator<= (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE <= scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE <= scalar; });
         return result;
     }
 
 
     /// @brief Scalar Greater-Then-Equal Comparison 
     /// 
-    /// @details Compares each value within the matrix to a given
+    /// @details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values 
     /// that are greater-than-equal as true and the everything else 
     /// as false.
     ///
-    /// @requires Comparison of scalar type and matrix type support 
+    /// @requires Comparison of scalar type and box type support 
     /// greater-than-equal comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than-equal 
-    /// comparison between the scalar and the matrix element's types 
+    /// comparison between the scalar and the box element's types 
     /// is noexcept.
     ///
     /// @tparam _ElemT 
     ///
-    /// @param mtx type: [matrix<_ElemT>] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
     /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
-    /// @return matrix<bool> 
+    /// @return box<bool> 
     template<typename _ElemT>
 #if __cpluscplus >= 202002L 
         requires requires (_ElemT lhsE, _ElemT rhsE)
         { { lhsE >= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator>= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
+    operator>= (const box<_ElemT>& bx, const _ElemT& scalar)
         noexcept ( noexcept ( std::declval<_ElemT>() > std::declval<_ElemT>() ) )
-        -> matrix<bool>
+        -> box<bool>
 #else
     inline auto
-    operator>= (const matrix<_ElemT>& mtx, const _ElemT& scalar)
-        -> matrix<bool>
+    operator>= (const box<_ElemT>& bx, const _ElemT& scalar)
+        -> box<bool>
 #endif 
     { 
-        matrix<bool> result(mtx.row_size(), mtx.column_size(), false);
-        std::ranges::transform(mtx, result.begin(), [&](const _ElemT& mtxE) { return mtxE >= scalar; });
+        box<bool> result(bx.rows(), bx.columns(), false);
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE) { return bxE >= scalar; });
         return result;
     }
 
@@ -1737,11 +1626,11 @@ namespace std
     /// @exception std::swap is noexcept if __x.swap(__y) is noexcept.
     /// 
     /// @tparam _Tp 
-    /// @param __x type: [cortex::matrix<_Tp>] | qualifiers: [const], [ref]
-    /// @param __y type: [cortex::matrix<_Tp>] | qualifiers: [const], [ref]
+    /// @param __x type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
+    /// @param __y type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
     /// @return inline void
     template<typename _Tp>
-    inline void swap(cortex::matrix<_Tp>& x, cortex::matrix<_Tp>& y)
+    inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y)
         noexcept( noexcept(x.swap(y)) )
     { x.swap(y); }
 }

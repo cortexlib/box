@@ -1,5 +1,5 @@
 {
-    name: 'matrix',
+    name: 'box',
     uses: [
         'cortex/iterators',
         'cortex/concepts'

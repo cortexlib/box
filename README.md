@@ -1,9 +1,9 @@
-# Cortex : { cortex-matrix }
+# Cortex : { cortex-box }
 
-Matrix is a simple two dimensional array in C++.
+Box gives two dimensionsal indexing access to contigous data. It also provides a range of transformation and restructuring methods to change the shape of the box. A heavy point of focus for box is its vast array of operators overloads making data manipulation more expressive.
 
 ---
 
-- Refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for ways to contribute and support the development of "{ cortex-matrix }".
+- Refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for ways to contribute and support the development of "{ cortex-box }".
 
-- Refer to [LICENSE](./LICENSE) for ways to use and distrinute "{ cortex-matrix }".
+- Refer to [LICENSE](./LICENSE) for ways to use and distrinute "{ cortex-box }".
