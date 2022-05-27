@@ -53,8 +53,13 @@ TEST_CASE("Utility Functions")
             cortex::box<int> bx(2, 3, 1);
             std::vector<int> v = bx.flatten();
 
-            for (auto i { 0ul }; i < v.size(); ++i)
-                REQUIRE(v[i] == 1);
+            for (auto& elem : v)
+                REQUIRE(elem == 1);
+
+            v.assign({ 0, 1, 2, 3, 4, 5 });
+
+            for (auto i { 0 }; auto& elem : v)
+                REQUIRE(elem == i++);
         }
     }
 
