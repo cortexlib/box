@@ -275,7 +275,7 @@ namespace cortex
         , m_finish(m_start + _M_size(m_rows, m_columns))
         {
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0ul };
+            auto offset { 0uL };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
@@ -355,7 +355,7 @@ namespace cortex
             m_finish = m_start + _M_size(m_rows, m_columns);
 
             using init_iter = typename decltype(list)::iterator;
-            auto offset { 0ul };
+            auto offset { 0uL };
             for (init_iter row { list.begin() }; row not_eq list.end(); ++row)
             {
                 if (row->size() not_eq this->m_columns)
@@ -888,96 +888,176 @@ namespace cortex
         /// @brief Row Begin Iterator
         ///
         /// @details Returns an iterator to the beginning of the row.
-        /// The default row is 0. 
         /// 
-        /// @param row type: size_type
+        /// @param row type: size_type | default: 0uL
         /// @return constexpr row_iterator 
-        constexpr row_iterator row_begin(size_type row = 0ul) 
+        constexpr row_iterator row_begin(size_type row = 0uL) 
         { 
-            _M_range_check(row, 0ul);
-            return row_iterator(begin() + _M_index(row, 0ul), row, 0ul, rows(), columns()); 
+            _M_range_check(row, 0uL);
+            return row_iterator(begin() + _M_index(row, 0uL), row, 0uL, rows(), columns()); 
         }
 
 
         /// @brief Row Begin Iterator (const)
         ///
         /// @details Returns an iterator to the beginning of the row.
-        /// The default row is 0.
         /// 
-        /// @param row type: size_type
+        /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator 
-        constexpr const_row_iterator row_begin(size_type row = 0ul) const
+        constexpr const_row_iterator row_begin(size_type row = 0uL) const
         { 
-            _M_range_check(row, 0ul);
-            return const_row_iterator(begin() + _M_index(row, 0ul), row, 0ul, rows(), columns()); 
+            _M_range_check(row, 0uL);
+            return const_row_iterator(begin() + _M_index(row, 0uL), row, 0uL, rows(), columns()); 
         }
 
 
         /// @brief Constant Row Begin Iterator
         ///
-        /// @details Returns a constant iterator to the beginning of the
-        /// row. The default row is 0.
+        /// @details Returns a constant iterator to the beginning 
+        /// of the row. 
+        /// 
+        /// @param row type: size_type | default: 0uL
+        /// @return constexpr const_row_iterator 
+        constexpr const_row_iterator row_cbegin(size_type row = 0uL) const 
+        {
+            _M_range_check(row, 0uL);
+            return const_row_iterator(cbegin() + _M_index(row, 0uL), row, 0uL, rows(), columns()); 
+        }
+
+
+        /// @brief Reverse Row Begin Iterator 
+        ///
+        /// @details Returns a reverse iterator to the beginning of the
+        /// reversed row. 
+        /// 
+        /// @param row type: size_type | default: 0uL
+        /// @return constexpr reverse_row_iterator 
+        constexpr reverse_row_iterator row_rbegin(size_type row = 0uL)
+        {
+            _M_range_check(row, 0uL);
+            return reverse_row_iterator(row_end(row));
+        }
+
+
+        /// @brief Reverse Row Begin Iterator (const)
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// beginning of the reversed row. 
+        /// 
+        /// @param row type: size_type | default: 0uL
+        /// @return constexpr const_reverse_row_iterator 
+        constexpr const_reverse_row_iterator row_rbegin(size_type row = 0uL) const
+        {
+            _M_range_check(row, 0uL);
+            return const_reverse_row_iterator(row_end(row));
+        }
+
+
+        /// @brief Constant Reverse Row Begin Iterator
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// beginning of the reversed row.  
         /// 
         /// @param row 
-        /// @return constexpr const_row_iterator 
-        constexpr const_row_iterator row_cbegin(size_type row = 0ul) const 
+        /// @return constexpr const_reverse_row_iterator 
+        constexpr const_reverse_row_iterator row_crbegin(size_type row = 0uL) const
         {
-            _M_range_check(row, 0ul);
-            return const_row_iterator(cbegin() + _M_index(row, 0ul), row, 0ul, rows(), columns()); 
+            _M_range_check(row, 0uL);
+            return const_reverse_row_iterator(row_end(row));
         }
 
 
         /// @brief Row End Iterator
         ///
         /// @details Returns an iterator to the end of the row.
-        /// The default row is 0. The end iterator is set to one 
-        /// after the last element in the row, this happens to be 
-        /// the first element in the next row. This is why the 
-        /// iterator column index is set to 0 and the row index is 
-        /// one plus the indicated positon. 
+        /// The end iterator is set to one after the last element 
+        /// in the row, this happens to be the first element in 
+        /// the next row. This is why the iterator column index 
+        /// is set to 0 and the row index is one plus the indicated 
+        /// positon. 
         /// 
-        /// @param row 
+        /// @param row type: size_type | default: 0uL
         /// @return constexpr row_iterator 
-        constexpr row_iterator row_end(size_type row = 0ul)
+        constexpr row_iterator row_end(size_type row = 0uL)
         {
-            _M_range_check(row, 0ul);
-            return row_iterator(begin() + _M_index(row + 1ul, 0ul), row + 1ul, 0ul, rows(), columns());
+            _M_range_check(row, 0uL);
+            return row_iterator(begin() + _M_index(row + 1uL, 0uL), row + 1uL, 0uL, rows(), columns());
         }
 
 
         /// @brief Row End Iterator (const)
         ///
         /// @details Returns an iterator to the end of the row.
-        /// The default row is 0. The end iterator is set to one
-        /// after the last element in the row, this happens to be
-        /// the first element in the next row. This is why the
-        /// iterator column index is set to 0 and the row index is
-        /// one plus the indicated position. 
+        /// The end iterator is set to one after the last element 
+        /// in the row, this happens to be the first element in 
+        /// the next row. This is why the iterator column index 
+        /// is set to 0 and the row index is one plus the indicated
+        /// position. 
         /// 
-        /// @param row 
+        /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator 
-        constexpr const_row_iterator row_end(size_type row = 0ul) const
+        constexpr const_row_iterator row_end(size_type row = 0uL) const
         { 
-            _M_range_check(row, 0ul);
-            return const_row_iterator(begin() + _M_index(row + 1ul, 0ul), row + 1ul, 0ul, rows(), columns());
+            _M_range_check(row, 0uL);
+            return const_row_iterator(begin() + _M_index(row + 1uL, 0uL), row + 1uL, 0uL, rows(), columns());
         }
 
 
         /// @brief Constant Row End Iterator
         ///
         /// @details Returns a constant iterator to the end of the
-        /// row. The default row is 0. The end iterator is set to one
-        /// after the last element in the row, this happens to be
-        /// the first element in the next row. This is why the
-        /// iterator column index is set to 0 and the row index is
-        /// one plus the indicated position.
+        /// row. The end iterator is set to one after the last element 
+        /// in the row, this happens to be the first element in the 
+        /// next row. This is why the iterator column index is set 
+        /// to 0 and the row index is one plus the indicated position.
+        /// 
+        /// @param row type: size_type | default: 0uL
+        /// @return constexpr const_row_iterator 
+        constexpr const_row_iterator row_cend(size_type row = 0uL) const
+        { 
+            _M_range_check(row, 0uL);
+            return const_row_iterator(cbegin() + _M_index(row + 1uL, 0uL), row + 1uL, 0uL, rows(), columns());
+        }
+
+        /// @brief Reverse Row End Iterator
+        ///
+        /// @details Returns a reverse iterator to the end of the
+        /// reversed row. 
         /// 
         /// @param row 
-        /// @return constexpr const_row_iterator 
-        constexpr const_row_iterator row_cend(size_type row = 0ul) const
-        { 
-            _M_range_check(row, 0ul);
-            return const_row_iterator(cbegin() + _M_index(row + 1ul, 0ul), row + 1ul, 0ul, rows(), columns());
+        /// @return constexpr reverse_row_iterator 
+        constexpr reverse_row_iterator row_rend(size_type row = 0uL)
+        {
+            _M_range_check(row, 0uL);
+            return reverse_row_iterator(row_begin(row));
+        }
+
+
+        /// @brief Reverse Row End Iterator (const)
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// end of the reversed row. 
+        /// 
+        /// @param row 
+        /// @return constexpr const_reverse_row_iterator 
+        constexpr const_reverse_row_iterator row_rend(size_type row = 0uL) const
+        {
+            _M_range_check(row, 0uL);
+            return const_reverse_row_iterator(row_begin(row));
+        }
+
+
+        /// @brief Constant Reverse Row End Iterator
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// end of the reversed row.
+        /// 
+        /// @param row 
+        /// @return constexpr const_reverse_row_iterator 
+        constexpr const_reverse_row_iterator row_crend(size_type row = 0uL) const
+        {
+            _M_range_check(row, 0uL);
+            return const_reverse_row_iterator(row_begin(row));
         }
 
 
