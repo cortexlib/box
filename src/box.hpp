@@ -21,6 +21,7 @@
 
 #include <memory>
 #include <utility>
+#include <iostream>
 #include <initializer_list>
 #include <cassert>
 #include <ranges>
@@ -1432,15 +1433,20 @@ namespace cortex
         /// @brief Matrix Transpose
         ///
         /// @details Performs a box transpose.
+        /// Uses std::copy over std::ranges::copy as the output
+        /// iterator is required to be std::constructible_v which
+        /// column_iterator doesn't satisfy yet.
         /// 
         /// @return constexpr box<value_type> 
         constexpr box<value_type> transpose()
         {
             box<value_type> result(this->columns(), this->rows());
 
-            for (auto row { 0u }; row < this->rows(); ++row)
-                for (auto col { 0u }; col < this->columns(); ++col)
-                    result.at(col, row) = this->at(row, col);
+            if (empty())
+                return result;
+
+            std::copy(this->begin(), this->end(), result.column_begin());
+
             return result;
         }
 

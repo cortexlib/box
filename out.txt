@@ -1,0 +1,78 @@
+[info ] [cortex/box] Compile: test/metadata.test.cpp
+[info ] [cortex/box] Compile: test/modifiers.test.cpp
+[info ] [cortex/box] Compile: test/operators.test.cpp
+[info ] [cortex/box] Compile: test/methods.test.cpp
+[info ] [cortex/box] Compile: test/comparisons.test.cpp
+[info ] [cortex/box] Compile: test/element_access.test.cpp
+[info ] [cortex/box] Compile: test/masks.test.cpp
+[info ] [cortex/box] Compile: test/iterators.test.cpp
+[info ] [cortex/box] Compile: test/utility.test.cpp
+[info ] [cortex/box] Compile: test/constructors.test.cpp
+[info ] [cortex/box] Compile: test/operators.test.cpp                -    5180ms [ 1/10]
+[info ] [cortex/box] Compile: test/element_access.test.cpp           -    6631ms [ 2/10]
+[info ] [cortex/box] Compile: test/comparisons.test.cpp              -    7158ms [ 3/10]
+[info ] [cortex/box] Compile: test/utility.test.cpp                  -    7253ms [ 4/10]
+[info ] [cortex/box] Compile: test/iterators.test.cpp                -    7261ms [ 5/10]
+[info ] [cortex/box] Compile: test/constructors.test.cpp             -    7294ms [ 6/10]
+[info ] [cortex/box] Compile: test/masks.test.cpp                    -    7613ms [ 7/10]
+[info ] [cortex/box] Compile: test/methods.test.cpp                  -    8112ms [ 8/10]
+[info ] [cortex/box] Compile: test/modifiers.test.cpp                -    8112ms [ 9/10]
+[info ] [cortex/box] Compile: test/metadata.test.cpp                 -    8112ms [10/10]
+[error] Compilation failed: /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp
+[error] Subcommand FAILED [Exited 1]: g++-11 -fPIC -pthread -I src -isystem /home/tyler/.local/share/dds/pkg/cortex-concepts@0.1.1/src -isystem /home/tyler/.local/share/dds/pkg/cortex-iterators@0.4.0/src -isystem /home/tyler/dev/cortexlib/matrix/_build/_catch-2.10.2 -Wall -Wextra -Wpedantic -Wconversion -MD -MF /home/tyler/dev/cortexlib/matrix/_build/obj/test/modifiers.test.cpp.o.d -MQ /home/tyler/dev/cortexlib/matrix/_build/obj/test/modifiers.test.cpp.o -c /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp -o/home/tyler/dev/cortexlib/matrix/_build/obj/test/modifiers.test.cpp.o -std=c++20
+In file included from /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:2:
+src/box.hpp: In instantiation of ‘constexpr cortex::box<_Tp> cortex::box<_Tp, _Alloc>::transpose() [with _Tp = int; _Alloc = std::allocator<int>]’:
+/home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:25:36:   required from here
+src/box.hpp:1447:30: error: no match for call to ‘(const std::ranges::__copy_fn) (cortex::box<int>::iterator, cortex::box<int>::iterator, cortex::box<int>::column_iterator)’
+ 1447 |             std::ranges::copy(this->begin(), this->end(), result.column_begin());
+      |             ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/ranges_uninitialized.h:36,
+                 from /usr/include/c++/11/memory:86,
+                 from /home/tyler/dev/cortexlib/matrix/_build/_catch-2.10.2/catch2/catch.hpp:2943,
+                 from /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:1:
+/usr/include/c++/11/bits/ranges_algobase.h:302:7: note: candidate: ‘template<class _Iter, class _Sent, class _Out>  requires (input_iterator<_Iter>) && (sentinel_for<_Sent, _Iter>) && (weakly_incrementable<_Out>) && (indirectly_copyable<_Iter, _Out>) constexpr std::ranges::copy_result<_Iter, _Out> std::ranges::__copy_fn::operator()(_Iter, _Sent, _Out) const’
+  302 |       operator()(_Iter __first, _Sent __last, _Out __result) const
+      |       ^~~~~~~~
+/usr/include/c++/11/bits/ranges_algobase.h:302:7: note:   template argument deduction/substitution failed:
+/usr/include/c++/11/bits/ranges_algobase.h:302:7: note: constraints not satisfied
+In file included from /usr/include/c++/11/compare:39,
+                 from /usr/include/c++/11/bits/stl_pair.h:65,
+                 from /usr/include/c++/11/bits/stl_algobase.h:64,
+                 from /usr/include/c++/11/bits/char_traits.h:39,
+                 from /usr/include/c++/11/string:40,
+                 from /home/tyler/dev/cortexlib/matrix/_build/_catch-2.10.2/catch2/catch.hpp:472,
+                 from /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:1:
+/usr/include/c++/11/concepts: 
+In substitution of ‘template<class _Iter, class _Sent, class _Out>  
+requires (input_iterator<_Iter>) && (sentinel_for<_Sent, _Iter>) && (weakly_incrementable<_Out>) && (indirectly_copyable<_Iter, _Out>) constexpr std::ranges::copy_result<_Iter, _Out> std::ranges::__copy_fn::operator()(_Iter, _Sent, _Out) const [with _Iter = cortex::normal_iterator<int*, cortex::box<int> >; _Sent = cortex::normal_iterator<int*, cortex::box<int> >; _Out = cortex::column_iterator<cortex::normal_iterator<int*, cortex::box<int> > >]’:
+src/box.hpp:1447:30:   
+required from ‘constexpr cortex::box<_Tp> cortex::box<_Tp, _Alloc>::transpose() [with _Tp = int; _Alloc = std::allocator<int>]’
+/home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:25:36:   
+required from here
+/usr/include/c++/11/concepts:138:13:   required for the satisfaction of ‘constructible_from<_Tp>’ [with _Tp = cortex::column_iterator<cortex::normal_iterator<int*, cortex::box<int, std::allocator<int> > > >]
+/usr/include/c++/11/concepts:143:13:   required for the satisfaction of ‘default_initializable<_Iter>’ [with _Iter = cortex::column_iterator<cortex::normal_iterator<int*, cortex::box<int, std::allocator<int> > > >]
+/usr/include/c++/11/bits/iterator_concepts.h:597:13:   required for the satisfaction of ‘weakly_incrementable<_Out>’ [with _Out = cortex::column_iterator<cortex::normal_iterator<int*, cortex::box<int, std::allocator<int> > > >]
+/usr/include/c++/11/concepts:139:30: note: the expression ‘is_constructible_v<_Tp, _Args ...> [with _Tp = cortex::column_iterator<cortex::normal_iterator<int*, cortex::box<int, std::allocator<int> > > >; _Args = {}]’ evaluated to ‘false’
+  139 |       = destructible<_Tp> && is_constructible_v<_Tp, _Args...>;
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/ranges_uninitialized.h:36,
+                 from /usr/include/c++/11/memory:86,
+                 from /home/tyler/dev/cortexlib/matrix/_build/_catch-2.10.2/catch2/catch.hpp:2943,
+                 from /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:1:
+src/box.hpp: In instantiation of ‘constexpr cortex::box<_Tp> cortex::box<_Tp, _Alloc>::transpose() [with _Tp = int; _Alloc = std::allocator<int>]’:
+/home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:25:36:   required from here
+/usr/include/c++/11/bits/ranges_algobase.h:312:7: note: candidate: ‘template<class _Range, class _Out>  requires (input_range<_Range>) && (weakly_incrementable<_Out>) && (indirectly_copyable<decltype(std::__detail::__ranges_begin((declval<_Container&>)())), _Out>) constexpr std::ranges::copy_result<std::ranges::borrowed_iterator_t<_Range>, _Out> std::ranges::__copy_fn::operator()(_Range&&, _Out) const’
+  312 |       operator()(_Range&& __r, _Out __result) const
+      |       ^~~~~~~~
+/usr/include/c++/11/bits/ranges_algobase.h:312:7: note:   template argument deduction/substitution failed:
+In file included from /home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp:2:
+src/box.hpp:1447:30: note:   candidate expects 2 arguments, 3 provided
+ 1447 |             std::ranges::copy(this->begin(), this->end(), result.column_begin());
+      |             ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[error] Compilation failed [/home/tyler/dev/cortexlib/matrix/src/test/modifiers.test.cpp]
+[error] Source compilation failed.
+[error] 
+Source compilation failed. Refer to the compiler output.
+
+[error] Refer: https://vector-of-bool.github.io/docs/dds/err/compile-failure.html
