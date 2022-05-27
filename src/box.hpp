@@ -54,6 +54,8 @@ namespace cortex
     /// @todo use memory algorithms from ranges ------------------------------ ✔️
     /// @todo using pointers to start and end over size ---------------------- ✔️
     /// @todo the reshape method --------------------------------------------- ✔️
+    /// @todo Add column iterator -------------------------------------------- ✔️
+    /// @todo Add row iterator ----------------------------------------------- ✔️
     /// @todo Add support for matrix operations ------------------------------ 🗑️ (scraped)
     /// @todo Add support for shrink_to_fit ---------------------------------- 🗑️ (scraped)
     /// @todo Add support for reserve ---------------------------------------- 🗑️ (scraped)
@@ -66,8 +68,6 @@ namespace cortex
     /// @todo Add flips ------------------------------------------------------ 
     /// @todo Add rotates ----------------------------------------------------
     /// @todo Add other modification methods (mod, xor etc.) ----------------- 
-    /// @todo Add column iterator -------------------------------------------- 
-    /// @todo Add row iterator ----------------------------------------------- 
     /// 
     /// @tparam _Tp 
     template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -408,9 +408,8 @@ namespace cortex
         constexpr void resize(size_type new_rows, size_type new_columns)
         {
             auto old_size { _M_size(m_rows, m_columns) };
-            auto new_size { new_rows * new_columns not_eq 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
-
-            if (new_size > alloc_traits::max_size(m_allocator))
+            
+            if (auto new_size { _M_size(new_rows, new_columns) }; new_size > alloc_traits::max_size(m_allocator))
                 throw std::length_error("Matrix resize too large");
             else
             {
@@ -466,9 +465,8 @@ namespace cortex
         constexpr void resize(size_type new_rows, size_type new_columns, const value_type& value)
         {
             auto old_size { _M_size(m_rows, m_columns) };
-            auto new_size { new_rows * new_columns not_eq 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
 
-            if (new_size > alloc_traits::max_size(m_allocator))
+            if (auto new_size { _M_size(new_rows, new_columns) }; new_size > alloc_traits::max_size(m_allocator))
                 throw std::length_error("Matrix resize too large");
             else
             {
@@ -570,7 +568,7 @@ namespace cortex
         /// @param new_columns type: [size_type]
         constexpr void reshape(size_type new_rows, size_type new_columns)
         {
-            auto new_size { new_rows * new_columns not_eq 0 ? new_rows * new_columns : std::max(new_rows, new_columns) };
+            auto new_size { _M_size(new_rows, new_columns) };
 
             if (new_size not_eq _M_size(m_rows, m_columns))
                 throw std::length_error("Cannot reshape box that has different total size");
