@@ -515,8 +515,6 @@ namespace cortex
         /// :>> Returns the iterator to the erased position 
         [[maybe_unused]] constexpr iterator erase(const_iterator position)
         {
-            // auto pos { begin() + (position - cbegin()) };
-
             std::ranges::destroy_at(std::addressof(*position));
             std::ranges::uninitialized_fill(position, position + 1, value_type());
 
@@ -534,9 +532,6 @@ namespace cortex
         /// :>> Returns the iterator indicated the start of the erase 
         [[maybe_unused]] constexpr iterator erase(const_iterator first, const_iterator last)
         {
-            // auto start { begin() + (first - cbegin()) };
-            // auto finish { begin() + (last - cbegin()) };
-
             std::ranges::destroy(first, last);
             std::ranges::uninitialized_fill(first, last, value_type());
 
@@ -969,12 +964,10 @@ namespace cortex
 
         /// @brief Row End Iterator
         ///
-        /// @details Returns an iterator to the end of the row.
-        /// The end iterator is set to one after the last element 
-        /// in the row, this happens to be the first element in 
-        /// the next row. This is why the iterator column index 
-        /// is set to 0 and the row index is one plus the indicated 
-        /// positon. 
+        /// @details Returns an iterator to one past the end of the 
+        /// row, this happens to be the first element in the next row.
+        /// This is why the iterator column index is set to 0 and the 
+        /// row index is one plus the indicated positon. 
         /// 
         /// @param row type: size_type | default: 0uL
         /// @return constexpr row_iterator 
@@ -987,12 +980,11 @@ namespace cortex
 
         /// @brief Row End Iterator (const)
         ///
-        /// @details Returns an iterator to the end of the row.
-        /// The end iterator is set to one after the last element 
-        /// in the row, this happens to be the first element in 
-        /// the next row. This is why the iterator column index 
-        /// is set to 0 and the row index is one plus the indicated
-        /// position. 
+        /// @details Returns an constant iterator to one past the 
+        /// end of the row, this happens to be the first element 
+        /// in the next row. This is why the iterator column index 
+        /// is set to 0 and the row index is one plus the indicated 
+        /// positon.  
         /// 
         /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator 
@@ -1005,11 +997,11 @@ namespace cortex
 
         /// @brief Constant Row End Iterator
         ///
-        /// @details Returns a constant iterator to the end of the
-        /// row. The end iterator is set to one after the last element 
-        /// in the row, this happens to be the first element in the 
-        /// next row. This is why the iterator column index is set 
-        /// to 0 and the row index is one plus the indicated position.
+        /// @details Returns an constant iterator to one past the 
+        /// end of the row, this happens to be the first element 
+        /// in the next row. This is why the iterator column index 
+        /// is set to 0 and the row index is one plus the indicated 
+        /// positon. 
         /// 
         /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator 
@@ -1058,6 +1050,183 @@ namespace cortex
         {
             _M_range_check(row, 0uL);
             return const_reverse_row_iterator(row_begin(row));
+        }
+
+
+        /// @brief Column Begin Iterator
+        ///
+        /// @details Returns an iterator to the beginning of the
+        /// column.
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr column_iterator 
+        constexpr column_iterator column_begin(size_type column = 0uL)
+        {
+            _M_range_check(0uL, column);
+            return column_iterator(begin() + _M_index(0uL, column), 0uL, column, rows(), columns());
+        }
+
+
+        /// @brief Column Begin Iterator (const)
+        ///
+        /// @details Returns a constant iterator to the beginning of
+        /// the column.
+        ///
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_column_iterator
+        constexpr const_column_iterator column_begin(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_column_iterator(cbegin() + _M_index(0uL, column), 0uL, column, rows(), columns());
+        }
+
+
+        /// @brief Constant Column Begin Iterator
+        ///
+        /// @details Returns a constant iterator to the beginning of
+        /// the column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_column_iterator 
+        constexpr const_column_iterator column_cbegin(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_column_iterator(cbegin() + _M_index(0uL, column), 0uL, column, rows(), columns());
+        }
+
+
+        /// @brief Reverse Column Begin Iterator
+        ///
+        /// @details Returns a reverse iterator to the beginning of
+        /// the reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr reverse_column_iterator 
+        constexpr reverse_column_iterator column_rbegin(size_type column = 0uL)
+        {
+            _M_range_check(0uL, column);
+            return reverse_column_iterator(column_end(column));
+        }
+
+
+        /// @brief Reverse Column Begin Iterator (const)
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// beginning of the reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_reverse_column_iterator 
+        constexpr const_reverse_column_iterator column_rbegin(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_reverse_column_iterator(column_cend(column));
+        }
+
+
+        /// @brief Constant Reverse Column Begin Iterator
+        ///
+        /// @details Returns a constant reverse iterator to the
+        /// beginning of the reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_reverse_column_iterator 
+        constexpr const_reverse_column_iterator column_crbegin(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_reverse_column_iterator(column_cend(column));
+        }
+
+
+        /// @brief Column End Iterator
+        ///
+        /// @details Returns an iterator to one past the end of
+        /// the column, this happens to be the first element in the
+        /// next column. This is why the iterator row index is set
+        /// to 0 and the column index is one plus the indicated
+        /// position.
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr column_iterator 
+        constexpr column_iterator column_end(size_type column = 0uL)
+        {
+            _M_range_check(0uL, column);
+            return column_iterator(begin() + _M_index(0uL, column + 1uL), 0uL, column + 1uL, rows(), columns());
+        }
+
+
+        /// @brief Column End Iterator (const) 
+        ///
+        /// @details Returns a constant iterator to one past the end
+        /// of the column, this happens to be the first element in the
+        /// next column. This is why the iterator row index is set
+        /// to 0 and the column index is one plus the indicated
+        /// position.
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_column_iterator 
+        constexpr const_column_iterator column_end(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_column_iterator(cbegin() + _M_index(0uL, column + 1uL), 0uL, column + 1uL, rows(), columns());
+        }
+
+
+        /// @brief Constant Column End Iterator
+        ///
+        /// @details Returns a constant iterator to one past the end
+        /// of the column, this happens to be the first element in the
+        /// next column. This is why the iterator row index is set
+        /// to 0 and the column index is one plus the indicated
+        /// position. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_column_iterator 
+        constexpr const_column_iterator column_cend(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_column_iterator(cbegin() + _M_index(0uL, column + 1uL), 0uL, column + 1uL, rows(), columns());
+        }
+
+
+        /// @brief Reverse Column End Iterator
+        ///
+        /// @details Returns a reverse iterator the end of the
+        /// reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr reverse_column_iterator 
+        constexpr reverse_column_iterator column_rend(size_type column = 0uL)
+        {
+            _M_range_check(0uL, column);
+            return reverse_column_iterator(column_begin(column));
+        }
+
+
+        /// @brief Reverse Column End Iterator (const)
+        ///
+        /// @details Returns a constant reverse iterator the end of
+        /// the reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_reverse_column_iterator 
+        constexpr const_reverse_column_iterator column_rend(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_reverse_column_iterator(column_cbegin(column));
+        }
+
+        
+        /// @brief Constant Reverse Column End Iterator
+        ///
+        /// @details Returns a constant reverse iterator the end of
+        /// the reversed column. 
+        /// 
+        /// @param column type: size_type | default: 0uL
+        /// @return constexpr const_reverse_column_iterator 
+        constexpr const_reverse_column_iterator column_crend(size_type column = 0uL) const
+        {
+            _M_range_check(0uL, column);
+            return const_reverse_column_iterator(column_cbegin(column));
         }
 
 
@@ -1778,8 +1947,7 @@ namespace std
     /// @param __y type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
     /// @return inline void
     template<typename _Tp>
-    inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y)
-        noexcept( noexcept(x.swap(y)) )
+    inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y) noexcept
     { x.swap(y); }
 }
 
