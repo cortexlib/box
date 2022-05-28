@@ -74,13 +74,13 @@ TEST_CASE("Modifications")
         SECTION("box::transpose - Double transpose in-place")
         {
             cortex::box<int> bx = { { 0, 1 }
-                                    , { 2, 3 }
-                                    , { 4, 5 }
-                                    , { 7, 6 }
-                                    , { 8, 9 } };
+                                  , { 2, 3 }
+                                  , { 4, 5 }
+                                  , { 7, 6 }
+                                  , { 8, 9 } };
 
             cortex::box<int> bxcheck = { { 0, 2, 4, 7, 8 }
-                                        , { 1, 3, 5, 6, 9 } };
+                                       , { 1, 3, 5, 6, 9 } };
 
             REQUIRE(bx.size() == 10);
             REQUIRE(bx.rows() == 5);
@@ -118,7 +118,7 @@ TEST_CASE("Modifications")
             cortex::box<int> bx = { { 5, 1 } };
 
             cortex::box<int> bxcheck = { { 5 }
-                                        , { 1 } };
+                                       , { 1 } };
 
             REQUIRE(bx.size() == 2);
             REQUIRE(bx.rows() == 1);

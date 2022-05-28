@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.1
+/// @version 2.0.2 ..
 /// @date 2022-16-22
 /// 
 /// @copyright Copyright (c) 2022
@@ -21,7 +21,6 @@
 
 #include <memory>
 #include <utility>
-#include <iostream>
 #include <initializer_list>
 #include <cassert>
 #include <ranges>
@@ -39,13 +38,14 @@ namespace cortex
     /// stores elements sequentially in memory but is 
     /// viewed as a series of rows and columns. 
     /// 
-    /// @todo Projection method ---------------------------------------------- 🗑️
-    /// @todo Add flips ------------------------------------------------------ 
-    /// @todo Add rotates ----------------------------------------------------
+    /// @todo Add support for iterator constructors -------------------------- ✔️
+    /// @todo Projection method ---------------------------------------------- 🗑️ (do-able with assign)
+    /// @todo Add support for single initialiser constructor ----------------- 🗑️ (too ambiguous for compiler)
+    /// @todo Add support for assign ----------------------------------------- 
     /// @todo Add other modification methods (mod, xor etc.) ----------------- 
     /// @todo Add support for operator overloads ----------------------------- 
-    /// @todo Add support for assign ----------------------------------------- 
-    /// @todo Add support for iterator constructors -------------------------- 
+    /// @todo Add flips ------------------------------------------------------ 
+    /// @todo Add rotates ----------------------------------------------------
     /// 
     /// @tparam _Tp 
     template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -237,13 +237,33 @@ namespace cortex
         }
 
 
+        /// @brief Assign Copy Constructor
+        ///
+        /// @details Iterates from first to last and copys the
+        /// elements to this box. Copy is done through the boxes
+        /// begin() iterator, thus copy is done row-wise.
+        ///
+        /// @tparam _It concept: [std::input_iterator]
+        /// @param first type: 
+        template<std::input_iterator _It>
+        constexpr box(_It first, _It last
+                     , size_type rows, size_type cols
+                     , [[maybe_unused]] const allocator_type& alloc = allocator_type())
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { std::ranges::uninitialized_copy(first, last, begin(), end()); }
+
+
         /// @brief Initialiser List Constructor
         ///
         /// @details Uses std::initializer_list to create a box 
         /// from an initializer list of initializer lists. Elements 
         /// ownership is moved to the box's memory.
         ///
-        /// @param init_list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
+        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
         constexpr box(std::initializer_list<std::initializer_list<value_type>> list
                         , const allocator_type& alloc = allocator_type())
         : m_rows(list.size())

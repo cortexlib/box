@@ -78,6 +78,19 @@ TEST_CASE("Constructors and Assignment")
             for (auto i { 0ul }; i < bx.size(); ++i)
                 REQUIRE(bx[i] == static_cast<int>(i + 1));
         }
+
+        SECTION("Assign Constructor")
+        {
+            std::vector<int> v { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            cortex::box<int> bx(v.begin(), v.end(), 2, 5);
+            
+            REQUIRE(bx.rows() == 2);
+            REQUIRE(bx.columns() == 5);
+            REQUIRE(bx.size() == 10);
+
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3, 4, 5 }
+                                           , { 6, 7, 8, 9, 10 } });
+        }
     }
 
     SECTION("Custom Allocted")
