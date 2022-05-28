@@ -1295,8 +1295,7 @@ namespace cortex
 
             box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto &elem)
-                                   { return elem * scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem * scalar; });
 
             return result;
         }
@@ -1366,8 +1365,7 @@ namespace cortex
 
             box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto &elem)
-                                   { return elem / scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem / scalar; });
 
             return result;
         }
@@ -1420,8 +1418,7 @@ namespace cortex
 
             box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto &elem)
-                                   { return elem % scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem % scalar; });
 
             return result;
         }
@@ -1474,10 +1471,227 @@ namespace cortex
 
             box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto &elem) { return elem ^ scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem ^ scalar; });
 
             return result;
         }
+
+
+        /// @brief Box Element-wise Bitwise And
+        ///
+        /// @details Performs an element-wise bitwise And operation
+        /// between two boxes. The boxes must have the same dimensions.
+        ///
+        /// @exception std::invalid_argument If the dimensions of the boxes
+        /// do not match, std::invalid_argument is thrown.
+        ///
+        /// @tparam _ElemT concept: BitAnd | requires: BitAndWith<value_type, _ElemT>
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
+        template <BitAnd _ElemT>
+        requires BitAndWith<value_type, _ElemT>
+        constexpr auto bit_and(const box<_ElemT> &other)
+            -> box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
+        {
+            if (this->dimensions() not_eq other.dimensions())
+                throw std::invalid_argument("In box::bit_and - dimensions do not match");
+
+            box<decltype(std::declval<value_type>() & std::declval<_ElemT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, other, result.begin(), std::bit_and{});
+
+            return result;
+        }
+
+        /// @brief Scalar Bitwise And
+        ///
+        /// @details Performs an element-wise bitwise And operation
+        /// between all elements of the box and the scalar. The
+        /// box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown.
+        ///
+        /// @tparam _ScalarT concept: BitAnd | requires: BitAndWith<value_type, _ScalarT>
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
+        template <BitAnd _ScalarT>
+        requires BitAndWith<value_type, _ScalarT>
+        constexpr auto bit_and(const _ScalarT &scalar)
+            -> box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::bit_and - scalar bit_and on empty box");
+
+            box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem & scalar; });
+
+            return result;
+        }
+
+
+        /// @brief Box Element-wise Bitwise Or
+        ///
+        /// @details Performs an element-wise bitwise Or operation
+        /// between two boxes. The boxes must have the same dimensions.
+        ///
+        /// @exception std::invalid_argument If the dimensions of the boxes
+        /// do not match, std::invalid_argument is thrown.
+        ///
+        /// @tparam _ElemT concept: BitOr | requires: BitOrWith<value_type, _ElemT>
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
+        template <BitOr _ElemT>
+        requires BitOrWith<value_type, _ElemT>
+        constexpr auto bit_or(const box<_ElemT> &other)
+            -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
+        {
+            if (this->dimensions() not_eq other.dimensions())
+                throw std::invalid_argument("In box::left_bitshift - dimensions do not match");
+
+            box<decltype(std::declval<value_type>() | std::declval<_ElemT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, other, result.begin(), std::bit_or{});
+
+            return result;
+        }
+
+        /// @brief Scalar Bitwise Or
+        ///
+        /// @details Performs an element-wise bitwise Or operation
+        /// between all elements of the box and the scalar. The
+        /// box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown.
+        ///
+        /// @tparam _ScalarT concept: BitOr | requires: BitOrWith<value_type, _ScalarT>
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
+        template <BitOr _ScalarT>
+        requires BitOrWith<value_type, _ScalarT>
+        constexpr auto bit_or(const _ScalarT &scalar)
+            -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::left_bitshift - scalar left_bitshift on empty box");
+
+            box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem | scalar; });
+
+            return result;
+        }
+
+
+        /// @brief Box Element-wise Left Bit-shift
+        ///
+        /// @details Performs an element-wise left bit-shift operation
+        /// between two boxes. The boxes must have the same dimensions.
+        ///
+        /// @exception std::invalid_argument If the dimensions of the boxes
+        /// do not match, std::invalid_argument is thrown.
+        ///
+        /// @tparam _ElemT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ElemT>
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
+        template <LeftBitShift _ElemT>
+        requires LeftBitShiftWith<value_type, _ElemT>
+        constexpr auto shift_left(const box<_ElemT> &other)
+            -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
+        {
+            if (this->dimensions() not_eq other.dimensions())
+                throw std::invalid_argument("In box::left_bitshift - dimensions do not match");
+
+            box<decltype(std::declval<value_type>() << std::declval<_ElemT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem << other_elem; });
+
+            return result;
+        }
+
+        /// @brief Scalar Left bit-shift
+        ///
+        /// @details Performs an element-wise left bit-shift operation
+        /// between all elements of the box and the scalar. The
+        /// box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown.
+        ///
+        /// @tparam _ScalarT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ScalarT>
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
+        template <LeftBitShift _ScalarT>
+        requires LeftBitShiftWith<value_type, _ScalarT>
+        constexpr auto shift_left(const _ScalarT &scalar)
+            -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::left_bitshift - scalar left_bitshift on empty box");
+
+            box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem << scalar; });
+
+            return result;
+        }
+
+
+        /// @brief Box Element-wise Right Bit-shift
+        ///
+        /// @details Performs an element-wise right bit-shift operation
+        /// between two boxes. The boxes must have the same dimensions.
+        ///
+        /// @exception std::invalid_argument If the dimensions of the boxes
+        /// do not match, std::invalid_argument is thrown.
+        ///
+        /// @tparam _ElemT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ElemT>
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
+        template <RightBitShift _ElemT>
+        requires RightBitShiftWith<value_type, _ElemT>
+        constexpr auto shift_right(const box<_ElemT> &other)
+            -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
+        {
+            if (this->dimensions() not_eq other.dimensions())
+                throw std::invalid_argument("In box::right_bitshift - dimensions do not match");
+
+            box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem >> other_elem; });
+
+            return result;
+        }
+
+        /// @brief Scalar Right bit-shift
+        ///
+        /// @details Performs an element-wise right bit-shift operation
+        /// between all elements of the box and the scalar. The
+        /// box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown.
+        ///
+        /// @tparam _ScalarT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ScalarT>
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
+        template <RightBitShift _ScalarT>
+        requires RightBitShiftWith<value_type, _ScalarT>
+        constexpr auto shift_right(const _ScalarT &scalar)
+            -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::right_bitshift - scalar right_bitshift on empty box");
+
+            box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem >> scalar; });
+
+            return result;
+        }
+
 
         /// @brief Matrix Transpose
         ///

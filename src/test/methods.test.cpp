@@ -464,7 +464,7 @@ TEST_CASE("Modulo Operator")
                 REQUIRE(elem == 0);
         }
 
-        SECTION("Non `modiplicible` or `modiplicibleWith` type")
+        SECTION("Non `Modulo` or `ModuloWith` type")
         {
             using namespace std::string_literals;
 
@@ -585,6 +585,390 @@ TEST_CASE("Bit Arithmatic Methods")
 
             for (auto& elem : rbx)
                 REQUIRE(elem == 9);
+        }
+    }
+
+    SECTION("box::bit_and")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.bit_and(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<decltype(int() & std::size_t())> rbxcheck(4, 5, 4);
+
+            auto rbx { bx.bit_and(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 4uL);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 10);
+
+            auto rbx { bx.bit_and(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 10);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 5);
+
+            bx = bx.bit_and(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 5);
+        }
+
+        SECTION("Non `BitAnd` or `BitAndWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.bit_and(nbx) };
+        }
+
+        SECTION("Scalar And")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 6);
+
+            auto rbx { bx.bit_and(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 6);
+        }
+    }
+
+    SECTION("box::bit_or")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 7);
+
+            auto rbx { bx.bit_or(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 7);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<decltype(int() | std::size_t())> rbxcheck(4, 5, 7);
+
+            auto rbx { bx.bit_or(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 7uL);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 10);
+
+            auto rbx { bx.bit_or(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 10);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 5);
+
+            bx = bx.bit_or(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 5);
+        }
+
+        SECTION("Non `BitOr` or `BitOrWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.bit_or(nbx) };
+        }
+
+        SECTION("Scalar Or")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 15);
+
+            auto rbx { bx.bit_or(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 15);
+        }
+    }
+
+    SECTION("box::shift_left")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 64);
+
+            auto rbx { bx.shift_left(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 64);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<decltype(int() << std::size_t())> rbxcheck(4, 5, 112);
+
+            auto rbx { bx.shift_left(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 112uL);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 10240);
+
+            auto rbx { bx.shift_left(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 10240);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 160);
+
+            bx = bx.shift_left(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 160);
+        }
+
+        SECTION("Non `RightBitShift` or `RightBitShiftWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.left_bitshift(nbx) };
+        }
+
+        SECTION("Scalar Right Bit Shift")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 960);
+
+            auto rbx { bx.shift_left(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 960);
+        }
+    }
+
+    SECTION("box::shift_right")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.shift_right(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<decltype(int() >> std::size_t())> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.shift_right(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0uL);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.shift_right(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 0);
+
+            bx = bx.shift_right(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Non `LeftBitShift` or `LeftBitShiftWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.right_bitshift(nbx) };
+        }
+
+        SECTION("Scalar Left Bit Shift")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 0);
+
+            auto rbx { bx.shift_right(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
         }
     }
 }
