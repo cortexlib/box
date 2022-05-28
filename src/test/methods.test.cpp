@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+#include <iostream>
 #include <box.hpp>
 
 TEST_CASE("Arithmatic Methods")
@@ -248,7 +249,7 @@ TEST_CASE("Arithmatic Methods")
                 REQUIRE(elem == 25);
         }
 
-        SECTION("Non `Mliplicible` or `MuliplicibleWith` type")
+        SECTION("Non `Multiplicible` or `MultiplicibleWith` type")
         {
             using namespace std::string_literals;
 
@@ -388,7 +389,10 @@ TEST_CASE("Arithmatic Methods")
                 REQUIRE(elem == 2.5);
         }
     }
+}
 
+TEST_CASE("Modulo Operator")
+{
     SECTION("box::mod")
     {
         SECTION("Same type")
@@ -482,6 +486,105 @@ TEST_CASE("Arithmatic Methods")
 
             for (auto& elem : rbx)
                 REQUIRE(elem == 3);
+        }
+    }
+}
+
+TEST_CASE("Bit Arithmatic Methods")
+{
+    SECTION("box::bit_xor")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 7);
+
+            auto rbx { bx.bit_xor(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 7);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<decltype(int() ^ std::size_t())> rbxcheck(4, 5, 3);
+
+            auto rbx { bx.bit_xor(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 3uL);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.bit_xor(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 0);
+
+            bx = bx.bit_xor(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Non `BitXor` or `BitXorWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.bit_xor(nbx) };
+        }
+
+        SECTION("Scalar Xor")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 9);
+
+            auto rbx { bx.bit_xor(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 9);
         }
     }
 }
