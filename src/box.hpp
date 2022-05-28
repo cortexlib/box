@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.5 ..
+/// @version 2.0.6 ..
 /// @date 2022-16-22
 ///
 /// @copyright Copyright (c) 2022
@@ -1183,8 +1183,8 @@ namespace cortex
         /// `AddableWith` with type of the elemnts of the
         /// passed box. A new box is created and returned.
         ///
-        /// @requires The type of this box's elements are `Addable`
-        /// @requires The type of this box's elements and the type
+        /// @    requires The type of this box's elements are `Addable`
+        /// @    requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `AddableWith`.
         ///
         /// @tparam _ElemT
@@ -1192,7 +1192,7 @@ namespace cortex
         /// @return constexpr auto : A box whose element's type
         /// is the sum of the two input matrices element types.
         template <Addable _ElemT>
-        requires AddableWith<value_type, _ElemT>
+            requires AddableWith<value_type, _ElemT>
         constexpr auto add(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
         {
@@ -1216,8 +1216,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @requires The type of this box's elements are `Subtractable`
-        /// @requires The type of this box's elements and the type
+        /// @    requires The type of this box's elements are `Subtractable`
+        /// @    requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `SubtractableWith`.
         ///
         /// @tparam _ElemT
@@ -1225,7 +1225,7 @@ namespace cortex
         /// @return constexpr auto : A box whose element type
         /// is the difference of the two input matrices element types.
         template <Subtractable _ElemT>
-        requires SubtractableWith<value_type, _ElemT>
+            requires SubtractableWith<value_type, _ElemT>
         constexpr auto sub(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
         {
@@ -1249,8 +1249,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @requires The type of this box's elements are `Multiplicable`
-        /// @requires The type of this box's elements and the type
+        /// @    requires The type of this box's elements are `Multiplicable`
+        /// @    requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `MultiplicableWith`.
         ///
         /// @tparam _ElemT
@@ -1258,7 +1258,7 @@ namespace cortex
         /// @return constexpr auto : A box whose element type
         /// is the product of the two input matrices element types.
         template <Multiplicable _ElemT>
-        requires MultiplicableWith<value_type, _ElemT>
+            requires MultiplicableWith<value_type, _ElemT>
         constexpr auto mul(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
         {
@@ -1277,16 +1277,16 @@ namespace cortex
         /// @details Performs an element-wise multiplication of the box
         /// by a 'scalar' value.
         ///
-        /// @requires The type of this box's elements are `MultiplicableWith`
+        /// @    requires The type of this box's elements are `MultiplicableWith`
         /// the type denoted _ScalarT.
-        /// @requires The type denoted _ScalarT be `Multiplicable`.
+        /// @    requires The type denoted _ScalarT be `Multiplicable`.
         ///
         ///
         /// @tparam _ScalarT
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         template <Multiplicable _ScalarT>
-        requires MultiplicableWith<value_type, _ScalarT>
+            requires MultiplicableWith<value_type, _ScalarT>
         constexpr auto mul(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         {
@@ -1310,8 +1310,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @requires The type of this box's elements are `Divisible`
-        /// @requires The type of this box's elements and the type
+        /// @    requires The type of this box's elements are `Divisible`
+        /// @    requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `DivisibleWith`.
         ///
         /// @note When dividing two matrices, if both matrices elements
@@ -1323,7 +1323,7 @@ namespace cortex
         /// @return constexpr auto : A box whose element type
         /// is the quotient of the two input matrices element types.
         template <Divisible _ElemT>
-        requires DivisibleWith<value_type, _ElemT>
+            requires DivisibleWith<value_type, _ElemT>
         constexpr auto div(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
         {
@@ -1342,9 +1342,9 @@ namespace cortex
         /// @details Performs an element-wise division of the box
         /// by a 'scalar' value.
         ///
-        /// @requires The type of this box's elements are `DivisibleWith`
+        /// @    requires The type of this box's elements are `DivisibleWith`
         /// the type denoted _ScalarT.
-        /// @requires The type denoted _ScalarT be `Divisible`.
+        /// @    requires The type denoted _ScalarT be `Divisible`.
         ///
         /// @note When dividing two matrices, if both matrices elements
         /// are integrals, the division is performed as integer divisionbx.
@@ -1354,7 +1354,7 @@ namespace cortex
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         template <Divisible _ScalarT>
-        requires DivisibleWith<value_type, _ScalarT>
+            requires DivisibleWith<value_type, _ScalarT>
         constexpr auto div(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         {
@@ -1378,11 +1378,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: Modulo | requires: ModuloWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: Modulo |     requires: ModuloWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
         template <Modulo _ElemT>
-        requires ModuloWith<value_type, _ElemT>
+            requires ModuloWith<value_type, _ElemT>
         constexpr auto mod(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
         {
@@ -1405,11 +1405,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: Modulo | requires: ModuloWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: Modulo |     requires: ModuloWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
         template <Modulo _ScalarT>
-        requires ModuloWith<value_type, _ScalarT>
+            requires ModuloWith<value_type, _ScalarT>
         constexpr auto mod(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
         {
@@ -1431,11 +1431,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitXor | requires: BitXorWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitXor |     requires: BitXorWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
         template <BitXor _ElemT>
-        requires BitXorWith<value_type, _ElemT>
+            requires BitXorWith<value_type, _ElemT>
         constexpr auto bit_xor(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
         {
@@ -1458,11 +1458,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitXor | requires: BitXorWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitXor |     requires: BitXorWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
         template <BitXor _ScalarT>
-        requires BitXorWith<value_type, _ScalarT>
+            requires BitXorWith<value_type, _ScalarT>
         constexpr auto bit_xor(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
         {
@@ -1485,11 +1485,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitAnd | requires: BitAndWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitAnd |     requires: BitAndWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
         template <BitAnd _ElemT>
-        requires BitAndWith<value_type, _ElemT>
+            requires BitAndWith<value_type, _ElemT>
         constexpr auto bit_and(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
         {
@@ -1512,11 +1512,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitAnd | requires: BitAndWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitAnd |     requires: BitAndWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
         template <BitAnd _ScalarT>
-        requires BitAndWith<value_type, _ScalarT>
+            requires BitAndWith<value_type, _ScalarT>
         constexpr auto bit_and(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
         {
@@ -1539,11 +1539,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitOr | requires: BitOrWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitOr |     requires: BitOrWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
         template <BitOr _ElemT>
-        requires BitOrWith<value_type, _ElemT>
+            requires BitOrWith<value_type, _ElemT>
         constexpr auto bit_or(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
         {
@@ -1566,11 +1566,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitOr | requires: BitOrWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitOr |     requires: BitOrWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
         template <BitOr _ScalarT>
-        requires BitOrWith<value_type, _ScalarT>
+            requires BitOrWith<value_type, _ScalarT>
         constexpr auto bit_or(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
         {
@@ -1593,11 +1593,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
         template <LeftBitShift _ElemT>
-        requires LeftBitShiftWith<value_type, _ElemT>
+            requires LeftBitShiftWith<value_type, _ElemT>
         constexpr auto shift_left(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
         {
@@ -1620,11 +1620,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
         template <LeftBitShift _ScalarT>
-        requires LeftBitShiftWith<value_type, _ScalarT>
+            requires LeftBitShiftWith<value_type, _ScalarT>
         constexpr auto shift_left(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
         {
@@ -1647,11 +1647,11 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
         template <RightBitShift _ElemT>
-        requires RightBitShiftWith<value_type, _ElemT>
+            requires RightBitShiftWith<value_type, _ElemT>
         constexpr auto shift_right(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
         {
@@ -1674,11 +1674,11 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
         template <RightBitShift _ScalarT>
-        requires RightBitShiftWith<value_type, _ScalarT>
+            requires RightBitShiftWith<value_type, _ScalarT>
         constexpr auto shift_right(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
         {
@@ -1701,10 +1701,10 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @requires BitNot<value_type>
+        /// @    requires BitNot<value_type>
         ///
         /// @return box<~value_type>
-        constexpr auto bit_not() const requires BitNot<value_type>
+        constexpr auto bit_not() const     requires BitNot<value_type>
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_not - bit_not on empty box");
@@ -1847,7 +1847,7 @@ namespace cortex
     /// @details Uses std::equal to compare the matrices.
     /// Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
     ///
-    /// @requires Matrix elements support equality comparison
+    /// @    requires Matrix elements support equality comparison
     /// that converts to a bool
     ///
     /// @exception Operation is has no exception iff the comparison
@@ -1864,7 +1864,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemL lhsE, _ElemR rhsE)
+        requires     requires(_ElemL lhsE, _ElemR rhsE)
     {
         {
             lhsE == rhsE
@@ -2011,7 +2011,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are equal as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// equality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison
@@ -2024,7 +2024,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE == rhsE
@@ -2051,7 +2051,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are inequal as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// inequality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison
@@ -2064,7 +2064,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE != rhsE
@@ -2091,7 +2091,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are less-than as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than comparison
@@ -2104,7 +2104,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE < rhsE
@@ -2131,7 +2131,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are greater-than as true and the everything else as false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// greater-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than comparison
@@ -2144,7 +2144,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE > rhsE
@@ -2172,7 +2172,7 @@ namespace cortex
     /// that are less-than-eqaul as true and the everything else as
     /// false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than-equal comparison
@@ -2185,7 +2185,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE <= rhsE
@@ -2213,7 +2213,7 @@ namespace cortex
     /// that are greater-than-equal as true and the everything else
     /// as false.
     ///
-    /// @requires Comparison of scalar type and box type support
+    /// @    requires Comparison of scalar type and box type support
     /// greater-than-equal comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than-equal
@@ -2227,7 +2227,7 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-    requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires     requires(_ElemT lhsE, _ElemT rhsE)
     {
         {
             lhsE >= rhsE
@@ -2261,6 +2261,7 @@ namespace cortex
     /// @param rx type: box<_RxT> | qualifiers: [const, ref]
     /// @return constexpr auto 
     template<typename _LxT, typename _RxT>
+        requires AddableWith<_LxT, _RxT>
     constexpr auto
     operator+ (const box<_LxT>& lx, const box<_RxT>& rx)
     { return lx.add(rx); }
@@ -2286,6 +2287,7 @@ namespace cortex
     /// @param rx type: box<_RxT> | qualifiers: [const, ref]
     /// @return constexpr void
     template<Addable _LxT, Addable _RxT>
+        requires AddableWith<_LxT, _RxT>
     constexpr void
     operator+= (box<_LxT>& lx, const box<_RxT>& rx) 
     { 
@@ -2293,6 +2295,55 @@ namespace cortex
             throw std::invalid_argument("operator+=: left-hand-side box type cannot store the resulting type of the call to `add`.");
         else
             lx = lx.add(rx);
+    }
+
+
+    /// @brief Subtraction Operator
+    ///
+    /// @detail Operator overload for `-` operator.
+    /// Calls lx `sub` method on rx and returns 
+    /// the result. 
+    /// 
+    /// @tparam _LxT 
+    /// @tparam _RxT 
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<typename _LxT, typename _RxT>
+        requires SubtractableWith<_LxT, _RxT>
+    constexpr auto
+    operator- (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.sub(rx); }
+
+
+    /// @brief Subiton Assignment Operator
+    ///
+    /// @details Operator overload for `-=` operator.
+    /// Calls lx `sub` method on rx and assigns the result 
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type but be
+    /// able to to store the resulting type of the
+    /// call to `sub`.
+    ///
+    /// @exception std::invalid_argument Thrown if the left-hand-side
+    /// box cannot store the resulting type of the call to `sub`.
+    /// 
+    /// @tparam _LxT concept: Subtractable
+    /// @tparam _RxT concept: Subtractable
+    /// @param lx type: box<_LxT> | qualifiers: [ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr void
+    template<Subtractable _LxT, Subtractable _RxT>
+        requires SubtractableWith<_LxT, _RxT>
+    constexpr void
+    operator-= (box<_LxT>& lx, const box<_RxT>& rx) 
+    { 
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().sub(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator-=: left-hand-side box type cannot store the resulting type of the call to `sub`.");
+        else
+            lx = lx.sub(rx);
     }
 
 } // namespace cortex
