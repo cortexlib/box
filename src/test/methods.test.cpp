@@ -248,7 +248,7 @@ TEST_CASE("Arithmatic Methods")
                 REQUIRE(elem == 25);
         }
 
-        SECTION("Non `muliplicible` or `muliplicibleWith` type")
+        SECTION("Non `Mliplicible` or `MuliplicibleWith` type")
         {
             using namespace std::string_literals;
 
@@ -273,7 +273,7 @@ TEST_CASE("Arithmatic Methods")
         }
     }
 
-     SECTION("box::div")
+    SECTION("box::div")
     {
         SECTION("Same type")
         {
@@ -364,7 +364,7 @@ TEST_CASE("Arithmatic Methods")
                 REQUIRE(elem == 1);
         }
 
-        SECTION("Non `diviplicible` or `diviplicibleWith` type")
+        SECTION("Non `Divisible` or `DivisibleWith` type")
         {
             using namespace std::string_literals;
 
@@ -386,6 +386,102 @@ TEST_CASE("Arithmatic Methods")
 
             for (auto& elem : rbx)
                 REQUIRE(elem == 2.5);
+        }
+    }
+
+    SECTION("box::mod")
+    {
+        SECTION("Same type")
+        {
+            cortex::box<int> bx(4, 5, 2);
+            cortex::box<int> nbx(4, 5, 5);
+            cortex::box<int> rbxcheck(4, 5, 2 % 5);
+
+            auto rbx { bx.mod(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 2);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 5);
+            
+            for (auto& elem : rbx)
+                REQUIRE(elem == 2 % 5);
+        }
+
+        SECTION("Different type")
+        {
+            cortex::box<int> bx(4, 5, 7);
+            cortex::box<std::size_t> nbx(4, 5, 4uL);
+            cortex::box<double> rbxcheck(4, 5, 3);
+
+            auto rbx { bx.mod(nbx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 7);
+            
+            for (auto& elem : nbx)
+                REQUIRE(elem == 4uL);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 3);
+        }
+
+        SECTION("Same Matrix")
+        {
+            cortex::box<int> bx(4, 5, 10);
+            cortex::box<int> rbxcheck(4, 5, 0);
+
+            auto rbx { bx.mod(bx) };
+
+            REQUIRE(rbx == rbxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 10);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Same Matrix + Assign")
+        {
+            cortex::box<int> bx(4, 5, 5);
+            cortex::box<int> bxcheck(4, 5, 0);
+
+            bx = bx.mod(bx);
+
+            REQUIRE(bx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 0);
+        }
+
+        SECTION("Non `modiplicible` or `modiplicibleWith` type")
+        {
+            using namespace std::string_literals;
+
+            cortex::box<std::string> bx(0, 10, "hello"s);
+            cortex::box<std::wstring> nbx(4, 5, L"world"s);
+
+            /// To test, uncomment and code should not compile
+            // auto rbx { bx.mod(nbx) };
+        }
+
+        SECTION("Scalar Modulo")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, 3);
+
+            auto rbx { bx.mod(6) };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == 3);
         }
     }
 }

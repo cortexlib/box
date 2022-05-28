@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.2
+/// @version 2.0.3 ..
 /// @date 2022-16-22
 /// 
 /// @copyright Copyright (c) 2022
@@ -1426,6 +1426,62 @@ namespace cortex
 
             return result;
         }
+
+
+        /// @brief Box Modulus
+        ///
+        /// @details Performs an element-wise modulus operation
+        /// between two boxes. The boxes must have the same dimensions.
+        ///
+        /// @exception std::invalid_argument If the dimensions of the boxes
+        /// do not match, std::invalid_argument is thrown.
+        /// 
+        /// @tparam _ElemT concept: Modulo | requires: ModuloWith<value_type, _ElemT>
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() % std::declval<_ElemT>())> 
+        template<Modulo _ElemT>
+            requires ModuloWith<value_type, _ElemT>
+        constexpr auto mod(const box<_ElemT>& other)
+            -> box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
+        {
+            if (this->dimensions() not_eq other.dimensions())
+                throw std::invalid_argument("In box::mod - dimensions do not match");
+
+            box<decltype(std::declval<value_type>() % std::declval<_ElemT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, other, result.begin(), std::modulus{});
+
+            return result;
+        }
+
+
+        /// @brief Scalar Box Modulus
+        ///
+        /// @details Performs an element-wise modulus operation
+        /// between all elements of the box and the scalar. The 
+        /// box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown. 
+        /// 
+        /// @tparam _ScalarT concept: Modulo | requires: ModuloWith<value_type, _ScalarT>
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
+        /// @return box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())> 
+        template<Modulo _ScalarT>
+            requires ModuloWith<value_type, _ScalarT>
+        constexpr auto mod(const _ScalarT& scalar)
+            -> box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::mod - scalar modulus on empty box");
+
+            box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem % scalar; });
+
+            return result;
+        }
+        
 
         /// @brief Matrix Transpose
         ///
