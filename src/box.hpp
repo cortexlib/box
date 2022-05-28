@@ -1548,7 +1548,7 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
-                throw std::invalid_argument("In box::left_bitshift - dimensions do not match");
+                throw std::invalid_argument("In box::bit_or - dimensions do not match");
 
             box<decltype(std::declval<value_type>() | std::declval<_ElemT>())> result(this->rows(), this->columns());
 
@@ -1575,7 +1575,7 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
         {
             if (empty())
-                throw std::invalid_argument("In box::left_bitshift - scalar left_bitshift on empty box");
+                throw std::invalid_argument("In box::bit_or - scalar bit_or on empty box");
 
             box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
@@ -1602,7 +1602,7 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
-                throw std::invalid_argument("In box::left_bitshift - dimensions do not match");
+                throw std::invalid_argument("In box::shift_left - dimensions do not match");
 
             box<decltype(std::declval<value_type>() << std::declval<_ElemT>())> result(this->rows(), this->columns());
 
@@ -1629,7 +1629,7 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
         {
             if (empty())
-                throw std::invalid_argument("In box::left_bitshift - scalar left_bitshift on empty box");
+                throw std::invalid_argument("In box::shift_left - scalar shift_left on empty box");
 
             box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
@@ -1656,7 +1656,7 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
-                throw std::invalid_argument("In box::right_bitshift - dimensions do not match");
+                throw std::invalid_argument("In box::shift_right - dimensions do not match");
 
             box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())> result(this->rows(), this->columns());
 
@@ -1683,11 +1683,35 @@ namespace cortex
             -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
         {
             if (empty())
-                throw std::invalid_argument("In box::right_bitshift - scalar right_bitshift on empty box");
+                throw std::invalid_argument("In box::shift_right - scalar shift_right on empty box");
 
             box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem >> scalar; });
+
+            return result;
+        }
+
+
+        /// @brief Element-wise Bitwise Not
+        ///
+        /// @details Performs an element-wise bitwise not operation.
+        /// The box must not be empty.
+        ///
+        /// @exception std::invalid_argument If the box is empty,
+        /// std::invalid_argument is thrown.
+        ///
+        /// @requires BitNot<value_type>
+        ///
+        /// @return box<~value_type>
+        constexpr auto bit_not() requires BitNot<value_type>
+        {
+            if (empty())
+                throw std::invalid_argument("In box::bit_not - bit_not on empty box");
+
+            box<decltype(~std::declval<value_type>())> result(this->rows(), this->columns());
+
+            std::ranges::transform(*this, result.begin(), std::bit_not{});
 
             return result;
         }

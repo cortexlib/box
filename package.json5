@@ -5,6 +5,6 @@
     test_driver: 'Catch-Main',
     depends: [
         'cortex-iterators^0.4.1',
-        'cortex-concepts^0.2.0'
+        'cortex-concepts^0.2.1'
     ]
 }

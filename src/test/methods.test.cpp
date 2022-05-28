@@ -971,4 +971,23 @@ TEST_CASE("Bit Arithmatic Methods")
                 REQUIRE(elem == 0);
         }
     }
+
+    SECTION("box::bit_not")
+    {
+        SECTION("Bit Not")
+        {
+            cortex::box<int> bx(4, 5, 15);
+            cortex::box<int> bxcheck(4, 5, -16);
+
+            auto rbx { bx.bit_not() };
+
+            REQUIRE(rbx == bxcheck);
+
+            for (auto& elem : bx)
+                REQUIRE(elem == 15);
+
+            for (auto& elem : rbx)
+                REQUIRE(elem == -16);
+        }
+    }
 }
