@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.2 ..
+/// @version 2.0.2
 /// @date 2022-16-22
 /// 
 /// @copyright Copyright (c) 2022
