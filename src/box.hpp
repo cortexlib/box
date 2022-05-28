@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.0
+/// @version 2.0.1
 /// @date 2022-16-22
 /// 
 /// @copyright Copyright (c) 2022
@@ -37,38 +37,15 @@ namespace cortex
     /// 
     /// @details Box is a two dimensional array that 
     /// stores elements sequentially in memory but is 
-    /// viewed as a series of rows and columns. M
+    /// viewed as a series of rows and columns. 
     /// 
-    /// @todo Add support for iterators -------------------------------------- ✔️
-    /// @todo Add support for range based for loops -------------------------- ✔️
-    /// @todo Add support for basic arithmatic ------------------------------- ✔️
-    /// @todo Add support for std::allocator --------------------------------- ✔️
-    /// @todo Add support for std::initializer_list -------------------------- ✔️
-    /// @todo Add support for std::swap -------------------------------------- ✔️
-    /// @todo Add support for flatten ---------------------------------------- ✔️
-    /// @todo Add support for clear ------------------------------------------ ✔️
-    /// @todo Add support for resize ----------------------------------------- ✔️
-    /// @todo Add invokation operator support -------------------------------- ✔️
-    /// @todo Comparison operators between boxes ----------------------------- ✔️
-    /// @todo Comparison operators between scalars --------------------------- ✔️
-    /// @todo allocator constructors ----------------------------------------- ✔️
-    /// @todo use memory algorithms from ranges ------------------------------ ✔️
-    /// @todo using pointers to start and end over size ---------------------- ✔️
-    /// @todo the reshape method --------------------------------------------- ✔️
-    /// @todo Add column iterator -------------------------------------------- ✔️
-    /// @todo Add row iterator ----------------------------------------------- ✔️
-    /// @todo Add support for matrix operations ------------------------------ 🗑️ (scraped)
-    /// @todo Add support for shrink_to_fit ---------------------------------- 🗑️ (scraped)
-    /// @todo Add support for reserve ---------------------------------------- 🗑️ (scraped)
-    /// @todo Add support for swaps of different box types ------------------- ❌ (not possible)
-    /// @todo Add support for operator overloads ----------------------------- 
-    /// @todo Add support for assign ----------------------------------------- 
-    /// @todo Add support for erase ------------------------------------------ 
-    /// @todo Projection method ---------------------------------------------- 
-    /// @todo Add support for iterator constructors -------------------------- 
+    /// @todo Projection method ---------------------------------------------- 🗑️
     /// @todo Add flips ------------------------------------------------------ 
     /// @todo Add rotates ----------------------------------------------------
     /// @todo Add other modification methods (mod, xor etc.) ----------------- 
+    /// @todo Add support for operator overloads ----------------------------- 
+    /// @todo Add support for assign ----------------------------------------- 
+    /// @todo Add support for iterator constructors -------------------------- 
     /// 
     /// @tparam _Tp 
     template<typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -1445,7 +1422,7 @@ namespace cortex
             if (empty())
                 return result;
 
-            std::copy(this->begin(), this->end(), result.column_begin());
+            std::ranges::copy(*this, result.column_begin());
 
             return result;
         }

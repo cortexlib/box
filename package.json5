@@ -4,7 +4,7 @@
     namespace: 'cortex',
     test_driver: 'Catch-Main',
     depends: [
-        'cortex-iterators^0.4.0',
+        'cortex-iterators^0.4.1',
         'cortex-concepts^0.1.1'
     ]
 }
