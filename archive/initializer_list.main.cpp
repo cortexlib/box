@@ -9,7 +9,7 @@ auto main() -> int
                               , { 7, 8 }
                               , { 9, 10 }};
 
-    for (auto& elem : m)
+    for (auto& elem : bx)
             std::cout << elem << ", ";
         std::cout << std::endl;
 }

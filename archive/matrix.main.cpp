@@ -34,31 +34,31 @@ void printArray(std::vector<T> vec)
 
 auto main() -> int
 {
-    cortex::matrix<int> m(7, 3, 1);
+    cortex::matrix<int> bx(, 3, 1);
 
     printArray(m);
-    auto ptr { m.data() };
+    auto ptr { bx.data() };
     std::cout << "Capacity: " 
-              << m.capacity() 
+              << bx.capacity() 
               << " | Size: " 
-              << m.size() 
+              << bx.size() 
               << " | Data: " 
-              << m.data()
+              << bx.data()
               << " | ptr: "
               << ptr
               << " | Value at ptr: "
               << *ptr  
               << "\n";
 
-    m.reserve(8, 4);
+    bx.reserve(8, 4);
 
     printArray(m);
     std::cout << "Capacity: " 
-              << m.capacity() 
+              << bx.capacity() 
               << " | Size: " 
-              << m.size() 
+              << bx.size() 
               << " | Data: " 
-              << m.data()
+              << bx.data()
               << " | ptr: "
               << ptr
               << " | Value at ptr: "

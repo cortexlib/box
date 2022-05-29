@@ -2,20 +2,20 @@
 
 auto main() -> int
 {
-    cortex::matrix<int> m(10, 10, 1);
+    cortex::matrix<int> bx(0, 10, 1);
 
-    std::cout << m.size() << std::endl;
+    std::cout << bx.size() << std::endl;
 
-    for (auto& elem : m)
+    for (auto& elem : bx)
         std::cout << elem << ", ";
     std::cout << std::endl;
     std::cout << std::endl;
 
-    m.resize(12, 10);
+    bx.resize(12, 10);
 
-    std::cout << m.size() << std::endl;
+    std::cout << bx.size() << std::endl;
 
-    for (auto& elem : m)
+    for (auto& elem : bx)
         std::cout << elem << ", ";
     std::cout << std::endl;
 
