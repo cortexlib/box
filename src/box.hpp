@@ -1381,7 +1381,7 @@ namespace cortex
         /// @tparam _ElemT concept: Modulo |     requires: ModuloWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
-        template <Modulo _ElemT>
+        template <Any _ElemT>
             requires ModuloWith<value_type, _ElemT>
         constexpr auto mod(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
@@ -1408,7 +1408,7 @@ namespace cortex
         /// @tparam _ScalarT concept: Modulo |     requires: ModuloWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
-        template <Modulo _ScalarT>
+        template <Any _ScalarT>
             requires ModuloWith<value_type, _ScalarT>
         constexpr auto mod(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
@@ -1434,7 +1434,7 @@ namespace cortex
         /// @tparam _ElemT concept: BitXor |     requires: BitXorWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
-        template <BitXor _ElemT>
+        template <Any _ElemT>
             requires BitXorWith<value_type, _ElemT>
         constexpr auto bit_xor(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
@@ -1461,7 +1461,7 @@ namespace cortex
         /// @tparam _ScalarT concept: BitXor |     requires: BitXorWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
-        template <BitXor _ScalarT>
+        template <Any _ScalarT>
             requires BitXorWith<value_type, _ScalarT>
         constexpr auto bit_xor(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
@@ -1488,7 +1488,7 @@ namespace cortex
         /// @tparam _ElemT concept: BitAnd |     requires: BitAndWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
-        template <BitAnd _ElemT>
+        template <Any _ElemT>
             requires BitAndWith<value_type, _ElemT>
         constexpr auto bit_and(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
@@ -1515,7 +1515,7 @@ namespace cortex
         /// @tparam _ScalarT concept: BitAnd |     requires: BitAndWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
-        template <BitAnd _ScalarT>
+        template <Any _ScalarT>
             requires BitAndWith<value_type, _ScalarT>
         constexpr auto bit_and(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
@@ -1542,7 +1542,7 @@ namespace cortex
         /// @tparam _ElemT concept: BitOr |     requires: BitOrWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
-        template <BitOr _ElemT>
+        template <Any _ElemT>
             requires BitOrWith<value_type, _ElemT>
         constexpr auto bit_or(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
@@ -1569,7 +1569,7 @@ namespace cortex
         /// @tparam _ScalarT concept: BitOr |     requires: BitOrWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
-        template <BitOr _ScalarT>
+        template <Any _ScalarT>
             requires BitOrWith<value_type, _ScalarT>
         constexpr auto bit_or(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
@@ -1596,7 +1596,7 @@ namespace cortex
         /// @tparam _ElemT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
-        template <LeftBitShift _ElemT>
+        template <Any _ElemT>
             requires LeftBitShiftWith<value_type, _ElemT>
         constexpr auto shift_left(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
@@ -1623,7 +1623,7 @@ namespace cortex
         /// @tparam _ScalarT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
-        template <LeftBitShift _ScalarT>
+        template <Any _ScalarT>
             requires LeftBitShiftWith<value_type, _ScalarT>
         constexpr auto shift_left(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
@@ -1650,7 +1650,7 @@ namespace cortex
         /// @tparam _ElemT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
-        template <RightBitShift _ElemT>
+        template <Any _ElemT>
             requires RightBitShiftWith<value_type, _ElemT>
         constexpr auto shift_right(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
@@ -1677,7 +1677,7 @@ namespace cortex
         /// @tparam _ScalarT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
-        template <RightBitShift _ScalarT>
+        template <Any _ScalarT>
             requires RightBitShiftWith<value_type, _ScalarT>
         constexpr auto shift_right(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
@@ -1703,7 +1703,7 @@ namespace cortex
         ///
         /// @    requires BitNot<value_type>
         ///
-        /// @return box<~value_type>
+        /// @return constexpr auto
         constexpr auto bit_not() const
             requires BitNot<value_type>
         {
@@ -2439,7 +2439,7 @@ namespace cortex
     /// @note The left-hand-side box is mutable.
     /// @note The left-hand-side boxes type must be
     /// able to to store the resulting type of the
-    
+
     ///
     /// @tparam _ElemT concept: Any
     /// @tparam _ScalarT concept: Any
