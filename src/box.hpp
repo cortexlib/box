@@ -1257,7 +1257,7 @@ namespace cortex
         /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
         /// @return constexpr auto : A box whose element type
         /// is the product of the two input matrices element types.
-        template <Multiplicable _ElemT>
+        template <Any _ElemT>
             requires MultiplicableWith<value_type, _ElemT>
         constexpr auto mul(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
@@ -1285,7 +1285,7 @@ namespace cortex
         /// @tparam _ScalarT
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
-        template <Multiplicable _ScalarT>
+        template <Any _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
         constexpr auto mul(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
@@ -1322,7 +1322,7 @@ namespace cortex
         /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
         /// @return constexpr auto : A box whose element type
         /// is the quotient of the two input matrices element types.
-        template <Divisible _ElemT>
+        template <Any _ElemT>
             requires DivisibleWith<value_type, _ElemT>
         constexpr auto div(const box<_ElemT> &other) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
@@ -1353,7 +1353,7 @@ namespace cortex
         /// @tparam _ScalarT
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
         /// @return box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
-        template <Divisible _ScalarT>
+        template <Any _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
         constexpr auto div(const _ScalarT &scalar) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
@@ -2261,7 +2261,7 @@ namespace cortex
     /// @param lx type: box<_LxT> | qualifiers: [const, ref]
     /// @param rx type: box<_RxT> | qualifiers: [const, ref]
     /// @return constexpr auto 
-    template<typename _LxT, typename _RxT>
+    template<Addable _LxT, Addable _RxT>
         requires AddableWith<_LxT, _RxT>
     constexpr auto
     operator+ (const box<_LxT>& lx, const box<_RxT>& rx)
@@ -2310,14 +2310,14 @@ namespace cortex
     /// @param lx type: box<_LxT> | qualifiers: [const, ref]
     /// @param rx type: box<_RxT> | qualifiers: [const, ref]
     /// @return constexpr auto 
-    template<typename _LxT, typename _RxT>
+    template<Subtractable _LxT, Subtractable _RxT>
         requires SubtractableWith<_LxT, _RxT>
     constexpr auto
     operator- (const box<_LxT>& lx, const box<_RxT>& rx)
     { return lx.sub(rx); }
 
 
-    /// @brief Subiton Assignment Operator
+    /// @brief Subtraction Assignment Operator
     ///
     /// @details Operator overload for `-=` operator.
     /// Calls lx `sub` method on rx and assigns the result 
@@ -2348,10 +2348,124 @@ namespace cortex
     }
 
 
-    /// @brief 
+    /// @brief Multiplication Operator
+    ///
+    /// @detail Operator overload for `*` operator.
+    /// Calls lx `mul` method on rx and returns
+    /// the resulting box.
     /// 
-    /// @tparam _ElemT 
-    /// @param bx 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires MultiplicableWith<_LxT, _RxT>
+    constexpr auto
+    operator* (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.mul(rx); }
+
+
+    /// @brief Multiplication Operator
+    ///
+    /// @details Operator overload for `*` operator.
+    /// Calls bx `mul` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires MultiplicableWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator* (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.mul(sx); }
+
+
+    /// @brief Multiplication Operator
+    ///
+    /// @details Operator overload for `*` operator.
+    /// Calls bx `mul` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ScalarT concept: Any
+    /// @tparam _ElemT concept: Any
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ScalarT, Any _ElemT>
+        requires MultiplicableWith<_ScalarT, _ElemT>
+    constexpr auto
+    operator* (const _ScalarT& sx, const box<_ElemT>& bx)
+    { return bx.mul(sx); }
+
+
+    /// @brief Multiplication Assignment Operator
+    ///
+    /// @detail Operator overload for `*=` operator.
+    /// Calls lx `mul` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `mul`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires MultiplicableWith<_LxT, _RxT>
+    constexpr void
+    operator*= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().mul(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
+        else
+            lx = lx.mul(rx);
+    }
+
+
+    /// @brief Multiplication Assignment Operator
+    /// 
+    /// @details Operator overload for `*=` operator.
+    /// Calls bx `mul` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires MultiplicableWith<_ElemT, _ScalarT>
+    constexpr void
+    operator*= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().mul(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
+        else
+            bx = bx.mul(sx);
+    }
+
+
+    /// @brief Bitwise Not Operator
+    ///
+    /// @details Operator overload for `~` operator.
+    /// Calls bx `bit_not` method and returns the 
+    /// resulting box. 
+    /// 
+    /// @tparam _ElemT : concept: BitNot
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// @return constexpr auto 
     template<BitNot _ElemT>
     constexpr auto
@@ -2359,6 +2473,15 @@ namespace cortex
     { return bx.bit_not(); }
 
 
+    /// @brief Transpose Operator
+    ///
+    /// @details Operator overload for `!` operator.
+    /// Calls bx `transpose` method and returns the
+    /// resulting box. 
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
     template<Any _ElemT>
     constexpr auto
     operator! (box<_ElemT> bx)

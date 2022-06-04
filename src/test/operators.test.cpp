@@ -307,6 +307,185 @@ TEST_CASE("Arithmatic Operators")
         }
     }
 
+    SECTION("Multiply and Multiply Assign")
+    {
+        SECTION("Box Multiply")
+        {
+            SECTION("Multiply")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a * b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 5, 226, 39 }
+                                                  , { 972, -210, 684 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<double> b = { { 6, 23 }
+                                            , { 4.5, 8.75 }
+                                            , { 1.15, 435 }
+                                            , { 13.4, 0.4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a * b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<double> { { 6, 46 }
+                                                     , { 13.5, 35 }
+                                                     , { 5.75, 2610 }
+                                                     , { 93.8, 3.2 } });
+                }
+
+                SECTION("Self Multiply")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a * a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 1, 4 }
+                                                  , { 9, 16 }
+                                                  , { 25, 36 }
+                                                  , { 49, 64 } });
+                }
+            }
+
+            SECTION("Multiply Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a *= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 5, 226, 39 }
+                                                  , { 972, -210, 684 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<double> b = { { 6, 23 }
+                                            , { 4.5, 8.75 }
+                                            , { 1.15, 435 }
+                                            , { 13.4, 0.4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a *= b, std::invalid_argument);
+                    b *= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<double> { { 6, 46 }
+                                                     , { 13.5, 35 }
+                                                     , { 5.75, 2610 }
+                                                     , { 93.8, 3.2 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Multiply")
+        {
+            SECTION("Multiply")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a * 5 };
+                    auto c { 4 * a };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 5, 10, 15 }
+                                                  , { 20, 25, 30 } });
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 4, 8, 12 }
+                                                  , { 16, 20, 24 } });
+                }
+            }
+
+            SECTION("Multiply Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a *= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 5, 10, 15 }
+                                                  , { 20, 25, 30 } });
+                }
+            }
+        }
+    }            
 }
 
 TEST_CASE("Bit Operators")
