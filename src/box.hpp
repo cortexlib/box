@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.6 ..
+/// @version 2.0.7 ..
 /// @date 2022-16-22
 ///
 /// @copyright Copyright (c) 2022
@@ -1704,7 +1704,8 @@ namespace cortex
         /// @    requires BitNot<value_type>
         ///
         /// @return box<~value_type>
-        constexpr auto bit_not() const     requires BitNot<value_type>
+        constexpr auto bit_not() const
+            requires BitNot<value_type>
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_not - bit_not on empty box");
@@ -2345,6 +2346,23 @@ namespace cortex
         else
             lx = lx.sub(rx);
     }
+
+
+    /// @brief 
+    /// 
+    /// @tparam _ElemT 
+    /// @param bx 
+    /// @return constexpr auto 
+    template<BitNot _ElemT>
+    constexpr auto
+    operator~ (box<_ElemT> bx)
+    { return bx.bit_not(); }
+
+
+    template<Any _ElemT>
+    constexpr auto
+    operator! (box<_ElemT> bx)
+    { return bx.transpose(); }
 
 } // namespace cortex
 

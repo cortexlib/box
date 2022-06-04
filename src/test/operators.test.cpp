@@ -306,4 +306,50 @@ TEST_CASE("Arithmatic Operators")
             }
         }
     }
+
+}
+
+TEST_CASE("Bit Operators")
+{
+    SECTION("Bit Not")
+    {
+        cortex::box<int> a = { { 1, 2 }
+                             , { 3, 4 }
+                             , { 5, 6 }
+                             , { 7, 8 } };
+
+        REQUIRE(a.size() == 8);
+        REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+        auto b { ~a };
+
+        REQUIRE(b.size() == 8);
+        REQUIRE(b.dimensions() == std::tuple{4, 2});
+        REQUIRE(b == cortex::box<int> { { -2, -3 }
+                                      , { -4, -5 }
+                                      , { -6, -7 }
+                                      , { -8, -9 } });
+    }
+
+}
+
+TEST_CASE("Utility Operators")
+{
+    SECTION("Transpose")
+    {
+        cortex::box<int> a = { { 1, 2 }
+                             , { 3, 4 }
+                             , { 5, 6 }
+                             , { 7, 8 } };
+
+        REQUIRE(a.size() == 8);
+        REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+        auto b { !a };
+
+        REQUIRE(b.size() == 8);
+        REQUIRE(b.dimensions() == std::tuple{2, 4});
+        REQUIRE(b == cortex::box<int> { { 1, 3, 5, 7 }
+                                      , { 2, 4, 6, 8 } });
+    }
 }
