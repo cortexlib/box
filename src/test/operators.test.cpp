@@ -486,6 +486,354 @@ TEST_CASE("Arithmatic Operators")
             }
         }
     }
+
+    SECTION("Divide and Divide Assign")
+    {
+        SECTION("Box Divide")
+        {
+            SECTION("Divide")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a / b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 2 }
+                                           , { 1, 8 }
+                                           , { 1, 5 }
+                                           , { 2, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a / b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 0, 1 }
+                                                    , { 3, 0 }
+                                                    , { 5, 1 }
+                                                    , { 3, 2 } });
+                }
+
+                SECTION("Self Divide")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a / a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 1, 1 }
+                                                  , { 1, 1 }
+                                                  , { 1, 1 }
+                                                  , { 1, 1 } });
+                }
+            }
+
+            SECTION("Divide Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a /= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a /= b, std::invalid_argument);
+                    b /= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 6, 11 }
+                                                  , { 15, 2 }
+                                                  , { 23, 42 }
+                                                  , { 1, 0 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Divide")
+        {
+            SECTION("Divide")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a / 5 };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 1, 1 } });
+                }
+            }
+
+            SECTION("Divide Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a /= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 1, 1 } });
+                }
+            }
+        }
+    }
+
+    SECTION("Modulo and Modulo Assign")
+    {
+        SECTION("Box Modulo")
+        {
+            SECTION("Modulo")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a % b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 1, 2, 3 }
+                                                  , { 4, 5, 6 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 23 }
+                                           , { 45, 8 }
+                                           , { 115, 255 }
+                                           , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a % b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 1, 2 }
+                                                    , { 3, 4 }
+                                                    , { 5, 6 }
+                                                    , { 7, 0 } });
+                }
+
+                SECTION("Self Modulo")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a % a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 } });
+                }
+            }
+
+            SECTION("Modulo Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a %= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 1, 2, 3 }
+                                                  , { 4, 5, 6 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a %= b, std::invalid_argument);
+                    b %= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 0, 1 }
+                                                  , { 0, 0 }
+                                                  , { 0, 3 }
+                                                  , { 6, 4 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Modulo")
+        {
+            SECTION("Modulo")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a % 5 };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 1, 2, 3 }
+                                                  , { 4, 0, 1 } });
+                }
+            }
+
+            SECTION("Modulo Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a %= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 1, 2, 3 }
+                                                  , { 4, 0, 1 } });
+                }
+            }
+        }
+    }
 }
 
 TEST_CASE("Bit Operators")

@@ -2457,6 +2457,188 @@ namespace cortex
     }
 
 
+    /// @brief Division Operator
+    ///
+    /// @detail Operator overload for `/` operator.
+    /// Calls lx `div` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires DivisibleWith<_LxT, _RxT>
+    constexpr auto
+    operator/ (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.div(rx); }
+
+
+    /// @brief Division Operator
+    ///
+    /// @details Operator overload for `/` operator.
+    /// Calls bx `div` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires DivisibleWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator/ (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.div(sx); }
+
+
+    /// @brief Division Assignment Operator
+    ///
+    /// @detail Operator overload for `/=` operator.
+    /// Calls lx `div` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `div`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires DivisibleWith<_LxT, _RxT>
+    constexpr void
+    operator/= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().div(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
+        else
+            lx = lx.div(rx);
+    }
+
+
+    /// @brief Division Assignment Operator
+    /// 
+    /// @details Operator overload for `/=` operator.
+    /// Calls bx `div` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires DivisibleWith<_ElemT, _ScalarT>
+    constexpr void
+    operator/= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().div(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
+        else
+            bx = bx.div(sx);
+    }
+
+
+    /// @brief Modulo Operator
+    ///
+    /// @detail Operator overload for `%` operator.
+    /// Calls lx `mod` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires ModuloWith<_LxT, _RxT>
+    constexpr auto
+    operator% (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.mod(rx); }
+
+
+    /// @brief Modulo Operator
+    ///
+    /// @details Operator overload for `%` operator.
+    /// Calls bx `mod` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires ModuloWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator% (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.mod(sx); }
+
+
+    /// @brief Modulo Assignment Operator
+    ///
+    /// @detail Operator overload for `%=` operator.
+    /// Calls lx `mod` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `mod`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires ModuloWith<_LxT, _RxT>
+    constexpr void
+    operator%= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().mod(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
+        else
+            lx = lx.mod(rx);
+    }
+
+
+    /// @brief Modulo Assignment Operator
+    /// 
+    /// @details Operator overload for `%=` operator.
+    /// Calls bx `mod` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires ModuloWith<_ElemT, _ScalarT>
+    constexpr void
+    operator%= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().mod(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
+        else
+            bx = bx.mod(sx);
+    }
+
+
     /// @brief Bit And Operator
     ///
     /// @detail Operator overload for `&` operator.
