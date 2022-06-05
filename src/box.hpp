@@ -2439,7 +2439,6 @@ namespace cortex
     /// @note The left-hand-side box is mutable.
     /// @note The left-hand-side boxes type must be
     /// able to to store the resulting type of the
-
     ///
     /// @tparam _ElemT concept: Any
     /// @tparam _ScalarT concept: Any
@@ -2455,6 +2454,333 @@ namespace cortex
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
         else
             bx = bx.mul(sx);
+    }
+
+
+    /// @brief Bit And Operator
+    ///
+    /// @detail Operator overload for `&` operator.
+    /// Calls lx `bit_and` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires BitAndWith<_LxT, _RxT>
+    constexpr auto
+    operator& (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.bit_and(rx); }
+
+
+    /// @brief Bit And Operator
+    ///
+    /// @details Operator overload for `&` operator.
+    /// Calls bx `bit_and` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitAndWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator& (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.bit_and(sx); }
+
+
+    /// @brief Bit And Operator
+    ///
+    /// @details Operator overload for `&` operator.
+    /// Calls bx `bit_and` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ScalarT concept: Any
+    /// @tparam _ElemT concept: Any
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ScalarT, Any _ElemT>
+        requires BitAndWith<_ScalarT, _ElemT>
+    constexpr auto
+    operator& (const _ScalarT& sx, const box<_ElemT>& bx)
+    { return bx.bit_and(sx); }
+
+
+    /// @brief Bit And Assignment Operator
+    ///
+    /// @detail Operator overload for `&=` operator.
+    /// Calls lx `bit_and` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `bit_and`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires BitAndWith<_LxT, _RxT>
+    constexpr void
+    operator&= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_and(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator&=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
+        else
+            lx = lx.bit_and(rx);
+    }
+
+
+    /// @brief Bit And Assignment Operator
+    /// 
+    /// @details Operator overload for `*=` operator.
+    /// Calls bx `bit_and` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitAndWith<_ElemT, _ScalarT>
+    constexpr void
+    operator&= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_and(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
+        else
+            bx = bx.bit_and(sx);
+    }
+
+
+    /// @brief Bit Or Operator
+    ///
+    /// @detail Operator overload for `*` operator.
+    /// Calls lx `bit_or` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires BitOrWith<_LxT, _RxT>
+    constexpr auto
+    operator| (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.bit_or(rx); }
+
+
+    /// @brief Bit Or Operator
+    ///
+    /// @details Operator overload for `*` operator.
+    /// Calls bx `bit_or` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitOrWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator| (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.bit_or(sx); }
+
+
+    /// @brief Bit Or Operator
+    ///
+    /// @details Operator overload for `*` operator.
+    /// Calls bx `bit_or` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ScalarT concept: Any
+    /// @tparam _ElemT concept: Any
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ScalarT, Any _ElemT>
+        requires BitOrWith<_ScalarT, _ElemT>
+    constexpr auto
+    operator| (const _ScalarT& sx, const box<_ElemT>& bx)
+    { return bx.bit_or(sx); }
+
+
+    /// @brief Bit Or Assignment Operator
+    ///
+    /// @detail Operator overload for `*=` operator.
+    /// Calls lx `bit_or` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `bit_or`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires BitOrWith<_LxT, _RxT>
+    constexpr void
+    operator|= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_or(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
+        else
+            lx = lx.bit_or(rx);
+    }
+
+
+    /// @brief Bit Or Assignment Operator
+    /// 
+    /// @details Operator overload for `*=` operator.
+    /// Calls bx `bit_or` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitOrWith<_ElemT, _ScalarT>
+    constexpr void
+    operator|= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_or(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
+        else
+            bx = bx.bit_or(sx);
+    }
+
+
+    /// @brief Bit Xor Operator
+    ///
+    /// @detail Operator overload for `^` operator.
+    /// Calls lx `bit_xor` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires BitXorWith<_LxT, _RxT>
+    constexpr auto
+    operator^ (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.bit_xor(rx); }
+
+
+    /// @brief Bit Xor Operator
+    ///
+    /// @details Operator overload for `^` operator.
+    /// Calls bx `bit_xor` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitXorWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator^ (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.bit_xor(sx); }
+
+
+    /// @brief Bit Xor Operator
+    ///
+    /// @details Operator overload for `^` operator.
+    /// Calls bx `bit_xor` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ScalarT concept: Any
+    /// @tparam _ElemT concept: Any
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ScalarT, Any _ElemT>
+        requires BitXorWith<_ScalarT, _ElemT>
+    constexpr auto
+    operator^ (const _ScalarT& sx, const box<_ElemT>& bx)
+    { return bx.bit_xor(sx); }
+
+
+    /// @brief Bit Xor Assignment Operator
+    ///
+    /// @detail Operator overload for `^=` operator.
+    /// Calls lx `bit_xor` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `bit_xor`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires BitXorWith<_LxT, _RxT>
+    constexpr void
+    operator^= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_xor(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
+        else
+            lx = lx.bit_xor(rx);
+    }
+
+
+    /// @brief Bit Xor Assignment Operator
+    /// 
+    /// @details Operator overload for `^=` operator.
+    /// Calls bx `bit_xor` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires BitXorWith<_ElemT, _ScalarT>
+    constexpr void
+    operator^= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_xor(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
+        else
+            bx = bx.bit_xor(sx);
     }
 
 

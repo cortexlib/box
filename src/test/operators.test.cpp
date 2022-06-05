@@ -485,11 +485,551 @@ TEST_CASE("Arithmatic Operators")
                 }
             }
         }
-    }            
+    }
 }
 
 TEST_CASE("Bit Operators")
 {
+    SECTION("Bit And and Bit And Assign")
+    {
+        SECTION("Box Bit And")
+        {
+            SECTION("Bit And")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a & b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 1, 0, 1 }
+                                                  , { 0, 4, 2 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 23 }
+                                           , { 45, 8 }
+                                           , { 115, 255 }
+                                           , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a & b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 0, 2 }
+                                                    , { 1, 0 }
+                                                    , { 1, 6 }
+                                                    , { 5, 0 } });
+                }
+
+                SECTION("Self Bit And")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a & a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 1, 2 }
+                                                  , { 3, 4 }
+                                                  , { 5, 6 }
+                                                  , { 7, 8 } });
+                }
+            }
+
+            SECTION("Bit And Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a &= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 1, 0, 1 }
+                                                  , { 0, 4, 2 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a &= b, std::invalid_argument);
+                    b &= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 0, 2 }
+                                                  , { 1, 0 }
+                                                  , { 1, 6 }
+                                                  , { 5, 0 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Bit And")
+        {
+            SECTION("Bit And")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a & 5 };
+                    auto c { 4 & a };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 1, 0, 1 }
+                                                  , { 4, 5, 4 } });
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 4, 4, 4 } });
+                }
+            }
+
+            SECTION("Bit And Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a &= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 1, 0, 1 }
+                                                  , { 4, 5, 4 } });
+                }
+            }
+        }
+    }
+
+    SECTION("Bit Or and Bit Or Assign")
+    {
+        SECTION("Box Bit Or")
+        {
+            SECTION("Bit Or")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a | b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 5, 115, 15 }
+                                                  , { 247, -41, 118 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 23 }
+                                           , { 45, 8 }
+                                           , { 115, 255 }
+                                           , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a | b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 7, 23 }
+                                                    , { 47, 12 }
+                                                    , { 119, 255 }
+                                                    , { 15, 12 } });
+                }
+
+                SECTION("Self Bit Or")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a | a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 1, 2 }
+                                                  , { 3, 4 }
+                                                  , { 5, 6 }
+                                                  , { 7, 8 } });
+                }
+            }
+
+            SECTION("Bit Or Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a |= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 5, 115, 15 }
+                                                  , { 247, -41, 118 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a |= b, std::invalid_argument);
+                    b |= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 7, 23 }
+                                                  , { 47, 12 }
+                                                  , { 119, 255 }
+                                                  , { 15, 12 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Bit Or")
+        {
+            SECTION("Bit Or")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a | 5 };
+                    auto c { 4 | a };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 5, 7, 7 }
+                                                  , { 5, 5, 7 } });
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 5, 6, 7 }
+                                                  , { 4, 5, 6 } });
+                }
+            }
+
+            SECTION("Bit Or Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a |= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 5, 7, 7 }
+                                                  , { 5, 5, 7 } });
+                }
+            }
+        }
+    }
+
+    SECTION("Bit Xor and Bit Xor Assign")
+    {
+        SECTION("Box Bit Xor")
+        {
+            SECTION("Bit Xor")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a ^ b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 4, 115, 14 }
+                                                  , { 247, -45, 116 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 23 }
+                                           , { 45, 8 }
+                                           , { 115, 255 }
+                                           , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a ^ b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 7, 21 }
+                                                    , { 46, 12 }
+                                                    , { 118, 249 }
+                                                    , { 10, 12 } });
+                }
+
+                SECTION("Self Bit Xor")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a ^ a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 } });
+                }
+            }
+
+            SECTION("Bit Xor Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a ^= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 4, 115, 14 }
+                                                  , { 247, -45, 116 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a ^= b, std::invalid_argument);
+                    b ^= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 7, 21 }
+                                                  , { 46, 12 }
+                                                  , { 118, 249 }
+                                                  , { 10, 12 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Bit Xor")
+        {
+            SECTION("Bit Xor")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a ^ 5 };
+                    auto c { 4 ^ a };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 4, 7, 6 }
+                                                  , { 1, 0, 3 } });
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 5, 6, 7 }
+                                                  , { 0, 1, 2 } });
+                }
+            }
+
+            SECTION("Bit Xor Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a ^= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 4, 7, 6 }
+                                                  , { 1, 0, 3 } });
+                }
+            }
+        }
+    }
+
     SECTION("Bit Not")
     {
         cortex::box<int> a = { { 1, 2 }
@@ -509,7 +1049,6 @@ TEST_CASE("Bit Operators")
                                       , { -6, -7 }
                                       , { -8, -9 } });
     }
-
 }
 
 TEST_CASE("Utility Operators")
