@@ -2784,6 +2784,188 @@ namespace cortex
     }
 
 
+    /// @brief Left Bit Shift Operator
+    ///
+    /// @detail Operator overload for `<<` operator.
+    /// Calls lx `shift_left` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires LeftBitShiftWith<_LxT, _RxT>
+    constexpr auto
+    operator<< (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.shift_left(rx); }
+
+
+    /// @brief Left Bit Shift Operator
+    ///
+    /// @details Operator overload for `<<` operator.
+    /// Calls bx `shift_left` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires LeftBitShiftWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator<< (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.shift_left(sx); }
+
+
+    /// @brief Left Bit Shift Assignment Operator
+    ///
+    /// @detail Operator overload for `<<=` operator.
+    /// Calls lx `shift_left` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `shift_left`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires LeftBitShiftWith<_LxT, _RxT>
+    constexpr void
+    operator<<= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().shift_left(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
+        else
+            lx = lx.shift_left(rx);
+    }
+
+
+    /// @brief Left Bit Shift Assignment Operator
+    /// 
+    /// @details Operator overload for `<<=` operator.
+    /// Calls bx `shift_left` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The left-hand-side box is mutable.
+    /// @note The left-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires LeftBitShiftWith<_ElemT, _ScalarT>
+    constexpr void
+    operator<<= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().shift_left(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
+        else
+            bx = bx.shift_left(sx);
+    }
+
+
+    /// @brief Right Bit Shift Operator
+    ///
+    /// @detail Operator overload for `>>` operator.
+    /// Calls lx `shift_right` method on rx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return constexpr auto 
+    template<Any _LxT, Any _RxT>
+        requires RightBitShiftWith<_LxT, _RxT>
+    constexpr auto
+    operator>> (const box<_LxT>& lx, const box<_RxT>& rx)
+    { return lx.shift_right(rx); }
+
+
+    /// @brief Right Bit Shift Operator
+    ///
+    /// @details Operator overload for `>>` operator.
+    /// Calls bx `shift_right` method on scalar sx and returns
+    /// the resulting box.
+    /// 
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires RightBitShiftWith<_ElemT, _ScalarT>
+    constexpr auto
+    operator>> (const box<_ElemT>& bx, const _ScalarT& sx)
+    { return bx.shift_right(sx); }
+
+
+    /// @brief Right Bit Shift Assignment Operator
+    ///
+    /// @detail Operator overload for `>>=` operator.
+    /// Calls lx `shift_right` method on rx and assigns the result
+    /// to lx.
+    ///
+    /// @note The right-hand-side box is mutable.
+    /// @note The right-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    /// call to `shift_right`.
+    /// 
+    /// @tparam _LxT concept: Any
+    /// @tparam _RxT concept: Any
+    /// @param lx type: box<_LxT> | qualifiers: [const, ref]
+    /// @param rx type: box<_RxT> | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _LxT, Any _RxT>
+        requires RightBitShiftWith<_LxT, _RxT>
+    constexpr void
+    operator>>= (box<_LxT>& lx, const box<_RxT>& rx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().shift_right(std::declval<box<_RxT>>())), box<_LxT>>)
+            throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
+        else
+            lx = lx.shift_right(rx);
+    }
+
+
+    /// @brief Right Bit Shift Assignment Operator
+    /// 
+    /// @details Operator overload for `>>=` operator.
+    /// Calls bx `shift_right` method on scalar sx and assigns 
+    /// the result to bx.
+    ///
+    /// @note The right-hand-side box is mutable.
+    /// @note The right-hand-side boxes type must be
+    /// able to to store the resulting type of the
+    ///
+    /// @tparam _ElemT concept: Any
+    /// @tparam _ScalarT concept: Any
+    /// @param bx type: box<_ElemT> | qualifiers: [const, ref]
+    /// @param sx type: _ScalarT | qualifiers: [const, ref]
+    /// @return requires constexpr 
+    template<Any _ElemT, Any _ScalarT>
+        requires RightBitShiftWith<_ElemT, _ScalarT>
+    constexpr void
+    operator>>= (box<_ElemT>& bx, const _ScalarT& sx)
+    {
+        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().shift_right(std::declval<_ScalarT>())), box<_ElemT>>)
+            throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
+        else
+            bx = bx.shift_right(sx);
+    }
+
+
     /// @brief Bitwise Not Operator
     ///
     /// @details Operator overload for `~` operator.

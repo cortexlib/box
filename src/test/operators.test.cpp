@@ -1030,6 +1030,354 @@ TEST_CASE("Bit Operators")
         }
     }
 
+    SECTION("Left Bit Shift and Left Bit Shift Assign")
+    {
+        SECTION("Box Left Bit Shift")
+        {
+            SECTION("Left Bit Shift")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a << b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 32, 262144, 24576 }
+                                                  , { 2097152, 20971520, 1572864 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 2 }
+                                           , { 1, 8 }
+                                           , { 1, 5 }
+                                           , { 2, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a << b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 64, 8 }
+                                                    , { 6, 1024 }
+                                                    , { 10, 192 }
+                                                    , { 28, 128 } });
+                }
+
+                SECTION("Self Left Bit Shift")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a << a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 2, 8 }
+                                                  , { 24, 64 }
+                                                  , { 160, 384 }
+                                                  , { 896, 2048 } });
+                }
+            }
+
+            SECTION("Left Bit Shift Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a <<= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 32, 262144, 24576 }
+                                                  , { 2097152, 20971520, 1572864 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a <<= b, std::invalid_argument);
+                    b <<= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 12, 92 }
+                                                  , { 360, 128 }
+                                                  , { 3680, 16320 }
+                                                  , { 1664, 1024 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Left Bit Shift")
+        {
+            SECTION("Left Bit Shift")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a << 5 };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 32, 64, 96 }
+                                                  , { 128, 160, 192 } });
+                }
+            }
+
+            SECTION("Left Bit Shift Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a <<= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 32, 64, 96 }
+                                                  , { 128, 160, 192 } });
+                }
+            }
+        }
+    }
+
+    SECTION("Right Bit Shift and Right Bit Shift Assign")
+    {
+        SECTION("Box Right Bit Shift")
+        {
+            SECTION("Right Bit Shift")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    auto c { a >> b };
+
+                    REQUIRE(c.size() == 6);
+                    REQUIRE(c.dimensions() == std::tuple{2, 3});
+                    REQUIRE(c == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<short> b = { { 6, 23 }
+                                           , { 45, 8 }
+                                           , { 115, 255 }
+                                           , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    auto c { a >> b };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<short> { { 0, 0 }
+                                                    , { 0, 0 }
+                                                    , { 0, 0 }
+                                                    , { 0, 0 } });
+                }
+
+                SECTION("Self Right Bit Shift")
+                {
+                    cortex::box<int> a = { { 1, 2 }
+                                         , { 3, 4 }
+                                         , { 5, 6 }
+                                         , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    auto c { a >> a };
+
+                    REQUIRE(c.size() == 8);
+                    REQUIRE(c.dimensions() == std::tuple{4, 2});
+                    REQUIRE(c == cortex::box<int> { { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 }
+                                                  , { 0, 0 } });
+                }
+            }
+
+            SECTION("Right Bit Shift Assign") 
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    cortex::box<int> b = { { 5, 113, 13 }
+                                         , { 243, -42, 114 } };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+
+                    a >>= b;
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+
+                SECTION("Different Type")
+                {
+                    cortex::box<short> a = { { 1, 2 }
+                                           , { 3, 4 }
+                                           , { 5, 6 }
+                                           , { 7, 8 } };
+
+                    REQUIRE(a.size() == 8);
+                    REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                    cortex::box<int> b = { { 6, 23 }
+                                         , { 45, 8 }
+                                         , { 115, 255 }
+                                         , { 13, 4 } };
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+
+                    REQUIRE_THROWS_AS(a >>= b, std::invalid_argument);
+                    b >>= a;
+
+                    REQUIRE(b.size() == 8);
+                    REQUIRE(b.dimensions() == std::tuple{4, 2});
+                    REQUIRE(b == cortex::box<int> { { 3, 5 }
+                                                  , { 5, 0 }
+                                                  , { 3, 3 }
+                                                  , { 0, 0 } });
+                }
+            }
+        }
+
+        SECTION("Scalar Right Bit Shift")
+        {
+            SECTION("Right Bit Shift")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    auto b { a >> 5 };
+
+                    REQUIRE(b.size() == 6);
+                    REQUIRE(b.dimensions() == std::tuple{2, 3});
+                    REQUIRE(b == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+            }
+
+            SECTION("Right Bit Shift Assign")
+            {
+                SECTION("Same Type")
+                {
+                    cortex::box<int> a = { { 1, 2, 3 }
+                                         , { 4, 5, 6 } };
+
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+
+                    a >>= 5;
+                    
+                    REQUIRE(a.size() == 6);
+                    REQUIRE(a.dimensions() == std::tuple{2, 3});
+                    REQUIRE(a == cortex::box<int> { { 0, 0, 0 }
+                                                  , { 0, 0, 0 } });
+                }
+            }
+        }
+    }
+
     SECTION("Bit Not")
     {
         cortex::box<int> a = { { 1, 2 }
