@@ -1738,6 +1738,24 @@ namespace cortex
             return result;
         }
 
+
+        /// @brief 
+        /// 
+        /// @tparam F 
+        /// @param func 
+        /// @return requires constexpr 
+        template<std::copy_constructible F>
+        constexpr auto
+        map(F func)
+        {
+            box<decltype(std::invoke(std::declval<F>(), std::declval<value_type>()))> result(this->rows(), this->columns());
+
+            if (not empty())
+                std::ranges::transform(*this, result.begin(), func);
+                
+            return result;
+        }
+
     private:
         /// @brief Allocates Matrix Recources
         ///
@@ -3176,6 +3194,12 @@ namespace cortex
     constexpr auto
     operator! (box<_ElemT> bx)
     { return bx.transpose(); }
+
+
+    template<Any _ElemT, std::copy_constructible F>
+    constexpr auto
+    operator|| (box<_ElemT> bx, F f)
+    { return bx.map(f); }
 
 } // namespace cortex
 

@@ -1751,19 +1751,160 @@ TEST_CASE("Utility Operators")
 {
     SECTION("Transpose")
     {
-        cortex::box<int> a = { { 1, 2 }
-                             , { 3, 4 }
-                             , { 5, 6 }
-                             , { 7, 8 } };
+        SECTION("Transpose")
+        {
+            cortex::box<int> a = { { 1, 2 }
+                                , { 3, 4 }
+                                , { 5, 6 }
+                                , { 7, 8 } };
 
-        REQUIRE(a.size() == 8);
-        REQUIRE(a.dimensions() == std::tuple{4, 2});
+            REQUIRE(a.size() == 8);
+            REQUIRE(a.dimensions() == std::tuple{4, 2});
 
-        auto b { !a };
+            auto b { !a };
 
-        REQUIRE(b.size() == 8);
-        REQUIRE(b.dimensions() == std::tuple{2, 4});
-        REQUIRE(b == cortex::box<int> { { 1, 3, 5, 7 }
-                                      , { 2, 4, 6, 8 } });
+            REQUIRE(b.size() == 8);
+            REQUIRE(b.dimensions() == std::tuple{2, 4});
+            REQUIRE(b == cortex::box<int> { { 1, 3, 5, 7 }
+                                        , { 2, 4, 6, 8 } });
+        }
+
+        SECTION("Transpose Empty")
+        {
+            cortex::box<int> a;
+
+            REQUIRE(a.size() == 0);
+            REQUIRE(a.dimensions() == std::tuple{0, 0});
+
+            auto b { !a };
+
+            REQUIRE(b.size() == 0);
+            REQUIRE(b.dimensions() == std::tuple{0, 0});
+        }
+
+        SECTION("Transpose Single Element")
+        {
+            cortex::box<int> a = { { 1 } };
+
+            REQUIRE(a.size() == 1);
+            REQUIRE(a.dimensions() == std::tuple{1, 1});
+
+            auto b { !a };
+
+            REQUIRE(b.size() == 1);
+            REQUIRE(b.dimensions() == std::tuple{1, 1});
+            REQUIRE(b == cortex::box<int> { { 1 } });
+        }
+
+        SECTION("Transpose Assign")
+        {
+            cortex::box<int> a = { { 1, 2 }
+                                , { 3, 4 }
+                                , { 5, 6 }
+                                , { 7, 8 } };
+
+            REQUIRE(a.size() == 8);
+            REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+            a = !a;
+
+            REQUIRE(a.size() == 8);
+            REQUIRE(a.dimensions() == std::tuple{2, 4});
+            REQUIRE(a == cortex::box<int> { { 1, 3, 5, 7 }
+                                        , { 2, 4, 6, 8 } });
+        }
+    }
+
+    SECTION("Map")
+    {
+        SECTION("Map")
+        {
+            SECTION("Map - Lambda")
+            {
+                cortex::box<int> a = { { 1, 2 }
+                                     , { 3, 4 }
+                                     , { 5, 6 }
+                                     , { 7, 8 } };
+
+                REQUIRE(a.size() == 8);
+                REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                auto b { a || [](const auto& i) { return i * 2; } };
+
+                REQUIRE(b.size() == 8);
+                REQUIRE(b.dimensions() == std::tuple{4, 2});
+                REQUIRE(b == cortex::box<int> { { 2, 4 }
+                                              , { 6, 8 }
+                                              , { 10, 12 }
+                                              , { 14, 16 } });
+            }
+
+            SECTION("Map - Named Lambda")
+            {
+                cortex::box<int> a = { { 1, 2 }
+                                     , { 3, 4 }
+                                     , { 5, 6 }
+                                     , { 7, 8 } };
+
+                auto xor_3 = [](const auto& i) { return i ^ 3; };
+
+                REQUIRE(a.size() == 8);
+                REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                auto b { a || xor_3 };
+
+                REQUIRE(b.size() == 8);
+                REQUIRE(b.dimensions() == std::tuple{4, 2});
+                REQUIRE(b == cortex::box<int> { { 2, 1 }
+                                              , { 0, 7 }
+                                              , { 6, 5 }
+                                              , { 4, 11 } });
+            }
+
+            SECTION("Map - Chained Lambdas")
+            {
+                cortex::box<int> a = { { 1, 2 }
+                                     , { 3, 4 }
+                                     , { 5, 6 }
+                                     , { 7, 8 } };
+
+                REQUIRE(a.size() == 8);
+                REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                auto b { a || [](const auto& i) { return i * 2; } 
+                           || [](const auto& i) { return i ^ 3; } };
+
+                REQUIRE(b.size() == 8);
+                REQUIRE(b.dimensions() == std::tuple{4, 2});
+                REQUIRE(b == cortex::box<int> { { 1, 7 }
+                                              , { 5, 11 }
+                                              , { 9, 15 }
+                                              , { 13, 19 } });
+            }
+
+            SECTION("Map - Chained Named Lambdas")
+            {
+                cortex::box<int> a = { { 1, 2 }
+                                     , { 3, 4 }
+                                     , { 5, 6 }
+                                     , { 7, 8 } };
+
+                auto square = [](const auto& i) { return i * 2; };
+                auto xor_3 = [](const auto& i) { return i ^ 3; };
+
+                REQUIRE(a.size() == 8);
+                REQUIRE(a.dimensions() == std::tuple{4, 2});
+
+                auto b { a || square 
+                           || xor_3 };
+
+                REQUIRE(b.size() == 8);
+                REQUIRE(b.dimensions() == std::tuple{4, 2});
+                REQUIRE(b == cortex::box<int> { { 1, 7 }
+                                              , { 5, 11 }
+                                              , { 9, 15 }
+                                              , { 13, 19 } });
+            }
+        }
     }
 }
