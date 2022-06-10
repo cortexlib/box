@@ -39,11 +39,11 @@ namespace cortex
     ///
     /// @todo Add support for iterator constructors -------------------------- ✔️
     /// @todo Add other modification methods (mod, xor etc.) ----------------- ✔️
+    /// @todo Add flips ------------------------------------------------------ ✔️
+    /// @todo Add support for operator overloads ----------------------------- ✔️
     /// @todo Projection method ---------------------------------------------- 🗑️ (do-able with assign)
     /// @todo Add support for single initialiser constructor ----------------- 🗑️ (too ambiguous for compiler)
     /// @todo Add support for assign -----------------------------------------
-    /// @todo Add support for operator overloads -----------------------------
-    /// @todo Add flips ------------------------------------------------------
     /// @todo Add rotates ----------------------------------------------------
     ///
     /// @tparam _Tp
@@ -51,32 +51,32 @@ namespace cortex
     class box
     {
     public:
-        using value_type = _Tp;
-        using size_type = std::size_t;
-        using difference_type = std::ptrdiff_t;
+        using value_type                            = _Tp;
+        using size_type                             = std::size_t;
+        using difference_type                       = std::ptrdiff_t;
 
-        using allocator_type = _Alloc;
-        using alloc_traits = typename std::allocator_traits<_Alloc>;
+        using allocator_type                        = _Alloc;
+        using alloc_traits                          = typename std::allocator_traits<_Alloc>;
 
-        using reference = _Tp &;
-        using const_reference = const _Tp &;
-        using pointer = typename alloc_traits::pointer;
-        using const_pointer = typename alloc_traits::pointer;
+        using reference                             = _Tp&;
+        using const_reference                       = const _Tp&;
+        using pointer                               = typename alloc_traits::pointer;
+        using const_pointer                         = typename alloc_traits::pointer;
 
-        using iterator = cortex::normal_iterator<pointer, box<value_type>>;
-        using const_iterator = cortex::normal_iterator<const_pointer, box<value_type>>;
-        using reverse_iterator = std::reverse_iterator<iterator>;
-        using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+        using iterator                              = cortex::normal_iterator<pointer, box<value_type>>;
+        using const_iterator                        = cortex::normal_iterator<const_pointer, box<value_type>>;
+        using reverse_iterator                      = std::reverse_iterator<iterator>;
+        using const_reverse_iterator                = std::reverse_iterator<const_iterator>;
 
-        using column_iterator = cortex::column_iterator<iterator>;
-        using const_column_iterator = cortex::column_iterator<const_iterator>;
-        using reverse_column_iterator = std::reverse_iterator<column_iterator>;
-        using const_reverse_column_iterator = std::reverse_iterator<const_column_iterator>;
+        using column_iterator                       = cortex::column_iterator<iterator>;
+        using const_column_iterator                 = cortex::column_iterator<const_iterator>;
+        using reverse_column_iterator               = std::reverse_iterator<column_iterator>;
+        using const_reverse_column_iterator         = std::reverse_iterator<const_column_iterator>;
 
-        using row_iterator = cortex::row_iterator<iterator>;
-        using const_row_iterator = cortex::row_iterator<const_iterator>;
-        using reverse_row_iterator = std::reverse_iterator<row_iterator>;
-        using const_reverse_row_iterator = std::reverse_iterator<const_row_iterator>;
+        using row_iterator                          = cortex::row_iterator<iterator>;
+        using const_row_iterator                    = cortex::row_iterator<const_iterator>;
+        using reverse_row_iterator                  = std::reverse_iterator<row_iterator>;
+        using const_reverse_row_iterator            = std::reverse_iterator<const_row_iterator>;
 
     private:
         size_type m_rows;
@@ -101,7 +101,7 @@ namespace cortex
         /// given allocator.
         ///
         /// @param alloc type: allocator_type | qualifiers: [const], [ref]
-        constexpr explicit box(const allocator_type &alloc) noexcept
+        constexpr explicit box(const allocator_type& alloc) noexcept
             : m_rows(size_type()), m_columns(size_type()), m_allocator(alloc), m_start(pointer()), m_finish(pointer())
         {
         }
@@ -116,7 +116,7 @@ namespace cortex
         /// @param cols type: [size_type]
         /// @param rows type: [size_type]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr explicit box(size_type rows, size_type cols, const allocator_type &alloc = allocator_type())
+        constexpr explicit box(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
             : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             if constexpr (std::is_default_constructible_v<value_type>)
@@ -135,7 +135,7 @@ namespace cortex
         /// @param rows type: [size_type]
         /// @param value type: [value_type] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr box(size_type rows, size_type cols, const value_type &value, const allocator_type &alloc = allocator_type())
+        constexpr box(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
             : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             std::ranges::uninitialized_fill(*this, value);
@@ -147,7 +147,7 @@ namespace cortex
         /// another box of the same underlying type.
         ///
         /// @param other type: [box] | qualifiers: [const], [ref]
-        constexpr box(const box &other)
+        constexpr box(const box& other)
             : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(other.m_allocator), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             std::ranges::uninitialized_copy(other, *this);
@@ -160,7 +160,7 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr box(const box &other, const allocator_type &alloc)
+        constexpr box(const box& other, const allocator_type& alloc)
             : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             std::ranges::uninitialized_copy(other, *this);
@@ -173,7 +173,7 @@ namespace cortex
         /// in a default constructed state.
         ///
         /// @param other type: [box] | qualifiers: [move]
-        constexpr box(box &&other) noexcept
+        constexpr box(box&& other) noexcept
             : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(std::move(other.m_allocator)), m_start(other.m_start), m_finish(other.m_finish)
         {
             other.m_start = pointer();
@@ -191,7 +191,7 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [move]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
-        constexpr box(box &&other, const allocator_type &alloc) noexcept
+        constexpr box(box&& other, const allocator_type& alloc) noexcept
             : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(alloc), m_start(other.m_start), m_finish(other.m_finish)
         {
             other.m_start = pointer();
@@ -211,7 +211,7 @@ namespace cortex
         /// @tparam _It concept: [std::input_iterator]
         /// @param first type:
         template <std::input_iterator _It>
-        constexpr box(_It first, _It last, size_type rows, size_type cols, [[maybe_unused]] const allocator_type &alloc = allocator_type())
+        constexpr box(_It first, _It last, size_type rows, size_type cols, [[maybe_unused]] const allocator_type& alloc = allocator_type())
             : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             std::ranges::uninitialized_copy(first, last, begin(), end());
@@ -224,7 +224,7 @@ namespace cortex
         /// ownership is moved to the box's memory.
         ///
         /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
-        constexpr box(std::initializer_list<std::initializer_list<value_type>> list, const allocator_type &alloc = allocator_type())
+        constexpr box(std::initializer_list<std::initializer_list<value_type>> list, const allocator_type& alloc = allocator_type())
             : m_rows(list.size()), m_columns(list.begin()->size()), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
         {
             using init_iter = typename decltype(list)::iterator;
@@ -246,7 +246,7 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [const], [ref]
         /// @return constexpr box&
-        constexpr box &operator=(const box &other)
+        constexpr box& operator= (const box& other)
         {
             if (*this not_eq other)
             {
@@ -269,7 +269,7 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [move]
         /// @return constexpr box&
-        constexpr box &operator=(box &&other) noexcept
+        constexpr box& operator= (box&& other) noexcept
         {
             if (*this not_eq other)
             {
@@ -296,7 +296,7 @@ namespace cortex
         ///
         /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
         /// @return constexpr box&
-        constexpr box &operator=(std::initializer_list<std::initializer_list<value_type>> list)
+        constexpr box& operator= (std::initializer_list<std::initializer_list<value_type>> list)
         {
             m_allocator = allocator_type();
             m_rows = list.size();
@@ -409,7 +409,7 @@ namespace cortex
         /// @param new_rows type: [size_type]
         /// @param new_columns type: [size_type]
         /// @param value type: [value_type] | qualifiers: [const], [ref]
-        constexpr void resize(size_type new_rows, size_type new_columns, const value_type &value)
+        constexpr void resize(size_type new_rows, size_type new_columns, const value_type& value)
         {
             auto old_size{_M_size(m_rows, m_columns)};
 
@@ -528,7 +528,7 @@ namespace cortex
         /// by moving ownership of the matrices resources.
         ///
         /// @param other type: [box] | qualifiers: [ref]
-        void swap(box &other) noexcept
+        void swap(box& other) noexcept
         {
             box tmp = std::move(other);
             other = std::move(*this);
@@ -1183,8 +1183,8 @@ namespace cortex
         /// `AddableWith` with type of the elemnts of the
         /// passed box. A new box is created and returned.
         ///
-        /// @    requires The type of this box's elements are `Addable`
-        /// @    requires The type of this box's elements and the type
+        /// @requires The type of this box's elements are `Addable`
+        /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `AddableWith`.
         ///
         /// @tparam _ElemT
@@ -1193,7 +1193,7 @@ namespace cortex
         /// is the sum of the two input matrices element types.
         template <Addable _ElemT>
             requires AddableWith<value_type, _ElemT>
-        constexpr auto add(const box<_ElemT> &other) const
+        constexpr auto add(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1216,8 +1216,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @    requires The type of this box's elements are `Subtractable`
-        /// @    requires The type of this box's elements and the type
+        /// @requires The type of this box's elements are `Subtractable`
+        /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `SubtractableWith`.
         ///
         /// @tparam _ElemT
@@ -1226,7 +1226,7 @@ namespace cortex
         /// is the difference of the two input matrices element types.
         template <Subtractable _ElemT>
             requires SubtractableWith<value_type, _ElemT>
-        constexpr auto sub(const box<_ElemT> &other) const
+        constexpr auto sub(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1249,8 +1249,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @    requires The type of this box's elements are `Multiplicable`
-        /// @    requires The type of this box's elements and the type
+        /// @requires The type of this box's elements are `Multiplicable`
+        /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `MultiplicableWith`.
         ///
         /// @tparam _ElemT
@@ -1259,7 +1259,7 @@ namespace cortex
         /// is the product of the two input matrices element types.
         template <Any _ElemT>
             requires MultiplicableWith<value_type, _ElemT>
-        constexpr auto mul(const box<_ElemT> &other) const
+        constexpr auto mul(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1277,9 +1277,9 @@ namespace cortex
         /// @details Performs an element-wise multiplication of the box
         /// by a 'scalar' value.
         ///
-        /// @    requires The type of this box's elements are `MultiplicableWith`
+        /// @requires The type of this box's elements are `MultiplicableWith`
         /// the type denoted _ScalarT.
-        /// @    requires The type denoted _ScalarT be `Multiplicable`.
+        /// @requires The type denoted _ScalarT be `Multiplicable`.
         ///
         ///
         /// @tparam _ScalarT
@@ -1287,7 +1287,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
-        constexpr auto mul(const _ScalarT &scalar) const
+        constexpr auto mul(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1310,8 +1310,8 @@ namespace cortex
         /// of the passed box. A new box is created and
         /// returned.
         ///
-        /// @    requires The type of this box's elements are `Divisible`
-        /// @    requires The type of this box's elements and the type
+        /// @requires The type of this box's elements are `Divisible`
+        /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `DivisibleWith`.
         ///
         /// @note When dividing two matrices, if both matrices elements
@@ -1324,7 +1324,7 @@ namespace cortex
         /// is the quotient of the two input matrices element types.
         template <Any _ElemT>
             requires DivisibleWith<value_type, _ElemT>
-        constexpr auto div(const box<_ElemT> &other) const
+        constexpr auto div(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1342,9 +1342,9 @@ namespace cortex
         /// @details Performs an element-wise division of the box
         /// by a 'scalar' value.
         ///
-        /// @    requires The type of this box's elements are `DivisibleWith`
+        /// @requires The type of this box's elements are `DivisibleWith`
         /// the type denoted _ScalarT.
-        /// @    requires The type denoted _ScalarT be `Divisible`.
+        /// @requires The type denoted _ScalarT be `Divisible`.
         ///
         /// @note When dividing two matrices, if both matrices elements
         /// are integrals, the division is performed as integer divisionbx.
@@ -1355,7 +1355,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
-        constexpr auto div(const _ScalarT &scalar) const
+        constexpr auto div(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1383,7 +1383,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
         template <Any _ElemT>
             requires ModuloWith<value_type, _ElemT>
-        constexpr auto mod(const box<_ElemT> &other) const
+        constexpr auto mod(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1410,7 +1410,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires ModuloWith<value_type, _ScalarT>
-        constexpr auto mod(const _ScalarT &scalar) const
+        constexpr auto mod(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1436,7 +1436,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
         template <Any _ElemT>
             requires BitXorWith<value_type, _ElemT>
-        constexpr auto bit_xor(const box<_ElemT> &other) const
+        constexpr auto bit_xor(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1463,7 +1463,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires BitXorWith<value_type, _ScalarT>
-        constexpr auto bit_xor(const _ScalarT &scalar) const
+        constexpr auto bit_xor(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1487,16 +1487,16 @@ namespace cortex
         ///
         /// @tparam _ElemT concept: BitAnd |     requires: BitAndWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
+        /// @return box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())>
         template <Any _ElemT>
             requires BitAndWith<value_type, _ElemT>
-        constexpr auto bit_and(const box<_ElemT> &other) const
-            -> box<decltype(std::declval<value_type>() & std::declval<_ElemT>())>
+        constexpr auto bit_and(const box<_ElemT>& other) const
+            -> box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
                 throw std::invalid_argument("In box::bit_and - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() & std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::bit_and{});
 
@@ -1514,18 +1514,18 @@ namespace cortex
         ///
         /// @tparam _ScalarT concept: BitAnd |     requires: BitAndWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
+        /// @return box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires BitAndWith<value_type, _ScalarT>
-        constexpr auto bit_and(const _ScalarT &scalar) const
-            -> box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())>
+        constexpr auto bit_and(const _ScalarT& scalar) const
+            -> box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())>
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_and - scalar bit_and on empty box");
 
-            box<decltype(std::declval<value_type>() & std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem & scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem&  scalar; });
 
             return result;
         }
@@ -1544,7 +1544,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
         template <Any _ElemT>
             requires BitOrWith<value_type, _ElemT>
-        constexpr auto bit_or(const box<_ElemT> &other) const
+        constexpr auto bit_or(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1571,7 +1571,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires BitOrWith<value_type, _ScalarT>
-        constexpr auto bit_or(const _ScalarT &scalar) const
+        constexpr auto bit_or(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1598,7 +1598,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
         template <Any _ElemT>
             requires LeftBitShiftWith<value_type, _ElemT>
-        constexpr auto shift_left(const box<_ElemT> &other) const
+        constexpr auto shift_left(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1625,7 +1625,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires LeftBitShiftWith<value_type, _ScalarT>
-        constexpr auto shift_left(const _ScalarT &scalar) const
+        constexpr auto shift_left(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1652,7 +1652,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
         template <Any _ElemT>
             requires RightBitShiftWith<value_type, _ElemT>
-        constexpr auto shift_right(const box<_ElemT> &other) const
+        constexpr auto shift_right(const box<_ElemT>& other) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
         {
             if (this->dimensions() not_eq other.dimensions())
@@ -1679,7 +1679,7 @@ namespace cortex
         /// @return box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
         template <Any _ScalarT>
             requires RightBitShiftWith<value_type, _ScalarT>
-        constexpr auto shift_right(const _ScalarT &scalar) const
+        constexpr auto shift_right(const _ScalarT& scalar) const
             -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
         {
             if (empty())
@@ -1701,7 +1701,7 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @    requires BitNot<value_type>
+        /// @requires BitNot<value_type>
         ///
         /// @return constexpr auto
         constexpr auto bit_not() const
@@ -1753,6 +1753,41 @@ namespace cortex
             if (not empty())
                 std::ranges::transform(*this, result.begin(), func);
                 
+            return result;
+        }
+
+
+        /// @brief Vertical Flip
+        ///
+        /// @details Performs a vertical flip of the box.
+        /// ie. The order of the rows is reversed.
+        /// 
+        /// @return constexpr auto 
+        constexpr auto vflip()
+        {
+            box<value_type> result(this->rows(), this->columns());
+
+            if (not empty())
+                for (auto cidx { 0u }; cidx < this->columns(); ++cidx)
+                    std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.column_rbegin(cidx));
+
+            return result;
+        }
+
+        /// @brief Horizontal Flip
+        ///
+        /// @details Performs a horizontal flip of the box.
+        /// ie. The order of the columns is reversed.
+        /// 
+        /// @return constexpr auto 
+        constexpr auto hflip()
+        {
+            box<value_type> result(this->rows(), this->columns());
+
+            if (not empty())
+                for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
+                    std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
+
             return result;
         }
 
@@ -1866,7 +1901,7 @@ namespace cortex
     /// @details Uses std::equal to compare the matrices.
     /// Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
     ///
-    /// @    requires Matrix elements support equality comparison
+    /// @requires Matrix elements support equality comparison
     /// that converts to a bool
     ///
     /// @exception Operation is has no exception iff the comparison
@@ -1883,19 +1918,19 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemL lhsE, _ElemR rhsE)
+        requires requires(_ElemL lhsE, _ElemR rhsE)
     {
         {
             lhsE == rhsE
             } -> std::convertible_to<bool>;
     }
     constexpr inline bool
-    operator==(const box<_ElemL> &lhs, const box<_ElemR> &rhs) noexcept(
+    operator== (const box<_ElemL>& lhs, const box<_ElemR>& rhs) noexcept(
         noexcept(std::declval<_ElemL>() == std::declval<_ElemR>())
-            &&noexcept(std::ranges::equal(lhs, rhs);))
+           & &noexcept(std::ranges::equal(lhs, rhs);))
 #else
     inline bool
-    operator==(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator== (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
 #endif
     {
         if (lhs.dimensions() not_eq rhs.dimensions())
@@ -1922,7 +1957,7 @@ namespace cortex
     /// @return constexpr inline auto
     template <typename _ElemL, typename _ElemR>
     constexpr inline auto
-    operator<=>(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator<=> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::compare_three_way{});
     }
@@ -1942,7 +1977,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
     inline bool
-    operator!=(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator!= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return !(lhs == rhs);
     }
@@ -1958,7 +1993,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
     inline bool
-    operator<(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator< (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return std::ranges::lexicographical_compare(lhs, rhs);
     }
@@ -1977,7 +2012,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
     inline bool
-    operator>(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return rhs < lhs;
     }
@@ -1998,7 +2033,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
     inline bool
-    operator<=(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator<= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return !(rhs < lhs);
     }
@@ -2017,7 +2052,7 @@ namespace cortex
     /// @return false
     template <typename _ElemL, typename _ElemR>
     inline bool
-    operator>=(const box<_ElemL> &lhs, const box<_ElemR> &rhs)
+    operator>= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
     {
         return !(lhs < rhs);
     }
@@ -2030,7 +2065,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are equal as true and the everything else as false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// equality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison
@@ -2043,23 +2078,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE == rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE == rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator==(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() == std::declval<_ElemT>()))
+    operator== (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() == std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator==(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator== (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE == scalar; });
         return result;
     }
@@ -2070,7 +2101,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are inequal as true and the everything else as false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// inequality comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the inequlity comparison
@@ -2083,23 +2114,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE != rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE != rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator!=(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() != std::declval<_ElemT>()))
+    operator!= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() != std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator!=(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator!= (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE != scalar; });
         return result;
     }
@@ -2110,7 +2137,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are less-than as true and the everything else as false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than comparison
@@ -2123,23 +2150,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE < rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE < rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator<(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() < std::declval<_ElemT>()))
+    operator< (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() < std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator<(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator< (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE < scalar; });
         return result;
     }
@@ -2150,7 +2173,7 @@ namespace cortex
     /// scalar. Creates a bit mask (or boolean mask) of the values
     /// that are greater-than as true and the everything else as false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// greater-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than comparison
@@ -2163,23 +2186,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE > rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE > rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator>(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator> (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator>(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator> (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE > scalar; });
         return result;
     }
@@ -2191,7 +2210,7 @@ namespace cortex
     /// that are less-than-eqaul as true and the everything else as
     /// false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// less-than comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the less-than-equal comparison
@@ -2204,23 +2223,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE <= rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE <= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator<=(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator<= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator<=(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator<= (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE <= scalar; });
         return result;
     }
@@ -2232,7 +2247,7 @@ namespace cortex
     /// that are greater-than-equal as true and the everything else
     /// as false.
     ///
-    /// @    requires Comparison of scalar type and box type support
+    /// @requires Comparison of scalar type and box type support
     /// greater-than-equal comparison that results in a bool.
     ///
     /// @exception Operation is noexcept iff the greater-than-equal
@@ -2246,23 +2261,19 @@ namespace cortex
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
-        requires     requires(_ElemT lhsE, _ElemT rhsE)
-    {
-        {
-            lhsE >= rhsE
-            } -> std::convertible_to<bool>;
-    }
+        requires requires(_ElemT lhsE, _ElemT rhsE)
+                { { lhsE >= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator>=(const box<_ElemT> &bx, const _ElemT &scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator>= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
         -> box<bool>
 #else
     inline auto
-    operator>=(const box<_ElemT> &bx, const _ElemT &scalar)
+    operator>= (const box<_ElemT>& bx, const _ElemT& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT &bxE)
+        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
                                { return bxE >= scalar; });
         return result;
     }
@@ -3219,7 +3230,7 @@ namespace std
     /// @param __y type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
     /// @return inline void
     template <typename _Tp>
-    inline void swap(cortex::box<_Tp> &x, cortex::box<_Tp> &y) noexcept
+    inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y) noexcept
     {
         x.swap(y);
     }
