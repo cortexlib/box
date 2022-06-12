@@ -3,8 +3,8 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.1.0
-/// @date 2022-16-22
+/// @version 2.2.0
+/// @date 12-06-2022
 ///
 /// @copyright Copyright (c) 2022
 
@@ -91,9 +91,12 @@ namespace cortex
         ///
         /// @details Default constructor for box.
         constexpr box() noexcept
-            : m_rows(size_type()), m_columns(size_type()), m_allocator(allocator_type()), m_start(pointer()), m_finish(pointer())
-        {
-        }
+        : m_rows(size_type())
+        , m_columns(size_type())
+        , m_allocator(allocator_type())
+        , m_start(pointer())
+        , m_finish(pointer())
+        { }
 
         /// @brief Allocator Constructor
         ///
@@ -102,9 +105,12 @@ namespace cortex
         ///
         /// @param alloc type: allocator_type | qualifiers: [const], [ref]
         constexpr explicit box(const allocator_type& alloc) noexcept
-            : m_rows(size_type()), m_columns(size_type()), m_allocator(alloc), m_start(pointer()), m_finish(pointer())
-        {
-        }
+        : m_rows(size_type())
+        , m_columns(size_type())
+        , m_allocator(alloc)
+        , m_start(pointer())
+        , m_finish(pointer())
+        { }
 
         /// @brief Size Constructor
         ///
@@ -117,7 +123,11 @@ namespace cortex
         /// @param rows type: [size_type]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
         constexpr explicit box(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
-            : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
         {
             if constexpr (std::is_default_constructible_v<value_type>)
                 std::ranges::uninitialized_default_construct(*this);
@@ -136,10 +146,12 @@ namespace cortex
         /// @param value type: [value_type] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
         constexpr box(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
-            : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
-        {
-            std::ranges::uninitialized_fill(*this, value);
-        }
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { std::ranges::uninitialized_fill(*this, value); }
 
         /// @brief Copy Constructor
         ///
@@ -148,10 +160,12 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [const], [ref]
         constexpr box(const box& other)
-            : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(other.m_allocator), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
-        {
-            std::ranges::uninitialized_copy(other, *this);
-        }
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_allocator(other.m_allocator)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { std::ranges::uninitialized_copy(other, *this); }
 
         /// @brief Copy Constructor with Alternative Allocator
         ///
@@ -161,10 +175,12 @@ namespace cortex
         /// @param other type: [box] | qualifiers: [const], [ref]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
         constexpr box(const box& other, const allocator_type& alloc)
-            : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
-        {
-            std::ranges::uninitialized_copy(other, *this);
-        }
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { std::ranges::uninitialized_copy(other, *this); }
 
         /// @brief Move Constructor
         ///
@@ -174,7 +190,11 @@ namespace cortex
         ///
         /// @param other type: [box] | qualifiers: [move]
         constexpr box(box&& other) noexcept
-            : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(std::move(other.m_allocator)), m_start(other.m_start), m_finish(other.m_finish)
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_allocator(std::move(other.m_allocator))
+        , m_start(other.m_start)
+        , m_finish(other.m_finish)
         {
             other.m_start = pointer();
             other.m_finish = pointer();
@@ -192,7 +212,11 @@ namespace cortex
         /// @param other type: [box] | qualifiers: [move]
         /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
         constexpr box(box&& other, const allocator_type& alloc) noexcept
-            : m_rows(other.m_rows), m_columns(other.m_columns), m_allocator(alloc), m_start(other.m_start), m_finish(other.m_finish)
+        : m_rows(other.m_rows)
+        , m_columns(other.m_columns)
+        , m_allocator(alloc)
+        , m_start(other.m_start)
+        , m_finish(other.m_finish)
         {
             other.m_start = pointer();
             other.m_finish = pointer();
@@ -211,11 +235,15 @@ namespace cortex
         /// @tparam _It concept: [std::input_iterator]
         /// @param first type:
         template <std::input_iterator _It>
-        constexpr box(_It first, _It last, size_type rows, size_type cols, [[maybe_unused]] const allocator_type& alloc = allocator_type())
-            : m_rows(rows), m_columns(cols), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
-        {
-            std::ranges::uninitialized_copy(first, last, begin(), end());
-        }
+        constexpr box(_It first, _It last
+                    , size_type rows, size_type cols
+                    , [[maybe_unused]] const allocator_type& alloc = allocator_type())
+        : m_rows(rows)
+        , m_columns(cols)
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { std::ranges::uninitialized_copy(first, last, begin(), end()); }
 
         /// @brief Initialiser List Constructor
         ///
@@ -224,11 +252,16 @@ namespace cortex
         /// ownership is moved to the box's memory.
         ///
         /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
-        constexpr box(std::initializer_list<std::initializer_list<value_type>> list, const allocator_type& alloc = allocator_type())
-            : m_rows(list.size()), m_columns(list.begin()->size()), m_allocator(alloc), m_start(_M_allocate(_M_size(m_rows, m_columns))), m_finish(m_start + _M_size(m_rows, m_columns))
+        constexpr box(std::initializer_list<std::initializer_list<value_type>> list
+                    , const allocator_type& alloc = allocator_type())
+        : m_rows(list.size())
+        , m_columns(list.begin()->size())
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
         {
             using init_iter = typename decltype(list)::iterator;
-            auto offset{0uL};
+            auto offset{ 0uL };
             for (init_iter row{list.begin()}; row != list.end(); ++row)
             {
                 if (row->size() != this->m_columns)
@@ -1764,62 +1797,92 @@ namespace cortex
         /// @brief Vertical Flip
         ///
         /// @details Performs a vertical flip of the box.
-        /// ie. The order of the rows is reversed.
+        /// ie. The order of the rows is reversed. If 
+        /// `this` box is empty, an empty box is returned
+        /// with no memory allocated to it.
         /// 
         /// @return constexpr auto 
         constexpr auto vflip() const
         {
-            box<value_type> result(this->rows(), this->columns());
+            if (empty())
+                return box<value_type>{};
+            else
+            {
+                box<value_type> result(this->rows(), this->columns());
 
-            if (!empty())
                 for (auto cidx { 0u }; cidx < this->columns(); ++cidx)
                     std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.column_rbegin(cidx));
 
-            return result;
+                return result;
+            }
         }
 
         /// @brief Horizontal Flip
         ///
         /// @details Performs a horizontal flip of the box.
-        /// ie. The order of the columns is reversed.
+        /// ie. The order of the columns is reversed. If 
+        /// `this` box is empty, an empty box is returned
+        /// with no memory allocated to it.
         /// 
         /// @return constexpr auto 
         constexpr auto hflip() const
         {
-            box<value_type> result(this->rows(), this->columns());
+            if (empty())
+                return box<value_type>{};
+            else
+            {
+                box<value_type> result(this->rows(), this->columns());
+                    for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
+                        std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
 
-            if (!empty())
-                for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
-                    std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
-
-            return result;
+                return result;
+            }
         }
 
 
-        /// @brief 
+        /// @brief Right Rotate
+        ///
+        /// Rotates the box 90 degrees clockwise. Inverts the 
+        /// dimension sizes of the box. If `this` box is empty,
+        /// an empty box is returned with no memory allocated to it.
         /// 
         /// @return constexpr auto 
         constexpr auto rrotate() const
         {
-            box<value_type> result(this->columns(), this->rows());
+            if (empty())
+                return box<value_type>{};
+            else
+            {
+                box<value_type> result(this->columns(), this->rows());
 
-            if (!empty())
                 for (auto cidx { 0u }; cidx < this->columns(); ++cidx)
                     std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.row_rbegin(cidx));
 
-            return result;
+                return result;
+            }
         }
 
 
+        /// @brief Left Rotate
+        ///
+        /// Rotates the box 90 degrees counter-clockwise. Inverts 
+        /// the dimension sizes of the box. If `this` box is empty,
+        /// an empty box is returned with no memory allocated to it.
+        /// 
+        /// @return constexpr auto 
         constexpr auto lrotate() const
         {
-            box<value_type> result(this->columns(), this->rows());
+            if (empty())
+                return box<value_type>{};
+            else
+            {
+                box<value_type> result(this->columns(), this->rows());
 
-            if (!empty())
                 for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
                     std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.column_rbegin(ridx));
 
-            return result;
+                return result;
+            }
         }
 
     private:
