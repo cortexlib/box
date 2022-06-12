@@ -504,4 +504,164 @@ TEST_CASE("Modifications")
             REQUIRE(rbx.hflip() == bx);
         }
     }
+
+    SECTION("box::rrotate")
+    {
+        SECTION("box::rrotate - Empty")
+        {
+            cortex::box<int> bx;
+
+            REQUIRE(bx.empty());
+            REQUIRE(bx.size() == 0);
+            REQUIRE(bx.rows() == 0);
+            REQUIRE(bx.columns() == 0);
+
+            auto rbx { bx.rrotate() };
+
+            REQUIRE(rbx.empty());
+            REQUIRE(rbx.size() == 0);
+            REQUIRE(rbx.rows() == 0);
+            REQUIRE(rbx.columns() == 0);
+
+            REQUIRE(rbx == bx);
+        }
+
+        SECTION("box::rrotate - Single")
+        {
+            cortex::box<int> bx = { { 0 } };
+
+            cortex::box<int> bxcheck = { { 0 } };
+
+            cortex::box<int> rbxcheck = { { 0 } };
+
+            REQUIRE(bx.size() == 1);
+            REQUIRE(bx.rows() == 1);
+            REQUIRE(bx.columns() == 1);
+
+            auto rbx { bx.rrotate() };
+
+            REQUIRE(bx == bxcheck);
+
+            REQUIRE(rbx.size() == 1);
+            REQUIRE(rbx.rows() == 1);
+            REQUIRE(rbx.columns() == 1);
+            REQUIRE(rbx == rbxcheck);
+
+            REQUIRE(rbx == bx);
+
+            REQUIRE(rbx.rrotate() == bx);
+        }
+
+        SECTION("box::rrotate - Shaped")
+        {
+            cortex::box<int> bx = { { 0, 1 }
+                                  , { 2, 3 }
+                                  , { 4, 5 }
+                                  , { 6, 7 }
+                                  , { 8, 9 } };
+
+            cortex::box<int> bxcheck = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+            cortex::box <int> rbxcheck = { { 8, 6, 4, 2, 0 }
+                                         , { 9, 7, 5, 3, 1 } };
+
+            REQUIRE(bx.size() == 10);
+            REQUIRE(bx.dimensions() == std::tuple{5, 2});
+
+            REQUIRE(bx == bxcheck);
+
+            auto rbx { bx.rrotate() };
+
+            REQUIRE(rbx.size() == 10);
+            REQUIRE(rbx.dimensions() == std::tuple{2, 5});
+
+            REQUIRE(rbx == rbxcheck);
+
+            REQUIRE(rbx.lrotate() == bx);
+        }
+    }
+
+    SECTION("box::lrotate")
+    {
+        SECTION("box::lrotate - Empty")
+        {
+            cortex::box<int> bx;
+
+            REQUIRE(bx.empty());
+            REQUIRE(bx.size() == 0);
+            REQUIRE(bx.rows() == 0);
+            REQUIRE(bx.columns() == 0);
+
+            auto rbx { bx.lrotate() };
+
+            REQUIRE(rbx.empty());
+            REQUIRE(rbx.size() == 0);
+            REQUIRE(rbx.rows() == 0);
+            REQUIRE(rbx.columns() == 0);
+
+            REQUIRE(rbx == bx);
+        }
+
+        SECTION("box::lrotate - Single")
+        {
+            cortex::box<int> bx = { { 0 } };
+
+            cortex::box<int> bxcheck = { { 0 } };
+
+            cortex::box<int> rbxcheck = { { 0 } };
+
+            REQUIRE(bx.size() == 1);
+            REQUIRE(bx.rows() == 1);
+            REQUIRE(bx.columns() == 1);
+
+            auto rbx { bx.lrotate() };
+
+            REQUIRE(bx == bxcheck);
+
+            REQUIRE(rbx.size() == 1);
+            REQUIRE(rbx.rows() == 1);
+            REQUIRE(rbx.columns() == 1);
+            REQUIRE(rbx == rbxcheck);
+
+            REQUIRE(rbx == bx);
+
+            REQUIRE(rbx.lrotate() == bx);
+        }
+
+        SECTION("box::lrotate - Shaped")
+        {
+            cortex::box<int> bx = { { 0, 1 }
+                                  , { 2, 3 }
+                                  , { 4, 5 }
+                                  , { 6, 7 }
+                                  , { 8, 9 } };
+
+            cortex::box<int> bxcheck = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+            cortex::box <int> rbxcheck = { { 1, 3, 5, 7, 9 }
+                                         , { 0, 2, 4, 6, 8 } };
+            
+            REQUIRE(bx.size() == 10);
+            REQUIRE(bx.dimensions() == std::tuple{5, 2});
+
+            REQUIRE(bx == bxcheck);
+
+            auto rbx { bx.lrotate() };
+
+            REQUIRE(rbx.size() == 10);
+            REQUIRE(rbx.dimensions() == std::tuple{2, 5});
+
+            REQUIRE(rbx == rbxcheck);
+
+            REQUIRE(rbx.rrotate() == bx);
+        }
+    }
 }
