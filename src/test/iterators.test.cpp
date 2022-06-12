@@ -1,6 +1,5 @@
 #include <catch2/catch.hpp>
 #include <box.hpp>
-#include <iostream>
 
 TEST_CASE("Iterators")
 {
