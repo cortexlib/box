@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.0.7 ..
+/// @version 2.1.0
 /// @date 2022-16-22
 ///
 /// @copyright Copyright (c) 2022
@@ -48,7 +48,7 @@ namespace cortex
     ///
     /// @tparam _Tp
     template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
-    class box
+    struct box
     {
     public:
         using value_type                            = _Tp;
@@ -229,9 +229,9 @@ namespace cortex
         {
             using init_iter = typename decltype(list)::iterator;
             auto offset{0uL};
-            for (init_iter row{list.begin()}; row not_eq list.end(); ++row)
+            for (init_iter row{list.begin()}; row != list.end(); ++row)
             {
-                if (row->size() not_eq this->m_columns)
+                if (row->size() != this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
                 std::uninitialized_move_n(row->begin(), this->m_columns, m_start + offset);
                 offset += this->m_columns;
@@ -248,7 +248,7 @@ namespace cortex
         /// @return constexpr box&
         constexpr box& operator= (const box& other)
         {
-            if (*this not_eq other)
+            if (*this != other)
             {
                 m_rows = other.m_rows;
                 m_columns = other.m_columns;
@@ -271,7 +271,7 @@ namespace cortex
         /// @return constexpr box&
         constexpr box& operator= (box&& other) noexcept
         {
-            if (*this not_eq other)
+            if (*this != other)
             {
                 m_rows = other.m_rows;
                 m_columns = other.m_columns;
@@ -306,9 +306,9 @@ namespace cortex
 
             using init_iter = typename decltype(list)::iterator;
             auto offset{0uL};
-            for (init_iter row{list.begin()}; row not_eq list.end(); ++row)
+            for (init_iter row{list.begin()}; row != list.end(); ++row)
             {
-                if (row->size() not_eq this->m_columns)
+                if (row->size() != this->m_columns)
                     throw std::invalid_argument("Columns must be all the same size");
                 std::uninitialized_move_n(row->begin(), this->m_columns, m_start + offset);
                 offset += this->m_columns;
@@ -515,7 +515,7 @@ namespace cortex
         {
             auto new_size{_M_size(new_rows, new_columns)};
 
-            if (new_size not_eq _M_size(m_rows, m_columns))
+            if (new_size != _M_size(m_rows, m_columns))
                 throw std::length_error("Cannot reshape box that has different total size");
             else
                 resize(new_rows, new_columns);
@@ -1193,10 +1193,10 @@ namespace cortex
         /// is the sum of the two input matrices element types.
         template <Addable _ElemT>
             requires AddableWith<value_type, _ElemT>
-        constexpr auto add(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() + std::declval<_ElemT>())>
+        constexpr auto 
+        add(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::add - dimensions do not match");
 
             box<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1226,10 +1226,10 @@ namespace cortex
         /// is the difference of the two input matrices element types.
         template <Subtractable _ElemT>
             requires SubtractableWith<value_type, _ElemT>
-        constexpr auto sub(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() - std::declval<_ElemT>())>
+        constexpr auto 
+        sub(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::sub - dimensions do not match");
 
             box<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1259,10 +1259,10 @@ namespace cortex
         /// is the product of the two input matrices element types.
         template <Any _ElemT>
             requires MultiplicableWith<value_type, _ElemT>
-        constexpr auto mul(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() * std::declval<_ElemT>())>
+        constexpr auto 
+        mul(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::mult - dimensions do not match");
 
             box<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1284,11 +1284,11 @@ namespace cortex
         ///
         /// @tparam _ScalarT
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
-        /// @return box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
-        constexpr auto mul(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())>
+        constexpr auto 
+        mul(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::mul - scalar multiplication on empty box");
@@ -1324,10 +1324,10 @@ namespace cortex
         /// is the quotient of the two input matrices element types.
         template <Any _ElemT>
             requires DivisibleWith<value_type, _ElemT>
-        constexpr auto div(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() / std::declval<_ElemT>())>
+        constexpr auto 
+        div(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::div - dimensions do not match");
 
             box<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1352,11 +1352,11 @@ namespace cortex
         ///
         /// @tparam _ScalarT
         /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
-        /// @return box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
-        constexpr auto div(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())>
+        constexpr auto 
+        div(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::div - scalar division on empty box");
@@ -1378,15 +1378,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: Modulo |     requires: ModuloWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: Modulo | requires: ModuloWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires ModuloWith<value_type, _ElemT>
-        constexpr auto mod(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() % std::declval<_ElemT>())>
+        constexpr auto 
+        mod(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::mod - dimensions do not match");
 
             box<decltype(std::declval<value_type>() % std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1405,13 +1405,13 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: Modulo |     requires: ModuloWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: Modulo | requires: ModuloWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires ModuloWith<value_type, _ScalarT>
-        constexpr auto mod(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())>
+        constexpr auto 
+        mod(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::mod - scalar modulus on empty box");
@@ -1431,15 +1431,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitXor |     requires: BitXorWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitXor | requires: BitXorWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires BitXorWith<value_type, _ElemT>
-        constexpr auto bit_xor(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())>
+        constexpr auto 
+        bit_xor(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_xor - dimensions do not match");
 
             box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1458,13 +1458,13 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitXor |     requires: BitXorWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitXor | requires: BitXorWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires BitXorWith<value_type, _ScalarT>
-        constexpr auto bit_xor(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())>
+        constexpr auto 
+        bit_xor(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_xor - scalar bit_xor on empty box");
@@ -1485,15 +1485,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitAnd |     requires: BitAndWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitAnd | requires: BitAndWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires BitAndWith<value_type, _ElemT>
-        constexpr auto bit_and(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())>
+        constexpr auto 
+        bit_and(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_and - dimensions do not match");
 
             box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1512,20 +1512,20 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitAnd |     requires: BitAndWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitAnd | requires: BitAndWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires BitAndWith<value_type, _ScalarT>
-        constexpr auto bit_and(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())>
+        constexpr auto 
+        bit_and(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_and - scalar bit_and on empty box");
 
             box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())> result(this->rows(), this->columns());
 
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem&  scalar; });
+            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem & scalar; });
 
             return result;
         }
@@ -1539,15 +1539,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: BitOr |     requires: BitOrWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: BitOr | requires: BitOrWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires BitOrWith<value_type, _ElemT>
-        constexpr auto bit_or(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() | std::declval<_ElemT>())>
+        constexpr auto 
+        bit_or(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_or - dimensions do not match");
 
             box<decltype(std::declval<value_type>() | std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1566,13 +1566,13 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: BitOr |     requires: BitOrWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: BitOr | requires: BitOrWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires BitOrWith<value_type, _ScalarT>
-        constexpr auto bit_or(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())>
+        constexpr auto 
+        bit_or(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_or - scalar bit_or on empty box");
@@ -1593,15 +1593,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires LeftBitShiftWith<value_type, _ElemT>
-        constexpr auto shift_left(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() << std::declval<_ElemT>())>
+        constexpr auto 
+        shift_left(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::shift_left - dimensions do not match");
 
             box<decltype(std::declval<value_type>() << std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1620,13 +1620,13 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: LeftBitShift |     requires: LeftBitShiftWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires LeftBitShiftWith<value_type, _ScalarT>
-        constexpr auto shift_left(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())>
+        constexpr auto 
+        shift_left(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::shift_left - scalar shift_left on empty box");
@@ -1647,15 +1647,15 @@ namespace cortex
         /// @exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// @tparam _ElemT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ElemT>
+        /// @tparam _ElemT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ElemT>
         /// @param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
+        /// @return constexpr auto
         template <Any _ElemT>
             requires RightBitShiftWith<value_type, _ElemT>
-        constexpr auto shift_right(const box<_ElemT>& other) const
-            -> box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())>
+        constexpr auto 
+        shift_right(const box<_ElemT>& other) const
         {
-            if (this->dimensions() not_eq other.dimensions())
+            if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::shift_right - dimensions do not match");
 
             box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())> result(this->rows(), this->columns());
@@ -1674,13 +1674,13 @@ namespace cortex
         /// @exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// @tparam _ScalarT concept: RightBitShift |     requires: RightBitShiftWith<value_type, _ScalarT>
+        /// @tparam _ScalarT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ScalarT>
         /// @param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// @return box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
+        /// @return constexpr auto
         template <Any _ScalarT>
             requires RightBitShiftWith<value_type, _ScalarT>
-        constexpr auto shift_right(const _ScalarT& scalar) const
-            -> box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())>
+        constexpr auto 
+        shift_right(const _ScalarT& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::shift_right - scalar shift_right on empty box");
@@ -1725,8 +1725,9 @@ namespace cortex
         /// iterator is required to be std::constructible_v which
         /// column_iterator doesn't satisfy yet.
         ///
-        /// @return constexpr box<value_type>
-        constexpr box<value_type> transpose()
+        /// @return constexpr auto
+        constexpr auto 
+        transpose()
         {
             box<value_type> result(this->columns(), this->rows());
 
@@ -1739,18 +1740,21 @@ namespace cortex
         }
 
 
-        /// @brief 
+        /// @brief Map
+        ///
+        /// @details Maps a function over the box, returning 
+        /// the mapped box.
         /// 
-        /// @tparam F 
-        /// @param func 
-        /// @return requires constexpr 
+        /// @tparam F concept: std::copy_constructible
+        /// @param func type: F 
+        /// @return constexpr auto 
         template<std::copy_constructible F>
         constexpr auto
         map(F func)
         {
-            box<decltype(std::invoke(std::declval<F>(), std::declval<value_type>()))> result(this->rows(), this->columns());
+            box<std::invoke_result_t<F, value_type>> result(this->rows(), this->columns());
 
-            if (not empty())
+            if (!empty())
                 std::ranges::transform(*this, result.begin(), func);
                 
             return result;
@@ -1767,7 +1771,7 @@ namespace cortex
         {
             box<value_type> result(this->rows(), this->columns());
 
-            if (not empty())
+            if (!empty())
                 for (auto cidx { 0u }; cidx < this->columns(); ++cidx)
                     std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.column_rbegin(cidx));
 
@@ -1784,7 +1788,7 @@ namespace cortex
         {
             box<value_type> result(this->rows(), this->columns());
 
-            if (not empty())
+            if (!empty())
                 for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
                     std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
 
@@ -1805,7 +1809,7 @@ namespace cortex
         /// @return constexpr pointer
         constexpr pointer _M_allocate(size_type __n)
         {
-            return __n not_eq 0 ? alloc_traits::allocate(m_allocator, __n) : pointer();
+            return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer();
         }
 
         /// @brief Dellocates Matrix Recources
@@ -1836,13 +1840,13 @@ namespace cortex
         /// @param __row type: [size_type]
         constexpr void _M_range_check(size_type __row, size_type __column) const
         {
-            if (__row >= this->rows() or __column >= this->columns())
+            if (__row >= this->rows() || __column >= this->columns())
                 throw std::out_of_range("box::_M_range_check - index out of range.");
         }
 
         constexpr size_type _M_size(size_type __rows, size_type __columns) const noexcept
         {
-            return __rows * __columns not_eq 0 ? __rows * __columns : std::max(__rows, __columns);
+            return __rows * __columns != 0 ? __rows * __columns : std::max(__rows, __columns);
         }
 
         constexpr size_type _M_index(size_type __row, size_type __column) const noexcept
@@ -1857,9 +1861,7 @@ namespace cortex
         /// @return _Up*
         template <typename _Up>
         _Up *_M_data_ptr(_Up *__ptr) const noexcept
-        {
-            return __ptr;
-        }
+        { return __ptr; }
 
 #if __cplusplus >= 201103L
 
@@ -1933,7 +1935,7 @@ namespace cortex
     operator== (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
 #endif
     {
-        if (lhs.dimensions() not_eq rhs.dimensions())
+        if (lhs.dimensions() != rhs.dimensions())
             return false;
         return std::ranges::equal(lhs, rhs);
     }
@@ -3231,9 +3233,7 @@ namespace std
     /// @return inline void
     template <typename _Tp>
     inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y) noexcept
-    {
-        x.swap(y);
-    }
+    { x.swap(y); }
 }
 
 #endif // __cplusplus >= 201703L
