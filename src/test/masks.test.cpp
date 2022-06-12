@@ -40,14 +40,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] == 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { false, true }
+                                      , { false, false }
+                                      , { false, false }
+                                      , { true, false }
+                                      , { true, true } };
 
             auto rbx { bx == 2 };
 
@@ -92,14 +90,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] != 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { true, false }
+                                      , { true, true }
+                                      , { true, true }
+                                      , { false, true }
+                                      , { false, false } };
 
             auto rbx { bx != 2 };
 
@@ -144,14 +140,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] < 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { true, false }
+                                      , { true, true }
+                                      , { true, false }
+                                      , { false, false }
+                                      , { false, false } };
 
             auto rbx { bx < 2 };
 
@@ -196,14 +190,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] > 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { false, false }
+                                      , { false, false }
+                                      , { false, true }
+                                      , { false, true }
+                                      , { false, false } };
 
             auto rbx { bx > 2 };
 
@@ -253,14 +245,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] <= 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { true, true }
+                                      , { true, true }
+                                      , { true, false }
+                                      , { true, false }
+                                      , { true, true } };
 
             auto rbx { bx <= 2 };
 
@@ -310,14 +300,12 @@ TEST_CASE("Boolean Masks")
         SECTION("Mismatched")
         {
             std::vector<int> v { 1, 2, 1, 1, 1, 5, 2, 5, 2, 2 };
-            cortex::box<int> bx(5, 2);
-            cortex::box<bool> bxcheck(5, 2);
-
-            for (auto i { 0ul }; i < v.size(); ++i)
-            {
-                bx[i] = v[i];
-                bxcheck[i] = v[i] >= 2;
-            }
+            cortex::box<int> bx(v.begin(), v.end(), 5, 2);
+            cortex::box<bool> bxcheck { { false, true }
+                                      , { false, false }
+                                      , { false, true }
+                                      , { true, true }
+                                      , { true, true } };
 
             auto rbx { bx >= 2 };
 
