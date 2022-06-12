@@ -1767,7 +1767,7 @@ namespace cortex
         /// ie. The order of the rows is reversed.
         /// 
         /// @return constexpr auto 
-        constexpr auto vflip()
+        constexpr auto vflip() const
         {
             box<value_type> result(this->rows(), this->columns());
 
@@ -1784,13 +1784,40 @@ namespace cortex
         /// ie. The order of the columns is reversed.
         /// 
         /// @return constexpr auto 
-        constexpr auto hflip()
+        constexpr auto hflip() const
         {
             box<value_type> result(this->rows(), this->columns());
 
             if (!empty())
                 for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
                     std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
+
+            return result;
+        }
+
+
+        /// @brief 
+        /// 
+        /// @return constexpr auto 
+        constexpr auto rrotate() const
+        {
+            box<value_type> result(this->columns(), this->rows());
+
+            if (!empty())
+                for (auto cidx { 0u }; cidx < this->columns(); ++cidx)
+                    std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.row_rbegin(cidx));
+
+            return result;
+        }
+
+
+        constexpr auto lrotate() const
+        {
+            box<value_type> result(this->columns(), this->rows());
+
+            if (!empty())
+                for (auto ridx { 0u }; ridx < this->rows(); ++ridx)
+                    std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.column_rbegin(ridx));
 
             return result;
         }
