@@ -373,9 +373,9 @@ namespace cortex
         /// @brief Intialiser List Assign
         ///
         /// @details Uses std::initializer_list to reassign 
-        /// values to a box. The box's memory is released and
-        /// new memory is allocated. This also resizes the box's
-        /// dimensions.
+        /// values to a box. If the lists dimensions are not
+        /// the same as the box's dimensions, then the box
+        /// is resized to match the dimensions of the list.
         /// 
         /// @param list type: [std::initializer_list<std::initializer_list<value_type>>]
         constexpr void assign(std::initializer_list<std::initializer_list<value_type>> list)
