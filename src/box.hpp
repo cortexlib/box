@@ -42,20 +42,20 @@ namespace cortex
     /// @todo Finish docs ---------------------------------------------------- 
     /// @todo Update test cases to support current version of box ------------  
     ///
-    /// @tparam _Tp
-    template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
+    /// @tparam T
+    template <Any T, typename _Alloc = std::allocator<T>>
     struct box
     {
     public:
-        using value_type                            = _Tp;
+        using value_type                            = T;
         using size_type                             = std::size_t;
         using difference_type                       = std::ptrdiff_t;
 
         using allocator_type                        = _Alloc;
         using alloc_traits                          = typename std::allocator_traits<_Alloc>;
 
-        using reference                             = _Tp&;
-        using const_reference                       = const _Tp&;
+        using reference                             = T&;
+        using const_reference                       = const T&;
         using pointer                               = typename alloc_traits::pointer;
         using const_pointer                         = typename alloc_traits::pointer;
 
@@ -1862,6 +1862,18 @@ namespace cortex
         }
 
 
+        /// @brief Map - Iterator Pair
+        ///
+        /// @details Maps a function over the box and a range
+        /// denoted by an iterator pair, returning the mapped 
+        /// box. Returns an empty box if `this` is empty.
+        /// 
+        /// @tparam It concept: std::input_iterator
+        /// @tparam F concept: std::copy_constructible
+        /// @param first type: It 
+        /// @param last type It
+        /// @param func type: F
+        /// @return constexpr auto 
         template<std::input_iterator It, std::copy_constructible F>
         constexpr auto
         map(It first, It last, F func)
@@ -3402,12 +3414,12 @@ namespace std
     ///
     /// @exception std::swap is noexcept if x.swap(y) is noexcept.
     ///
-    /// @tparam _Tp
-    /// @param __x type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
-    /// @param __y type: [cortex::box<_Tp>] | qualifiers: [const], [ref]
+    /// @tparam T
+    /// @param x type: [cortex::box<T>] | qualifiers: [const], [ref]
+    /// @param y type: [cortex::box<T>] | qualifiers: [const], [ref]
     /// @return inline void
-    template <typename _Tp>
-    inline void swap(cortex::box<_Tp>& x, cortex::box<_Tp>& y) noexcept
+    template <typename T>
+    inline void swap(cortex::box<T>& x, cortex::box<T>& y) noexcept
     { x.swap(y); }
 }
 
