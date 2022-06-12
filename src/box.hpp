@@ -1822,12 +1822,43 @@ namespace cortex
         constexpr auto
         map(F func)
         {
-            box<std::invoke_result_t<F, value_type>> result(this->rows(), this->columns());
 
-            if (!empty())
+            if (empty())
+                return box<std::invoke_result_t<F, value_type>>{};
+            else
+            {
+                box<std::invoke_result_t<F, value_type>> result(this->rows(), this->columns());
                 std::ranges::transform(*this, result.begin(), func);
-                
-            return result;
+                return result;
+            }
+        }
+
+
+        /// @brief Map - Range 
+        ///
+        /// @details Maps a function over the box and another 
+        /// range object, returning the mapped box. Returns an 
+        /// empty box if `this` is empty.
+        /// 
+        /// @tparam Rng concept: std::ranges::input_range
+        /// @tparam F concept: std::copy_constructible
+        /// @param rng type Rng | qualifiers: [move-semantics]
+        /// @param func type F
+        /// @return constexpr auto 
+        template<std::ranges::input_range Rng, std::copy_constructible F>
+        constexpr auto
+        map(Rng&& rng, F func)
+        {
+            using range_elem_t = typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>;
+
+            if (empty())
+                return box<std::invoke_result_t<F, value_type, range_elem_t>>{};
+            else
+            {
+                box<std::invoke_result_t<F, value_type, range_elem_t>> result(this->rows(), this->columns());
+                std::ranges::transform(*this, rng, result.begin(), func);
+                return result;
+            }
         }
 
 
