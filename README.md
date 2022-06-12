@@ -4,6 +4,20 @@ Box gives two dimensionsal indexing access to contigous data. It also provides a
 
 ---
 
+## Adding to your project
+
+Add DDS
+
+## Quick Overview
+
+Overview
+
+## Features
+
+Features!
+
+## Contributing and License
+
 - Refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for ways to contribute and support the development of "{ cortex-box }".
 
 - Refer to [LICENSE](./LICENSE) for ways to use and distrinute "{ cortex-box }".
