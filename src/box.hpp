@@ -1862,6 +1862,23 @@ namespace cortex
         }
 
 
+        template<std::input_iterator It, std::copy_constructible F>
+        constexpr auto
+        map(It first, It last, F func)
+        {
+            using iterator_elem_t = typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>;
+
+            if (empty())
+                return box<std::invoke_result_t<F, value_type, iterator_elem_t>>{};
+            else
+            {
+                box<std::invoke_result_t<F, value_type, iterator_elem_t>> result(this->rows(), this->columns());
+                std::ranges::transform(this->begin(), this->end(), first, last, result.begin(), func);
+                return result;
+            }
+        }
+
+
         /// @brief Vertical Flip
         ///
         /// @details Performs a vertical flip of the box.

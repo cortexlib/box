@@ -336,9 +336,9 @@ TEST_CASE("Modifications")
             }
         }
 
-        SECTION("Box and Another Range")
+        SECTION("Box and Range")
         {
-            SECTION("Lambda - With Box")
+            SECTION("Lambda - With Box")  
             {
                 cortex::box<int> bx = { { 0, 1 }
                                       , { 2, 3 }
@@ -402,6 +402,157 @@ TEST_CASE("Modifications")
                 std::vector<int> v = { 5, 2, 24, -1, -3, 56,-4, 2, -5, 4 };
 
                 auto rbx { bx.map(v, [](auto x, auto v) { return x * v; }) };
+
+                REQUIRE(rbx.size() == 10);
+                REQUIRE(rbx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(rbx == rbxcheck);
+            }
+
+            SECTION("Named Lambda")
+            {
+                cortex::box<int> bx = { { 0, 1 }
+                                      , { 2, 3 }
+                                      , { 4, 5 }
+                                      , { 6, 7 }
+                                      , { 8, 9 } };
+
+                auto add = [](const auto& x, const auto& y) { return x + y; };
+
+                cortex::box<int> bxcheck = { { 0, 1 }
+                                           , { 2, 3 }
+                                           , { 4, 5 }
+                                           , { 6, 7 }
+                                           , { 8, 9 } };
+
+                cortex::box<int> rbxcheck = { { 5, 3 }
+                                            , { 26, 2 }
+                                            , { 1, 61 }
+                                            , { 2, 9 }
+                                            , { 3, 13 } };
+
+                REQUIRE(bx.size() == 10);
+                REQUIRE(bx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(bx == bxcheck);
+
+                cortex::box<int> x = { { 5, 2 }
+                                     , { 24, -1 }
+                                     , { -3, 56 }
+                                     , { -4, 2 }
+                                     , { -5, 4 } };
+
+                auto rbx { bx.map(x, add) };
+
+                REQUIRE(rbx.size() == 10);
+                REQUIRE(rbx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(rbx == rbxcheck);
+            }
+        }
+
+        SECTION("Box and Iterators")
+        {
+            SECTION("Lambda - With Box")  
+            {
+                cortex::box<int> bx = { { 0, 1 }
+                                      , { 2, 3 }
+                                      , { 4, 5 }
+                                      , { 6, 7 }
+                                      , { 8, 9 } };
+
+                cortex::box<int> bxcheck = { { 0, 1 }
+                                           , { 2, 3 }
+                                           , { 4, 5 }
+                                           , { 6, 7 }
+                                           , { 8, 9 } };
+
+                cortex::box<int> rbxcheck = { { 0, 2 }
+                                            , { 48, -3 }
+                                            , { -12, 280 }
+                                            , { -24, 14 }
+                                            , { -40, 36 } };
+
+                REQUIRE(bx.size() == 10);
+                REQUIRE(bx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(bx == bxcheck);
+
+                cortex::box<int> x = { { 5, 2 }
+                                     , { 24, -1 }
+                                     , { -3, 56 }
+                                     , { -4, 2 }
+                                     , { -5, 4 } };
+
+                auto rbx { bx.map(x.begin(), x.end(), [](auto e, auto x) { return e * x; }) };
+
+                REQUIRE(rbx.size() == 10);
+                REQUIRE(rbx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(rbx == rbxcheck);
+            }
+
+            SECTION("Lambda - With Other Container")
+            {
+                cortex::box<int> bx = { { 0, 1 }
+                                      , { 2, 3 }
+                                      , { 4, 5 }
+                                      , { 6, 7 }
+                                      , { 8, 9 } };
+
+                cortex::box<int> bxcheck = { { 0, 1 }
+                                           , { 2, 3 }
+                                           , { 4, 5 }
+                                           , { 6, 7 }
+                                           , { 8, 9 } };
+
+                cortex::box<int> rbxcheck = { { 0, 2 }
+                                            , { 48, -3 }
+                                            , { -12, 280 }
+                                            , { -24, 14 }
+                                            , { -40, 36 } };
+
+                REQUIRE(bx.size() == 10);
+                REQUIRE(bx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(bx == bxcheck);
+
+                std::vector<int> v = { 5, 2, 24, -1, -3, 56,-4, 2, -5, 4 };
+
+                auto rbx { bx.map(v.begin(), v.end(), [](auto x, auto v) { return x * v; }) };
+
+                REQUIRE(rbx.size() == 10);
+                REQUIRE(rbx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(rbx == rbxcheck);
+            }
+
+            SECTION("Named Lambda")
+            {
+                cortex::box<int> bx = { { 0, 1 }
+                                      , { 2, 3 }
+                                      , { 4, 5 }
+                                      , { 6, 7 }
+                                      , { 8, 9 } };
+
+                auto add = [](const auto& x, const auto& y) { return x + y; };
+
+                cortex::box<int> bxcheck = { { 0, 1 }
+                                           , { 2, 3 }
+                                           , { 4, 5 }
+                                           , { 6, 7 }
+                                           , { 8, 9 } };
+
+                cortex::box<int> rbxcheck = { { 5, 3 }
+                                            , { 26, 2 }
+                                            , { 1, 61 }
+                                            , { 2, 9 }
+                                            , { 3, 13 } };
+
+                REQUIRE(bx.size() == 10);
+                REQUIRE(bx.dimensions() == std::tuple{ 5, 2 });
+                REQUIRE(bx == bxcheck);
+
+                cortex::box<int> x = { { 5, 2 }
+                                     , { 24, -1 }
+                                     , { -3, 56 }
+                                     , { -4, 2 }
+                                     , { -5, 4 } };
+
+                auto rbx { bx.map(x.begin(), x.end(), add) };
 
                 REQUIRE(rbx.size() == 10);
                 REQUIRE(rbx.dimensions() == std::tuple{ 5, 2 });
