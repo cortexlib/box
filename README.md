@@ -56,7 +56,7 @@ This will allow BPT/DDS to find the packages host by Trove. Once you've added th
 {
     name: 'package',
     version: 'x.x.x',
-    namespace: 'project',
+    namespace: 'namespace',
     test_driver: 'Catch-Main',
     depends: [
         'cortex-box^1.0.0'
@@ -70,7 +70,7 @@ Finally, any library that uses Box needs to declare that it is in use. This is d
 {
     name: 'library',
     uses: [
-        cortex/box
+        'cortex/box'
     ]
 }
 ```
