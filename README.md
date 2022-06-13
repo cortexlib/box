@@ -410,3 +410,8 @@ auto main() -> int
 ---
 
 ## Links and Resources
+
+- [DDS](https://dds.pizza)
+- [DDS Install Guide](https://dds.pizza/docs/tut/install.html)
+- [Trove Package Index Homepage](https://trovepi.dev)
+- [Cortex Library](https://github.com/cortexlib/cortexlib)
