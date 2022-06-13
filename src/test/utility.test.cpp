@@ -10,19 +10,19 @@ TEST_CASE("Utility Functions")
             cortex::box<int> bx(2, 3, 1);
             cortex::box<int> nbx(7, 4, 2);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 1);
-
-            for (auto i { 0ul }; i < nbx.size(); ++i)
-                REQUIRE(nbx[i] == 2);
+            for (auto& v : bx)
+                REQUIRE(v == 1);
+            
+            for (auto& v : nbx)
+                REQUIRE(v == 2);
 
             bx.swap(nbx);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 2);
-
-            for (auto i { 0ul }; i < nbx.size(); ++i)
-                REQUIRE(nbx[i] == 1);
+            for (auto& v : bx)
+                REQUIRE(v == 2);
+            
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
 
         SECTION("box - std::swap")
@@ -30,19 +30,19 @@ TEST_CASE("Utility Functions")
             cortex::box<int> bx(2, 3, 1);
             cortex::box<int> nbx(7, 4, 2);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 1);
-
-            for (auto i { 0ul }; i < nbx.size(); ++i)
-                REQUIRE(nbx[i] == 2);
+            for (auto& v : bx)
+                REQUIRE(v == 1);
+            
+            for (auto& v : nbx)
+                REQUIRE(v == 2);
 
             std::swap(bx, nbx);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 2);
-
-            for (auto i { 0ul }; i < nbx.size(); ++i)
-                REQUIRE(nbx[i] == 1);
+            for (auto& v : bx)
+                REQUIRE(v == 2);
+            
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
     }
 
