@@ -37,9 +37,10 @@ namespace cortex
     /// stores elements sequentially in memory but is
     /// viewed as a series of rows and columns.
     ///
-    /// @todo Add additional box::map methods -------------------------------- 
-    /// @todo Added support for slice operator ------------------------------- 
+    /// @todo Add additional box::map methods -------------------------------- ✔️
+    /// @todo Added support for slice operator ------------------------------- ✔️
     /// @todo Finish docs ---------------------------------------------------- 
+    /// @todo Make reshape not destroy elements ------------------------------  
     /// @todo Update test cases to support current version of box ------------  
     ///
     /// @tparam T
