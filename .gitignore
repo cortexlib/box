@@ -2,6 +2,10 @@
 build/*
 _build/*
 
+# Dependency folders
+deps/*
+_deps/*
+
 # Project configuration folders
 .vscode/*
 

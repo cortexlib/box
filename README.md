@@ -32,6 +32,8 @@ Box is part of a larger library called the [Cortex Library](https://github.com/c
     - [Restructuring](#restructuring)
       - [Resize](#resize)
       - [Reshape](#reshape)
+      - [Flips](#flips)
+      - [Rotates](#rotates)
   - [Contributing and License](#contributing-and-license)
   - [Links and Resources](#links-and-resources)
 
@@ -305,10 +307,11 @@ auto main() -> int
 }
 ```
 
-
 ### Restructuring
 
-Box sits between `std::vector` and `std::array` in terms of resource managment. The elements are stored dynamically but individual elements cannot be added to the box. However, a box is not fixed to its given size at construction. Box supports to operations for changing the dimensions of the box.
+Box sits between `std::vector` and `std::array` in terms of resource managment. The elements are stored dynamically but individual elements cannot be added to the box. However, a box is not fixed to its given size at construction. Box supportst two operations for changing the dimensions of the box.
+
+Box also supports more literal transformations of the data it holds. You've already seen one, `box::transpose` (!) which performs the mathematical transpose. There are two other categories for transformations, flips and rotates.
 
 #### Resize
 
@@ -403,6 +406,103 @@ auto main() -> int
     /// { 0 0 }
     /// { 0 0 }
     /// { 0 0 }
+
+    return 0;
+}
+```
+
+#### Flips
+
+Flips allow you to change the orientation of the data. Two flip methods exist as part of the box API; `box::vflip` which inverts the elements vertically and `box::hflip` which inverts the elements horizontlly.
+
+```cpp
+#include <iostream>
+#include <box.hpp>
+
+template<typename T>
+void print(const cortex::box<T>& bx)
+{
+    for (auto ridx { 0uL }; ridx < bx.rows(); ++ridx)
+    {
+        std::cout << "{ ";
+        for (auto elem { bx.row_begin(ridx) }; elem != bx.row_end(ridx); ++elem)
+            std::cout << *elem << ' ';
+        std::cout << "}\n";
+    }
+}
+
+auto main() -> int
+{
+    cortex::box<int> bx { { 1, 2, 3 } 
+                        , { 4, 5, 6 }
+                        , { 7, 8, 9 } };
+    
+    print(bx);
+
+    /// Output:
+    /// { 1 2 3 }
+    /// { 4 5 6 }
+    /// { 7 8 9 }
+
+    auto new_box { bx.vflip().hflip() };
+
+    print(new_box);
+
+    /// Output:
+    /// { 9 8 7 }
+    /// { 6 5 4 }
+    /// { 3 2 1 }
+
+    return 0;
+}
+```
+
+#### Rotates
+
+Rotates are the other form of data manipulation methods. Two rotates exist, `box::rrotate` which rotates the box 90 degrees to the left and `box::lrotate` which rotate the box 90 degrees to the right.
+
+```cpp
+#include <iostream>
+#include <box.hpp>
+
+template<typename T>
+void print(const cortex::box<T>& bx)
+{
+    for (auto ridx { 0uL }; ridx < bx.rows(); ++ridx)
+    {
+        std::cout << "{ ";
+        for (auto elem { bx.row_begin(ridx) }; elem != bx.row_end(ridx); ++elem)
+            std::cout << *elem << ' ';
+        std::cout << "}\n";
+    }
+}
+
+auto main() -> int
+{
+    cortex::box<int> bx { { 1, 2, 3 } 
+                        , { 4, 5, 6 }
+                        , { 7, 8, 9 } };
+    
+    print(bx);
+
+    /// Output:
+    /// { 1 2 3 }
+    /// { 4 5 6 }
+    /// { 7 8 9 }    
+
+    print(bx.rrotate());
+
+    /// Output:
+    /// { 7 4 1 }
+    /// { 8 5 2 }
+    /// { 9 6 3 }
+
+    print(bx.lrotate());
+
+    /// Output:
+    /// { 3 6 9 }
+    /// { 2 5 8 }
+    /// { 1 4 7 }
 
     return 0;
 }

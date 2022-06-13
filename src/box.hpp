@@ -11,21 +11,21 @@
 #ifndef CORTEX_BOX_H
 #define CORTEX_BOX_H 1
 
-#include <iterators/normal.hpp>
 #include <iterators/column.hpp>
-#include <iterators/row.hpp>
 #include <concepts.hpp>
+#include <iterators/normal.hpp>
+#include <iterators/row.hpp>
 
 #if __cplusplus >= 202002L
 
-#include <memory>
-#include <utility>
-#include <initializer_list>
 #include <cassert>
-#include <ranges>
-#include <vector>
 #include <execution>
 #include <functional>
+#include <initializer_list>
+#include <memory>
+#include <ranges>
+#include <utility>
+#include <vector>
 
 #define lexicographical_compare_bug 1
 
@@ -33,18 +33,16 @@ namespace cortex
 {
     /// @brief Box - Two Dimensional Array
     ///
-    /// @details Box is a two dimensional array that
-    /// stores elements sequentially in memory but is
-    /// viewed as a series of rows and columns.
-    ///
-    /// @todo Add additional box::map methods -------------------------------- ✔️
-    /// @todo Added support for slice operator ------------------------------- ✔️
-    /// @todo Finish docs ---------------------------------------------------- 
-    /// @todo Make reshape not destroy elements ------------------------------  
-    /// @todo Update test cases to support current version of box ------------  
-    ///
-    /// @tparam T
-    template <Any T, typename _Alloc = std::allocator<T>>
+    /// @details Box is a two dimensional generic container.
+    /// It aims to support expressive methods and operations
+    /// that allow unique manipulation an structural access 
+    /// to data.
+    /// Elements are stored continguously in memory and are 
+    /// layed out in a row-wise fashion.
+    /// 
+    /// @tparam T concept: Any
+    /// @tparam Alloc default: [std::allocator<T>]
+    template <Any T, typename Alloc = std::allocator<T>>
     struct box
     {
     public:
@@ -52,8 +50,8 @@ namespace cortex
         using size_type                             = std::size_t;
         using difference_type                       = std::ptrdiff_t;
 
-        using allocator_type                        = _Alloc;
-        using alloc_traits                          = typename std::allocator_traits<_Alloc>;
+        using allocator_type                        = Alloc;
+        using alloc_traits                          = typename std::allocator_traits<Alloc>;
 
         using reference                             = T&;
         using const_reference                       = const T&;
@@ -84,6 +82,7 @@ namespace cortex
         pointer m_finish;
 
     public:
+
         /// @brief Default Constructor
         ///
         /// @details Default constructor for box.
@@ -95,12 +94,13 @@ namespace cortex
         , m_finish(pointer())
         { }
 
+
         /// @brief Allocator Constructor
         ///
         /// @details Default Constructs a box with a
         /// given allocator.
         ///
-        /// @param alloc type: allocator_type | qualifiers: [const], [ref]
+        /// @param alloc type: allocator_type | qualifiers: [const, ref]
         constexpr explicit box(const allocator_type& alloc) noexcept
         : m_rows(size_type())
         , m_columns(size_type())
@@ -109,16 +109,17 @@ namespace cortex
         , m_finish(pointer())
         { }
 
+
         /// @brief Size Constructor
         ///
         /// @details Constructs a box with dimensions of
-        /// cols x rows. Values are default constructed or
-        /// fill constructed depending on the default constructiblity
-        /// qualificationbx.
+        /// rows x columns. Values are default constructed 
+        /// or fill constructed depending on the default 
+        /// constructiblity qualification.
         ///
-        /// @param cols type: [size_type]
-        /// @param rows type: [size_type]
-        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        /// @param cols type: size_type
+        /// @param rows type: size_type
+        /// @param alloc type: allocator_type | qualifiers: [const, ref]
         constexpr explicit box(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
@@ -132,16 +133,17 @@ namespace cortex
                 std::ranges::uninitialized_fill(*this, value_type());
         }
 
+
         /// @brief Size + Value Constructor
         ///
         /// @details Constructs a box with dimensions of
-        /// cols x rows. Values are constructed from the a
-        /// const reference to a provided value.
+        /// rows x columns. Values are constructed from 
+        /// the a constant reference to a provided value.
         ///
-        /// @param cols type: [size_type]
-        /// @param rows type: [size_type]
-        /// @param value type: [value_type] | qualifiers: [const], [ref]
-        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        /// @param cols type: size_type
+        /// @param rows type: size_type
+        /// @param value type: value_type | qualifiers: [const, ref]
+        /// @param alloc type: allocator_type | qualifiers: [const, ref]
         constexpr box(size_type rows, size_type cols, const value_type& value, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
@@ -150,12 +152,13 @@ namespace cortex
         , m_finish(m_start + _M_size(m_rows, m_columns))
         { std::ranges::uninitialized_fill(*this, value); }
 
+
         /// @brief Copy Constructor
         ///
         /// @details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// @param other type: [box] | qualifiers: [const], [ref]
+        /// @param other type: [box] | qualifiers: [const, ref]
         constexpr box(const box& other)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -164,13 +167,14 @@ namespace cortex
         , m_finish(m_start + _M_size(m_rows, m_columns))
         { std::ranges::uninitialized_copy(other, *this); }
 
+
         /// @brief Copy Constructor with Alternative Allocator
         ///
         /// @details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// @param other type: [box] | qualifiers: [const], [ref]
-        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        /// @param other type: [box] | qualifiers: [const, ref]
+        /// @param alloc type: allocator_type | qualifiers: [const, ref]
         constexpr box(const box& other, const allocator_type& alloc)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -178,6 +182,7 @@ namespace cortex
         , m_start(_M_allocate(_M_size(m_rows, m_columns)))
         , m_finish(m_start + _M_size(m_rows, m_columns))
         { std::ranges::uninitialized_copy(other, *this); }
+
 
         /// @brief Move Constructor
         ///
@@ -200,14 +205,16 @@ namespace cortex
             other.m_columns = size_type();
         }
 
+
         /// @brief Move Constructor with Alternative Allocator
         ///
         /// @details Moves ownership of an existing box's
         /// resources to this box and leaves the other box
-        /// in a default constructed state.
+        /// in a default constructed state. Uses an alternative
+        /// allocator for construction of `this` box.
         ///
         /// @param other type: [box] | qualifiers: [move]
-        /// @param alloc type: [allocator_type] | qualifiers: [const], [ref]
+        /// @param alloc type: allocator_type | qualifiers: [const, ref]
         constexpr box(box&& other, const allocator_type& alloc) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -223,16 +230,21 @@ namespace cortex
             other.m_size = size_type();
         }
 
+
         /// @brief Assign Copy Constructor
         ///
         /// @details Iterates from first to last and copys the
         /// elements to this box. Copy is done through the boxes
         /// begin() iterator, thus copy is done row-wise.
         ///
-        /// @tparam _It concept: [std::input_iterator]
-        /// @param first type:
-        template <std::input_iterator _It>
-        constexpr box(_It first, _It last
+        /// @tparam It concept: [std::input_iterator]
+        /// @param first type: [It]
+        /// @param last type: [It]
+        /// @param rows type: size_type
+        /// @param cols type: size_type
+        /// @param alloc type: allocator_type | qualifiers: [const, ref] | attribute: [[maybe_unused]]
+        template <std::input_iterator It>
+        constexpr box(It first, It last
                     , size_type rows, size_type cols
                     , [[maybe_unused]] const allocator_type& alloc = allocator_type())
         : m_rows(rows)
@@ -242,15 +254,17 @@ namespace cortex
         , m_finish(m_start + _M_size(m_rows, m_columns))
         { std::ranges::uninitialized_copy(first, last, begin(), end()); }
 
+
         /// @brief Initialiser List Constructor
         ///
         /// @details Uses std::initializer_list to create a box
         /// from an initializer list of initializer lists. Elements
         /// ownership is moved to the box's memory.
         ///
-        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
+        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const, ref]
+        /// @param alloc type: allocator_type | qualifiers: [const, ref] | attribute: [[maybe_unused]]
         constexpr box(std::initializer_list<std::initializer_list<value_type>> list
-                    , const allocator_type& alloc = allocator_type())
+                    , [[maybe_unused]] const allocator_type& alloc = allocator_type())
         : m_rows(list.size())
         , m_columns(list.begin()->size())
         , m_allocator(alloc)
@@ -268,13 +282,14 @@ namespace cortex
             }
         }
 
+
         /// @brief Copy Assignment
         ///
         /// @details Copies the contents of another box into
         /// this box and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         ///
-        /// @param other type: [box] | qualifiers: [const], [ref]
+        /// @param other type: [box] | qualifiers: [const, ref]
         /// @return constexpr box&
         constexpr box& operator= (const box& other)
         {
@@ -422,8 +437,8 @@ namespace cortex
         /// of the box remain unchanged, however, this is unchecked. For a checked
         /// change that can only changes the dimension sizes, use box::reshape.
         ///
-        /// @param new_rows type: [size_type]
-        /// @param new_columns type: [size_type]
+        /// @param new_rows type: size_type
+        /// @param new_columns type: size_type
         constexpr void resize(size_type new_rows, size_type new_columns)
         {
             auto old_size{_M_size(m_rows, m_columns)};
@@ -465,6 +480,7 @@ namespace cortex
             m_columns = new_columns;
         }
 
+
         /// @brief Resizes the box to dimensions new_rows x new_columns with default value
         ///
         /// @details Resizes the box to dimensions new_rows x new_columns,
@@ -477,9 +493,9 @@ namespace cortex
         /// unchecked. For a checked change that can only changes the dimension sizes, use
         /// box::reshape.
         ///
-        /// @param new_rows type: [size_type]
-        /// @param new_columns type: [size_type]
-        /// @param value type: [value_type] | qualifiers: [const], [ref]
+        /// @param new_rows type: size_type
+        /// @param new_columns type: size_type
+        /// @param value type: value_type | qualifiers: [const, ref]
         constexpr void resize(size_type new_rows, size_type new_columns, const value_type& value)
         {
             auto old_size{_M_size(m_rows, m_columns)};
@@ -521,21 +537,23 @@ namespace cortex
             m_columns = new_columns;
         }
 
+
         /// @brief Erases element indicated by position
         ///
         /// @details Erases the value of the box at position
         /// and resets it to value_type().
         ///
         /// @param position type: [const_iterator]
-        /// @return constexpr iterator - attr: [[maybe_unused]]
-        /// :>> Returns the iterator to the erased position
-        [[maybe_unused]] constexpr iterator erase(const_iterator position)
+        /// @return constexpr iterator | attribute: [[maybe_unused]]
+        [[maybe_unused]] constexpr iterator 
+        erase(const_iterator position)
         {
             std::ranges::destroy_at(std::addressof(*position));
             std::ranges::uninitialized_fill(position, position + 1, value_type());
 
             return position;
         }
+
 
         /// @brief Erases value between first and last
         ///
@@ -544,15 +562,16 @@ namespace cortex
         ///
         /// @param first type: [const_iterator]
         /// @param last type: [const_iterator]
-        /// @return constexpr iterator - attr: [[maybe_unused]]
-        /// :>> Returns the iterator indicated the start of the erase
-        [[maybe_unused]] constexpr iterator erase(const_iterator first, const_iterator last)
+        /// @return constexpr iterator | attribute: [[maybe_unused]]
+        [[maybe_unused]] constexpr iterator 
+        erase(const_iterator first, const_iterator last)
         {
             std::ranges::destroy(first, last);
             std::ranges::uninitialized_fill(first, last, value_type());
 
             return first;
         }
+
 
         /// @brief Clears the box elements
         ///
@@ -574,23 +593,25 @@ namespace cortex
             }
         }
 
+
         /// @brief Reshape current box elements to new dimensions
         ///
         /// @details Reshapes the current box's dimensisons while
         /// guranteeing that now reallocation occurs. Elements are
         /// preserved.
         ///
-        /// @param new_rows type: [size_type]
-        /// @param new_columns type: [size_type]
+        /// @param new_rows type: size_type
+        /// @param new_columns type: size_type
         constexpr void reshape(size_type new_rows, size_type new_columns)
         {
-            auto new_size{_M_size(new_rows, new_columns)};
+            auto new_size{ _M_size(new_rows, new_columns) };
 
             if (new_size != _M_size(m_rows, m_columns))
                 throw std::length_error("Cannot reshape box that has different total size");
             else
                 resize(new_rows, new_columns);
         }
+
 
         /// @brief Swaps two matrices of the same type.
         ///
@@ -606,110 +627,113 @@ namespace cortex
             *this = std::move(tmp);
         }
 
+
         /// @brief Get Allocator
         ///
         /// @details Returns the allocator used by the box.
         ///
         /// @return constexpr allocator_type
         constexpr allocator_type get_allocator() const noexcept
-        {
-            return m_allocator;
-        }
+        { return m_allocator; }
 
-        /// @brief Returns the overall size of the box.
+
+        /// @brief Box Size
+        /// 
+        /// @details Returns the overall size of the box.
         ///
         /// @return constexpr size_type
         constexpr size_type size() const noexcept
-        {
-            return empty() ? size_type(0) : _M_size(m_rows, m_columns);
-        }
+        { return empty() ? size_type(0) : _M_size(m_rows, m_columns); }
 
-        /// @brief Returns the number of the rows of the box.
+
+        /// @brief Row Size
+        /// 
+        /// @details Returns the number of the rows of the box.
         ///
         /// @return constexpr size_type
         constexpr size_type rows() const noexcept
-        {
-            return m_rows;
-        }
+        { return m_rows; }
 
-        /// @brief Returns the the number of columns in the box.
+
+        /// @brief Column Size
+        /// 
+        /// @details Returns the the number of columns in the box.
         ///
         /// @return constexpr size_type
         constexpr size_type columns() const noexcept
-        {
-            return m_columns;
-        }
+        { return m_columns; }
 
-        /// @brief Returns the maximum number of elements that
+
+        /// @brief Max Box Size
+        /// 
+        /// @details Returns the maximum number of elements that
         /// can be stored in the box.
         ///
         /// @return constexpr size_type
         constexpr size_type max_size() const noexcept
-        {
-            return alloc_traits::max_size(m_allocator);
-        }
+        { return alloc_traits::max_size(m_allocator); }
 
-        /// @brief Returns a structured binding of the box's
+
+        /// @brief Dimensions
+        /// 
+        /// @details Returns a structured binding of the box's
         /// dimensions.
         ///
-        /// @return constexpr auto : (structured binding)
+        /// @return constexpr auto
         constexpr auto dimensions() const noexcept
-        {
-            return std::tie(m_rows, m_columns);
-        }
+        { return std::tie(m_rows, m_columns); }
 
-        /// @brief Checks whether the box is square.
+
+        /// @brief Is Square
         ///
-        /// @details If the number of rows and columns are equal,
-        /// the box is square.
+        /// @details If the number of rows and columns 
+        /// are equal, the box is square.
         ///
         /// @return true
         /// @return false
         constexpr bool is_square() const noexcept
-        {
-            return m_rows == m_columns;
-        }
+        { return m_rows == m_columns; }
 
-        /// @brief Checks if the box is empty.
+
+        /// @brief Empty
+        ///
+        /// @details Checks whether the box is empty.
         ///
         /// @return true
         /// @return false
         constexpr bool empty() const noexcept
-        {
-            return m_start == m_finish;
-        }
+        { return m_start == m_finish; }
 
-        /// @brief Returns the underlying data pointer.
+
+        /// @brief Data
+        ///
+        /// @details Returns the underlying data pointer.
         ///
         /// @return pointer
         pointer data() noexcept
-        {
-            return _M_data_ptr(m_start);
-        }
+        { return _M_data_ptr(m_start); }
 
-        /// @brief Returns the underlying data pointer.
+        /// @brief Data
+        /// 
+        /// @details Returns the underlying data pointer.
         ///
         /// @return const_pointer
         const_pointer data() const noexcept
-        {
-            return _M_data_ptr(m_start);
-        }
+        { return _M_data_ptr(m_start); }
 
-        /// @brief Subscript Operator.
+        /// @brief Subscript Operator
         ///
         /// @details Returns a reference to the element that
         /// is at the position indicated by the pointer
         /// m_data + step. Offers linear access to the box's
         /// elements.
         ///
-        /// @param step type: [size_type]
+        /// @param step type: size_type
         /// @return constexpr reference
         constexpr reference operator[](size_type step)
-        {
-            return *(m_start + step);
-        }
+        { return *(m_start + step); }
 
-        /// @brief Two Dimensional Element Access (Point Access).
+        /// @brief At
         ///
         /// @details Returns a reference to the element that
         /// is at the point position (column, row) of the
@@ -717,8 +741,8 @@ namespace cortex
         ///
         /// @exception std::out_of_range
         ///
-        /// @param column type: [size_type]
-        /// @param row type: [size_type]
+        /// @param column type: size_type
+        /// @param row type: size_type
         /// @return constexpr reference
         constexpr reference at(size_type row, size_type column)
         {
@@ -726,7 +750,7 @@ namespace cortex
             return *(m_start + (m_columns * row) + column);
         }
 
-        /// @brief Two Dimensional Element Access (Point Access).
+        /// @brief At
         ///
         /// @details Returns a reference to the element that
         /// is at the point position (column, row) of the
@@ -734,8 +758,8 @@ namespace cortex
         ///
         /// @exception std::out_of_range
         ///
-        /// @param column type: [size_type]
-        /// @param row type: [size_type]
+        /// @param column type: size_type
+        /// @param row type: size_type
         /// @return constexpr const_reference
         constexpr const_reference at(size_type row, size_type column) const
         {
@@ -743,75 +767,71 @@ namespace cortex
             return *(m_start + (m_columns * row) + column);
         }
 
-        /// @brief Point Access Operator.
+        /// @brief Point Access Operator
         ///
         /// @details Provides point access to box's elements.
         /// Overloads the invokation operator. Utilises the at() method.
         ///
         /// @exception std::out_of_range
         ///
-        /// @param column type: [size_type]
-        /// @param row type: [size_type]
+        /// @param column type: size_type
+        /// @param row type: size_type
         /// @return constexpr reference
         constexpr reference operator()(size_type row, size_type column)
-        {
-            return this->at(row, column);
-        }
+        { return at(row, column); }
 
-        /// @brief Point Access Operator.
+        /// @brief Point Access Operator
         ///
         /// @details Provides point access to box's elements.
         /// Overloads the invokation operator. Utilises the at() method.
         ///
         /// @exception std::out_of_range
         ///
-        /// @param column type: [size_type]
-        /// @param row type: [size_type]
+        /// @param column type: size_type
+        /// @param row type: size_type
         /// @return constexpr const_reference
         constexpr const_reference operator()(size_type row, size_type column) const
-        {
-            return this->at(row, column);
-        }
+        { return at(row, column); }
 
-        /// @brief Returns a reference to the front element
+        /// @brief Front
+        /// 
+        /// @details Returns a reference to the front element
         /// of the box.
         ///
         /// @return constexpr reference
         constexpr reference front() noexcept
-        {
-            return *(this->begin());
-        }
+        { return *begin(); }
 
-        /// @brief Returns a reference to the front element
+        /// @brief Front
+        ///
+        /// @details Returns a reference to the front element
         /// of the box.
         ///
         /// @return constexpr const_reference
         constexpr const_reference front() const noexcept
-        {
-            return *(this->begin());
-        }
+        { return *begin(); }
 
-        /// @brief Returns a reference to the back element
+        /// @brief Back
+        ///
+        /// @details Returns a reference to the back element
         /// of the box.
         ///
         /// @return constexpr reference
         constexpr reference back() noexcept
-        {
-            return *(this->end() - 1);
-        }
+        { return *(end() - 1); }
 
-        /// @brief Returns a reference to the back element
+        /// @brief Back
+        /// 
+        /// @details Returns a reference to the back element
         /// of the box.
         ///
         /// @return constexpr const_reference
         constexpr const_reference back() const noexcept
-        {
-            return *(this->end() - 1);
-        }
+        { return *(this->end() - 1); }
 
-        /// @brief Flattens the box into a std::vector.
+        /// @brief Flatten
         ///
-        /// @details Creates a vector of the box's elements
+        /// @details Creates a std::vector of the box's elements
         /// in row major order.
         ///
         /// @return constexpr std::vector<value_type>
@@ -822,105 +842,118 @@ namespace cortex
             return vec;
         }
 
-        /// @brief Iterator to the beginning of the box.
+        /// @brief Begin Iterator
+        /// 
+        /// @details Iterator to the beginning of 
+        /// the box's data.
         ///
         /// @return constexpr iterator
         constexpr iterator begin() noexcept
-        {
-            return iterator(m_start);
-        }
+        { return iterator(m_start); }
 
-        /// @brief Constant iterator to the beginning of the box.
+        /// @brief Begin Iterator (const)
+        /// 
+        /// @details Constant iterator to the beginning 
+        /// of the box's data.
         ///
         /// @return constexpr const_iterator
         constexpr const_iterator begin() const noexcept
-        {
-            return const_iterator(m_start);
-        }
+        { return const_iterator(m_start); }
 
-        /// @brief Constant iterator to the beginning of the box.
+        /// @brief Constant Begin Iterator
+        /// 
+        /// @details Constant iterator to the beginning 
+        /// of the box.
         ///
         /// @return constexpr const_iterator
         constexpr const_iterator cbegin() const noexcept
-        {
-            return const_iterator(m_start);
-        }
+        { return const_iterator(m_start); }
 
-        /// @brief Reverse iterator to the end of the box.
+        /// @brief Reverse Begin Iterator
+        /// 
+        /// @details Iterator to the reversed beginning
+        /// of the box's data.
         ///
         /// @return constexpr reverse_iterator
         constexpr reverse_iterator rbegin() noexcept
-        {
-            return reverse_iterator(end());
-        }
+        { return reverse_iterator(end()); }
 
-        /// @brief Constant reverse iterator to the end of the box.
+        /// @brief Reverse Begin Iterator (const)
+        /// 
+        /// @details Constant iterator to the reversed 
+        /// beginning of the box's data.
         ///
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator rbegin() const noexcept
-        {
-            return const_reverse_iterator(end());
-        }
+        { return const_reverse_iterator(end()); }
 
-        /// @brief Constant reverse iterator to the end of the box.
+        /// @brief Constant Reverse Begin Iterator
+        ///
+        /// @details Constant iterator to the reversed
+        /// beginning of the box's data.
         ///
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator crbegin() const noexcept
-        {
-            return const_reverse_iterator(end());
-        }
+        { return const_reverse_iterator(end()); }
 
-        /// @brief Iterator to the end of the box.
+        /// @brief End Iterator
+        ///
+        /// @details Iterator to the end of the 
+        /// box's data.
         ///
         /// @return constexpr iterator
         constexpr iterator end() noexcept
-        {
-            return iterator(m_finish);
-        }
+        { return iterator(m_finish); }
 
-        /// @brief Constant iterator to the end of the box.
+        /// @brief End Iterator (const)
+        /// 
+        /// @details Constant iterator to the 
+        /// end of the box's data.
         ///
         /// @return constexpr const_iterator
         constexpr const_iterator end() const noexcept
-        {
-            return const_iterator(m_finish);
-        }
+        { return const_iterator(m_finish); }
 
-        /// @brief Constant iterator to the end of the box.
+        /// @brief Constant End Iterator
+        ///
+        /// @details Constant iterator to the
+        /// end of the box's data.
         ///
         /// @return constexpr const_iterator
         constexpr const_iterator cend() const noexcept
-        {
-            return const_iterator(m_finish);
-        }
+        { return const_iterator(m_finish); }
 
-        /// @brief Reverse iterator to the beginning of the box.
+        /// @brief Reverse End Iterator
+        ///
+        /// @details Iterator to the reversed end
+        /// of the box's data.
         ///
         /// @return constexpr reverse_iterator
         constexpr reverse_iterator rend() noexcept
-        {
-            return reverse_iterator(begin());
-        }
+        { return reverse_iterator(begin()); }
 
-        /// @brief Constant reverse iterator to the beginning of the box.
+        /// @brief Reverse End Iterator (const)
+        ///
+        /// @details Constant iterator to the reversed
+        /// end of the box's data.
         ///
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator rend() const noexcept
-        {
-            return const_reverse_iterator(begin());
-        }
+        { return const_reverse_iterator(begin()); }
 
-        /// @brief Constant reverse iterator to the beginning of the box.
+        /// @brief Constant Reverse End Iterator
+        ///
+        /// @details Constant iterator to the reversed
+        /// end of the box's data.
         ///
         /// @return constexpr const_reverse_iterator
         constexpr const_reverse_iterator crend() const noexcept
-        {
-            return const_reverse_iterator(begin());
-        }
+        { return const_reverse_iterator(begin()); }
 
         /// @brief Row Begin Iterator
         ///
-        /// @details Returns an iterator to the beginning of the row.
+        /// @details Returns an iterator to the beginning 
+        /// of the indicated row.
         ///
         /// @param row type: size_type | default: 0uL
         /// @return constexpr row_iterator
@@ -932,7 +965,8 @@ namespace cortex
 
         /// @brief Row Begin Iterator (const)
         ///
-        /// @details Returns an iterator to the beginning of the row.
+        /// @details Returns an iterator to the beginning 
+        /// of the indicated row.
         ///
         /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator
@@ -944,8 +978,8 @@ namespace cortex
 
         /// @brief Constant Row Begin Iterator
         ///
-        /// @details Returns a constant iterator to the beginning
-        /// of the row.
+        /// @details Returns a constant iterator to the 
+        /// beginning of the indicated row.
         ///
         /// @param row type: size_type | default: 0uL
         /// @return constexpr const_row_iterator
@@ -957,8 +991,8 @@ namespace cortex
 
         /// @brief Reverse Row Begin Iterator
         ///
-        /// @details Returns a reverse iterator to the beginning of the
-        /// reversed row.
+        /// @details Returns a reverse iterator to the 
+        /// beginning of the indicated reversed row.
         ///
         /// @param row type: size_type | default: 0uL
         /// @return constexpr reverse_row_iterator
@@ -970,8 +1004,8 @@ namespace cortex
 
         /// @brief Reverse Row Begin Iterator (const)
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// beginning of the reversed row.
+        /// @details Returns a constant reverse iterator 
+        /// to the beginning of the indicated reversed row.
         ///
         /// @param row type: size_type | default: 0uL
         /// @return constexpr const_reverse_row_iterator
@@ -983,8 +1017,8 @@ namespace cortex
 
         /// @brief Constant Reverse Row Begin Iterator
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// beginning of the reversed row.
+        /// @details Returns a constant reverse iterator 
+        /// to the beginning of the indicated reversed row.
         ///
         /// @param row
         /// @return constexpr const_reverse_row_iterator
@@ -1043,8 +1077,8 @@ namespace cortex
 
         /// @brief Reverse Row End Iterator
         ///
-        /// @details Returns a reverse iterator to the end of the
-        /// reversed row.
+        /// @details Returns a reverse iterator to the 
+        /// end of the indicated reversed row.
         ///
         /// @param row
         /// @return constexpr reverse_row_iterator
@@ -1056,8 +1090,8 @@ namespace cortex
 
         /// @brief Reverse Row End Iterator (const)
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// end of the reversed row.
+        /// @details Returns a constant reverse iterator 
+        /// to the end of the indicated reversed row.
         ///
         /// @param row
         /// @return constexpr const_reverse_row_iterator
@@ -1069,8 +1103,8 @@ namespace cortex
 
         /// @brief Constant Reverse Row End Iterator
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// end of the reversed row.
+        /// @details Returns a constant reverse iterator 
+        /// to the end of the indicated reversed row.
         ///
         /// @param row
         /// @return constexpr const_reverse_row_iterator
@@ -1082,8 +1116,8 @@ namespace cortex
 
         /// @brief Column Begin Iterator
         ///
-        /// @details Returns an iterator to the beginning of the
-        /// column.
+        /// @details Returns an iterator to the 
+        /// beginning of the indicated column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr column_iterator
@@ -1095,8 +1129,8 @@ namespace cortex
 
         /// @brief Column Begin Iterator (const)
         ///
-        /// @details Returns a constant iterator to the beginning of
-        /// the column.
+        /// @details Returns a constant iterator to the 
+        /// beginning of the indicated column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr const_column_iterator
@@ -1108,8 +1142,8 @@ namespace cortex
 
         /// @brief Constant Column Begin Iterator
         ///
-        /// @details Returns a constant iterator to the beginning of
-        /// the column.
+        /// @details Returns a constant iterator to the 
+        /// beginning of the indicated column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr const_column_iterator
@@ -1121,8 +1155,8 @@ namespace cortex
 
         /// @brief Reverse Column Begin Iterator
         ///
-        /// @details Returns a reverse iterator to the beginning of
-        /// the reversed column.
+        /// @details Returns a reverse iterator to the 
+        /// beginning of the reversed column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr reverse_column_iterator
@@ -1134,8 +1168,8 @@ namespace cortex
 
         /// @brief Reverse Column Begin Iterator (const)
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// beginning of the reversed column.
+        /// @details Returns a constant reverse iterator to 
+        /// the beginning of the indicated reversed column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr const_reverse_column_iterator
@@ -1147,8 +1181,8 @@ namespace cortex
 
         /// @brief Constant Reverse Column Begin Iterator
         ///
-        /// @details Returns a constant reverse iterator to the
-        /// beginning of the reversed column.
+        /// @details Returns a constant reverse iterator to 
+        /// the beginning of the indicated reversed column.
         ///
         /// @param column type: size_type | default: 0uL
         /// @return constexpr const_reverse_column_iterator
@@ -1248,18 +1282,16 @@ namespace cortex
         /// @brief Box Element-wise Addition
         ///
         /// @details Performs an element-wise addition
-        /// between matrices. Matrices are `Addable` iff the
-        /// type of this box's elements satisfies the
-        /// concept of `Addable` and satisfies the concept
-        /// `AddableWith` with type of the elemnts of the
-        /// passed box. A new box is created and returned.
+        /// operation between matrices. The boxes must
+        /// have the same dimensions. Returns a new box
+        /// with the computed values.
         ///
         /// @requires The type of this box's elements are `Addable`
         /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `AddableWith`.
         ///
         /// @tparam _ElemT
-        /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return constexpr auto : A box whose element's type
         /// is the sum of the two input matrices element types.
         template <Addable _ElemT>
@@ -1280,19 +1312,16 @@ namespace cortex
         /// @brief Box Element-wise Subtraction
         ///
         /// @details Performs an element-wise subtraction
-        /// between matrices. Matrices are `Subtractable`
-        /// iff the type of this box's elements satisfies
-        /// the concept of `Subtractable` and satisfies the
-        /// concept `SubtractableWith` with type of the elemnts
-        /// of the passed box. A new box is created and
-        /// returned.
+        /// operation between matrices. The boxes must
+        /// have the same dimensions. Returns a new box
+        /// with the computed values.
         ///
         /// @requires The type of this box's elements are `Subtractable`
         /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `SubtractableWith`.
         ///
         /// @tparam _ElemT
-        /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return constexpr auto : A box whose element type
         /// is the difference of the two input matrices element types.
         template <Subtractable _ElemT>
@@ -1313,19 +1342,16 @@ namespace cortex
         /// @brief Box Element-wise Multiplication
         ///
         /// @details Performs an element-wise multiplication
-        /// between matrices. Matrices are `Multiplicible`
-        /// iff the type of this box's elements satisfies
-        /// the concept of `Multiplicable` and satisfies the
-        /// concept `MultiplicableWith` with type of the elemnts
-        /// of the passed box. A new box is created and
-        /// returned.
+        /// operation between matrices. The boxes must
+        /// have the same dimensions. Returns a new box
+        /// with the computed values.
         ///
         /// @requires The type of this box's elements are `Multiplicable`
         /// @requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `MultiplicableWith`.
         ///
         /// @tparam _ElemT
-        /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return constexpr auto : A box whose element type
         /// is the product of the two input matrices element types.
         template <Any _ElemT>
@@ -1345,8 +1371,8 @@ namespace cortex
 
         /// @brief Scalar Multiplication.
         ///
-        /// @details Performs an element-wise multiplication of the box
-        /// by a 'scalar' value.
+        /// @details Performs an element-wise multiplication 
+        /// of the box by a 'scalar' value.
         ///
         /// @requires The type of this box's elements are `MultiplicableWith`
         /// the type denoted _ScalarT.
@@ -1354,7 +1380,7 @@ namespace cortex
         ///
         ///
         /// @tparam _ScalarT
-        /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return constexpr auto
         template <Any _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
@@ -1374,12 +1400,9 @@ namespace cortex
         /// @brief Box Element-wise Division
         ///
         /// @details Performs an element-wise division
-        /// between matrices. Matrices are `Divisible`
-        /// iff the type of this box's elements satisfies
-        /// the concept of `Divisible` and satisfies the
-        /// concept `MultiplicibleWith` with type of the elemnts
-        /// of the passed box. A new box is created and
-        /// returned.
+        /// operation between matrices. The boxes must
+        /// have the same dimensions. Returns a new box
+        /// with the computed values.
         ///
         /// @requires The type of this box's elements are `Divisible`
         /// @requires The type of this box's elements and the type
@@ -1390,7 +1413,7 @@ namespace cortex
         /// due to C++ rounding rules.
         ///
         /// @tparam _ElemT
-        /// @param other type: box<_ElemT> | qualifiers: [const], [ref]
+        /// @param other type: box<_ElemT> | qualifiers: [const, ref]
         /// @return constexpr auto : A box whose element type
         /// is the quotient of the two input matrices element types.
         template <Any _ElemT>
@@ -1422,7 +1445,7 @@ namespace cortex
         /// due to C++ rounding rules.
         ///
         /// @tparam _ScalarT
-        /// @param scalar type: _ScalarT | qualifiers: [const], [ref]
+        /// @param scalar type: _ScalarT | qualifiers: [const, ref]
         /// @return constexpr auto
         template <Any _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
@@ -1993,12 +2016,10 @@ namespace cortex
         ///
         /// @note Default allocator is std::allocator<value_type>.
         ///
-        /// @param __n type: [size_type]
+        /// @param __n type: size_type
         /// @return constexpr pointer
         constexpr pointer _M_allocate(size_type __n)
-        {
-            return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer();
-        }
+        { return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer(); }
 
         /// @brief Dellocates Matrix Recources
         ///
@@ -2007,10 +2028,8 @@ namespace cortex
         /// std::allocator_traits to get the allocators
         /// relevant methods.
         ///
-        /// @note Default allocator is std::allocator<value_type>.
-        ///
-        /// @param __p type: [pointer]
-        /// @param __n type: [size_type] | attr: [[maybe_unused]]
+        /// @param __p type: pointer
+        /// @param __n type: size_type | attribute: [[maybe_unused]]
         constexpr void _M_deallocate(pointer __p, [[maybe_unused]] size_type __n)
         {
             if (__p)
@@ -2024,8 +2043,8 @@ namespace cortex
         ///
         /// @exception std::out_of_range
         ///
-        /// @param __column type: [size_type]
-        /// @param __row type: [size_type]
+        /// @param __column type: size_type
+        /// @param __row type: size_type
         constexpr void _M_range_check(size_type __row, size_type __column) const
         {
             if (__row >= this->rows() || __column >= this->columns())
@@ -2033,19 +2052,15 @@ namespace cortex
         }
 
         constexpr size_type _M_size(size_type __rows, size_type __columns) const noexcept
-        {
-            return __rows * __columns != 0 ? __rows * __columns : std::max(__rows, __columns);
-        }
+        { return __rows * __columns != 0 ? __rows * __columns : std::max(__rows, __columns); }
 
         constexpr size_type _M_index(size_type __row, size_type __column) const noexcept
-        {
-            return __row * columns() + __column;
-        }
+        { return __row * columns() + __column; }
 
         /// @brief Returns the pointer passed to it.
         ///
         /// @tparam _Up
-        /// @param __ptr type: [_Up*]
+        /// @param __ptr type: _Up*
         /// @return _Up*
         template <typename _Up>
         _Up *_M_data_ptr(_Up *__ptr) const noexcept
@@ -2060,14 +2075,12 @@ namespace cortex
         /// underlying element type.
         ///
         /// @tparam _Ptr
-        /// @param __ptr type: [_Ptr]
+        /// @param __ptr type: _Ptr
         /// @return typename std::pointer_traits<_Ptr>::element_type*
         template <typename _Ptr>
         typename std::pointer_traits<_Ptr>::element_type *
         _M_data_ptr(_Ptr __ptr) const
-        {
-            return empty() ? nullptr : std::to_address(*__ptr);
-        }
+        { return empty() ? nullptr : std::to_address(*__ptr); }
 #else
 
         /// @brief Returns the given pointer
@@ -2076,7 +2089,7 @@ namespace cortex
         /// a builtin pointer type.
         ///
         /// @tparam _Up
-        /// @param __ptr type: [_Up*]
+        /// @param __ptr type: _Up*
         /// @return _Up*
         template <typename _Up>
         _Up *_M_data_ptr(_Up *__ptr) noexcept
@@ -2102,8 +2115,8 @@ namespace cortex
     /// @tparam _ElemR
     /// @rparam lhsE type: [_ElemL]
     /// @rparam rhsE type: [_ElemR]
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2142,8 +2155,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// @return constexpr inline auto
     template <typename _ElemL, typename _ElemR>
     constexpr inline auto
@@ -2161,8 +2174,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2177,8 +2190,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2196,8 +2209,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2217,8 +2230,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2236,8 +2249,8 @@ namespace cortex
     ///
     /// @tparam _ElemL
     /// @tparam _ElemR
-    /// @param lhs type: [box<_ElemL>] | qualifiers: [const], [ref]
-    /// @param rhs type: [box<_ElemR>] | qualifiers: [const], [ref]
+    /// @param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
+    /// @param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
     /// @return true
     /// @return false
     template <typename _ElemL, typename _ElemR>
@@ -2263,8 +2276,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -2299,8 +2312,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -2335,8 +2348,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -2371,8 +2384,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -2408,8 +2421,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -2446,8 +2459,8 @@ namespace cortex
     ///
     /// @tparam _ElemT
     ///
-    /// @param bx type: [box<_ElemT>] | qualifiers: [const], [ref]
-    /// @param scalar type: [_ElemT] | qualifiers: [const], [ref]
+    /// @param bx type: [box<_ElemT>] | qualifiers: [const, ref]
+    /// @param scalar type: [_ElemT] | qualifiers: [const, ref]
     /// @return box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
@@ -3416,8 +3429,8 @@ namespace std
     /// @exception std::swap is noexcept if x.swap(y) is noexcept.
     ///
     /// @tparam T
-    /// @param x type: [cortex::box<T>] | qualifiers: [const], [ref]
-    /// @param y type: [cortex::box<T>] | qualifiers: [const], [ref]
+    /// @param x type: [cortex::box<T>] | qualifiers: [const, ref]
+    /// @param y type: [cortex::box<T>] | qualifiers: [const, ref]
     /// @return inline void
     template <typename T>
     inline void swap(cortex::box<T>& x, cortex::box<T>& y) noexcept
