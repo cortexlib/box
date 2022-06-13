@@ -219,3 +219,106 @@ TEST_CASE("Constructors and Assignment")
         }
     }
 }
+
+TEST_CASE("Assignment")
+{
+    SECTION("box::assign - initialiser list")
+    {
+        SECTION("Same Size")
+        {
+            cortex::box<int> bx(3, 3, 1);
+
+            auto ptr { bx.data() };
+
+            REQUIRE(bx.size() == 9);
+            REQUIRE(bx.dimensions() == std::tuple{3, 3});
+            REQUIRE(bx.data() == ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 1, 1 }
+                                           , { 1, 1, 1 }
+                                           , { 1, 1, 1 } });
+
+            bx.assign({ { 1, 2, 3 }
+                      , { 4, 5, 6 }
+                      , { 7, 8, 9 } });
+            
+            REQUIRE(bx.size() == 9);
+            REQUIRE(bx.dimensions() == std::tuple{3, 3});
+            REQUIRE(bx.data() == ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3 }
+                                           , { 4, 5, 6 }
+                                           , { 7, 8, 9 } });
+        }
+
+        SECTION("Larger Size")
+        {
+            cortex::box<int> bx(3, 3, 1);
+
+            auto ptr { bx.data() };
+
+            REQUIRE(bx.size() == 9);
+            REQUIRE(bx.dimensions() == std::tuple{3, 3});
+            REQUIRE(ptr == bx.data());
+            REQUIRE(bx == cortex::box<int> { { 1, 1, 1 }
+                                           , { 1, 1, 1 }
+                                           , { 1, 1, 1 } });
+
+
+            bx.assign({ { 1, 2, 3 }
+                      , { 4, 5, 6 }
+                      , { 7, 8, 9 }
+                      , { 10, 11, 12 } });
+            
+            REQUIRE(bx.size() == 12);
+            REQUIRE(bx.dimensions() == std::tuple{4, 3});
+            REQUIRE(bx.data() != ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3 }
+                                           , { 4, 5, 6 }
+                                           , { 7, 8, 9 }
+                                           , { 10, 11, 12 } });
+        }
+
+        SECTION("Smaller Box")
+        {
+            cortex::box<int> bx(3, 3, 1);
+
+            auto ptr { bx.data() };
+
+            REQUIRE(bx.size() == 9);
+            REQUIRE(bx.dimensions() == std::tuple{3, 3});
+            REQUIRE(bx.data() == ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 1, 1 }
+                                           , { 1, 1, 1 }
+                                           , { 1, 1, 1 } });
+
+            bx.assign({ { 1, 2, 3, 4 } });
+
+            REQUIRE(bx.size() == 4);
+            REQUIRE(bx.dimensions() == std::tuple{1, 4});
+            REQUIRE(bx.data() != ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3, 4 } });
+        }
+
+        SECTION("Empty Box")
+        {
+            cortex::box<int> bx;
+
+            auto ptr { bx.data() };
+
+            REQUIRE(bx.size() == 0);
+            REQUIRE(bx.dimensions() == std::tuple{0, 0});
+            REQUIRE(ptr == bx.data());
+            REQUIRE(bx == cortex::box<int> { });
+
+            bx.assign({ { 1, 2, 3 }
+                      , { 4, 5, 6 }
+                      , { 7, 8, 9 } });
+            
+            REQUIRE(bx.size() == 9);
+            REQUIRE(bx.dimensions() == std::tuple{3, 3});
+            REQUIRE(bx.data() != ptr);
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3 }
+                                           , { 4, 5, 6 }
+                                           , { 7, 8, 9 } });
+        }
+    }
+}

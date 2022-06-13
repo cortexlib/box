@@ -3,7 +3,7 @@
 /// @file box
 /// @author Tyler Swann (oraqlle@github.com)
 /// @brief Two Dimensional Access To Contiguous Data
-/// @version 2.2.0
+/// @version 2.3.0
 /// @date 12-06-2022
 ///
 /// @copyright Copyright (c) 2022
@@ -37,14 +37,10 @@ namespace cortex
     /// stores elements sequentially in memory but is
     /// viewed as a series of rows and columns.
     ///
-    /// @todo Add support for iterator constructors -------------------------- ✔️
-    /// @todo Add other modification methods (mod, xor etc.) ----------------- ✔️
-    /// @todo Add flips ------------------------------------------------------ ✔️
-    /// @todo Add support for operator overloads ----------------------------- ✔️
-    /// @todo Projection method ---------------------------------------------- 🗑️ (do-able with assign)
-    /// @todo Add support for single initialiser constructor ----------------- 🗑️ (too ambiguous for compiler)
-    /// @todo Add support for assign -----------------------------------------
-    /// @todo Add rotates ----------------------------------------------------
+    /// @todo Add additional box::map methods -------------------------------- 
+    /// @todo Added support for slice operator ------------------------------- 
+    /// @todo Finish docs ---------------------------------------------------- 
+    /// @todo Update test cases to support current version of box ------------  
     ///
     /// @tparam _Tp
     template <typename _Tp, typename _Alloc = std::allocator<_Tp>>
@@ -327,7 +323,7 @@ namespace cortex
         /// from an initializer list of initializer lists. Elements
         /// ownership is moved to the box's memory.
         ///
-        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: [const], [ref]
+        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>]
         /// @return constexpr box&
         constexpr box& operator= (std::initializer_list<std::initializer_list<value_type>> list)
         {
@@ -372,6 +368,47 @@ namespace cortex
             m_finish = pointer();
             m_allocator = allocator_type();
         }
+
+
+        /// @brief Intialiser List Assign
+        ///
+        /// @details Uses std::initializer_list to reassign 
+        /// values to a box. If the lists dimensions are not
+        /// the same as the box's dimensions, then the box
+        /// is resized to match the dimensions of the list.
+        /// 
+        /// @param list type: [std::initializer_list<std::initializer_list<value_type>>]
+        constexpr void assign(std::initializer_list<std::initializer_list<value_type>> list)
+        {
+            auto new_rows { list.size() };
+            auto new_columns { list.begin()->size() };
+
+            std::ranges::destroy(*this);
+
+            if (new_rows != m_rows || new_columns != m_columns)
+            {
+                if (m_start)
+                    _M_deallocate(m_start, _M_size(m_rows, m_columns));
+            
+                m_start = _M_allocate(_M_size(new_rows, new_columns));
+                m_finish = m_start + _M_size(new_rows, new_columns);
+            }
+            
+            m_rows = new_rows;
+            m_columns = new_columns;
+
+            using init_iter = typename decltype(list)::iterator;
+            auto offset{ 0uL };
+            for (init_iter row{ list.begin() }; row != list.end(); ++row)
+            {
+                if (row->size() != this->m_columns)
+                    throw std::invalid_argument("Columns must be all the same size");
+
+                std::uninitialized_move_n(row->begin(), this->m_columns, m_start + offset);
+                offset += this->m_columns;
+            }
+        }
+
 
         /// @brief Resizes the box to dimensions new_rows x new_columns.
         ///

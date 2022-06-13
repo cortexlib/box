@@ -1,6 +1,6 @@
 {
     name: 'cortex-box',
-    version: '0.6.0',
+    version: '0.7.0',
     namespace: 'cortex',
     test_driver: 'Catch-Main',
     depends: [
