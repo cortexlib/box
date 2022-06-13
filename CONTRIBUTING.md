@@ -27,7 +27,7 @@ Any and all contributions are always very much appreciated. However, to make sur
    dds build -t :c++<std-version>:<compiler>
    ```
 
-   The code should compiler and an all tests should say they passed in the terminal.
+   The code should compile successfully and an all tests should say they passed in the terminal.
 
 5. Commit your changes. Your commit message should start with a one line
    short description of the modifications, with the details and explanations

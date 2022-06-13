@@ -1,8 +1,17 @@
 # Cortex : { box }
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![License](https://img.shields.io/github/license/cortexlib/box)](LICENSE.md)
+![Current Release](https://img.shields.io/github/v/release/cortexlib/box)
+![DDS Version](https://img.shields.io/badge/DDS%20Version-alpha--6-blue)
+![C++ Standard](https://img.shields.io/badge/C%2B%2B%20Standard-C%2B%2B20-red)
+![GCC](https://img.shields.io/badge/GCC-11.1.0-yellow)
+![Clang](https://img.shields.io/badge/Clang-❌-yellow)
 
 Box is a two dimensional generic container. It aims to provide expressive and dynamic operations that allow for easy fast mainpulation of the data's shape. Box is available under the `cortex::` namespace.
+
+Box has been built and tested for C++20 only. This is because `box` relies on `std::ranges`.
+Box also only works with GCC-11 currently due to Clang not having completed [PR0634R3](https://wg21.link/P0634R3) yet which invalidates part of the `std::ranges` library.
 
 Box is built and packaged using the [BPT/DDS](https://github.com/vector-of-bool/dds) building tool. Click [here](https://dds.pizza) view the documentation and install instructions for BPT/DDS. BPT/DDS is a command line tool for managing dependencies and building applications in C++.
 
