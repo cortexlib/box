@@ -1,0 +1,24 @@
+[project]
+name = "box"
+version = "0.9.0"
+
+# num_threads = 2
+
+git_repo_url = "https://github.com/cortexlib/box/blob/main"
+
+[path]
+compile_commands = "/_build/compile_commands.json"
+
+output_dir = "/docs"
+
+# [includes]
+# paths = [
+#     "~/.local/share/dds/pkg/cortex-iterators@0.4.1/src",
+#     "~/.local/share/dds/pkg/cortex-concpets@0.2.1/src",
+# ]
+
+# [ignore]
+# paths = [
+#     "/src/tests/",
+#     "/src/examples/",
+# ]
