@@ -127,7 +127,9 @@ public:
 
     'hidden' data() const noexcept;
 
-    constexpr 'hidden' operator[]('hidden' step);
+    constexpr std::span<value_type> slice('hidden' ridx) const;
+
+    constexpr std::span<value_type> operator[]('hidden' ridx);
 
     constexpr 'hidden' at('hidden' row, 'hidden' column);
 
@@ -230,19 +232,6 @@ public:
     constexpr auto rrotate() const;
 
     constexpr auto lrotate() const;
-
-private:
-    constexpr 'hidden' _M_allocate('hidden' __n);
-
-    constexpr void _M_deallocate('hidden' __p, 'hidden' __n);
-
-    constexpr void _M_range_check('hidden' __row, 'hidden' __column) const;
-
-    template <typename _Up>
-    _Up* _M_data_ptr(_Up* __ptr) const noexcept;
-
-    template <typename _Ptr>
-    typename std::pointer_traits<_Ptr>::element_type* _M_data_ptr(_Ptr __ptr) const;
 };
 ```
 
@@ -720,19 +709,35 @@ Returns the underlying data pointer.
 
 -----
 
-### Function `cortex::box::operator[]`
+### Function `cortex::box::slice`
 
 ``` cpp
-constexpr 'hidden' operator[]('hidden' step);
+constexpr std::span<value_type> slice('hidden' ridx) const;
 ```
 
-Subscript Operator
+Slice
 
-Returns a reference to the element that is at the position indicated by the pointer m\_data + step. Offers linear access to the box’s elements.
+Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data.
+
+\\exception std::out\_of\_range - if the row index is out of range of the box, the exception is thrown.
 
 #### Parameters
 
-  - `step` - type: size\_type \\return constexpr reference
+  - `ridx` - type: size\_type \\return std::span\<value\_type\>
+
+-----
+
+### Function `cortex::box::operator[]`
+
+``` cpp
+constexpr std::span<value_type> operator[]('hidden' ridx);
+```
+
+@brief Slice Operator
+
+@details Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data. Calls `box::slice`.
+
+@param ridx @return std::span\<value\_type\>
 
 -----
 
@@ -742,7 +747,7 @@ Returns a reference to the element that is at the position indicated by the poin
 constexpr 'hidden' at('hidden' row, 'hidden' column);
 ```
 
-At
+@brief Two Dimensional Element Access (Point Access).
 
 Returns a reference to the element that is at the point position (column, row) of the box.
 
@@ -1519,92 +1524,6 @@ Left Rotate
 Rotates the box 90 degrees counter-clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 \\return constexpr auto
-
------
-
-### Function `cortex::box::_M_allocate`
-
-``` cpp
-constexpr 'hidden' _M_allocate('hidden' __n);
-```
-
-Allocates Matrix Recources
-
-Allocates the memory for the box using the allocator of the container. Uses std::allocator\_traits to get the allocators relevant methods.
-
-\\note Default allocator is std::allocator\<value\_type\>.
-
-#### Parameters
-
-  - `__n` - type: size\_type \\return constexpr pointer
-
------
-
-### Function `cortex::box::_M_deallocate`
-
-``` cpp
-constexpr void _M_deallocate('hidden' __p, 'hidden' __n);
-```
-
-Dellocates Matrix Recources
-
-Dellocates the memory for the box using the allocator of the container. Uses std::allocator\_traits to get the allocators relevant methods.
-
-#### Parameters
-
-  - `__p` - type: pointer
-  - `__n` - type: size\_type | attribute: \[\[maybe\_unused\]\]
-
------
-
-### Function `cortex::box::_M_range_check`
-
-``` cpp
-constexpr void _M_range_check('hidden' __row, 'hidden' __column) const;
-```
-
-Checks index’s are in the bounds of the box
-
-Checks if \_\_column and \_\_row are withing the box’s bounds.
-
-\\exception std::out\_of\_range
-
-#### Parameters
-
-  - `__row` - type: size\_type
-  - `__column` - type: size\_type
-
------
-
-### Function `cortex::box::_M_data_ptr`
-
-``` cpp
-template <typename _Up>
-_Up* _M_data_ptr(_Up* __ptr) const noexcept;
-```
-
-Returns the pointer passed to it.
-
-#### Parameters
-
-  - `__ptr` - type: \_Up\* \\return \_Up\*
-
------
-
-### Function `cortex::box::_M_data_ptr`
-
-``` cpp
-template <typename _Ptr>
-typename std::pointer_traits<_Ptr>::element_type* _M_data_ptr(_Ptr __ptr) const;
-```
-
-Returns the pointer passed to it.
-
-If the value given is not a builtin pointer type, a pointer is created from the underlying element type.
-
-#### Parameters
-
-  - `__ptr` - type: \_Ptr \\return typename std::pointer\_traits\<\_Ptr\>::element\_type\*
 
 -----
 

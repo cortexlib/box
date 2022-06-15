@@ -5,4 +5,5 @@ include_dir=/home/tyler/.local/share/dds/pkg/cortex-concepts@0.2.1/src
 
 [input]
 soure_ext=hpp
-extract_private=true
+require_comment=true
+extract_private=false

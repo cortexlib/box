@@ -24,6 +24,7 @@
 #include <initializer_list>
 #include <memory>
 #include <ranges>
+#include <span>
 #include <utility>
 #include <vector>
 
@@ -734,7 +735,7 @@ namespace cortex
         /// \param ridx type: size_type
         /// \return std::span<value_type> 
         constexpr auto
-        slice(size_type ridx)
+        slice(size_type ridx) const
             -> std::span<value_type>
         {
             if (ridx >= m_rows)
