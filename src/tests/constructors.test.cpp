@@ -39,19 +39,19 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.rows() == 4);
             REQUIRE(nbx.columns() == 5);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-            {
-                REQUIRE(nbx[i] == 1);
-                REQUIRE(bx[i] == 1);
-            }
+            for (auto& v : bx)
+                REQUIRE(v == 1);
+
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
 
         SECTION("Move constructor")
         {
             cortex::box<int> bx(4, 5, 1);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 1);
+            for (auto& v : bx)
+                REQUIRE(v == 1);
 
             cortex::box<int> nbx(std::move(bx));
 
@@ -59,8 +59,8 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.rows() == 4);
             REQUIRE(nbx.columns() == 5);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(nbx[i] == 1);
+            for (auto& v : bx)
+                REQUIRE(v == 1);
         }
 
         SECTION("Initializer List Constructor")
@@ -75,8 +75,8 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(bx.columns() == 2);
             REQUIRE(bx.size() == 10);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == static_cast<int>(i + 1));
+            for (auto i { 1 }; auto& v : bx)
+                REQUIRE(v == i++);
         }
 
         SECTION("Assign Constructor")
@@ -136,11 +136,11 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.columns() == 5);
             REQUIRE(bx.get_allocator() == alloc);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-            {
-                REQUIRE(nbx[i] == 1);
-                REQUIRE(bx[i] == 1);
-            }
+            for (auto& v : bx)
+                REQUIRE(v == 1);
+
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
 
         SECTION("Move constructor")
@@ -148,8 +148,8 @@ TEST_CASE("Constructors and Assignment")
             std::allocator<int> alloc;
             cortex::box<int> bx(4, 5, 1, alloc);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == 1);
+            for (auto& v : bx)
+                REQUIRE(v == 1);
 
             cortex::box<int> nbx(std::move(bx));
 
@@ -158,8 +158,8 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.columns() == 5);
             REQUIRE(nbx.get_allocator() == alloc);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(nbx[i] == 1);
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
     }
 
@@ -179,11 +179,11 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.rows() == 4);
             REQUIRE(nbx.columns() == 5);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-            {
-                REQUIRE(nbx[i] == 1);
-                REQUIRE(bx[i] == 1);
-            }
+            for (auto& v : bx)
+                REQUIRE(v == 1);
+            
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
 
         SECTION("Move assignment")
@@ -200,8 +200,8 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(nbx.rows() == 4);
             REQUIRE(nbx.columns() == 5);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(nbx[i] == 1);
+            for (auto& v : nbx)
+                REQUIRE(v == 1);
         }
 
         SECTION("Initializer List Assignment")
@@ -214,8 +214,8 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(bx.columns() == 3);
             REQUIRE(bx.size() == 9);
 
-            for (auto i { 0ul }; i < bx.size(); ++i)
-                REQUIRE(bx[i] == static_cast<int>(i + 1));
+            for (auto i { 1 }; auto& v : bx)
+                REQUIRE(v == i++);
         }
     }
 }

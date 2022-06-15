@@ -721,19 +721,47 @@ namespace cortex
         const_pointer data() const noexcept
         { return _M_data_ptr(m_start); }
 
-        /// \brief Subscript Operator
-        ///
-        /// \details Returns a reference to the element that
-        /// is at the position indicated by the pointer
-        /// m_data + step. Offers linear access to the box's
-        /// elements.
-        ///
-        /// \param step type: size_type
-        /// \return constexpr reference
-        constexpr reference operator[](size_type step)
-        { return *(m_start + step); }
 
-        /// \brief At
+        /// \brief Slice
+        ///
+        /// \details Returns a slice of the box. The slice is
+        /// std::span over the indicated row of the box. The 
+        /// span is a view over the underlying data.
+        ///
+        /// \exception std::out_of_range - if the row index is 
+        /// out of range of the box, the exception is thrown.
+        /// 
+        /// \param ridx type: size_type
+        /// \return std::span<value_type> 
+        constexpr auto
+        slice(size_type ridx)
+            -> std::span<value_type>
+        {
+            if (ridx >= m_rows)
+                throw std::out_of_range("box::slice - row index out of range");
+            
+            return std::span<value_type>{
+                _M_data_ptr(m_start) + ridx * m_columns,
+                m_columns
+            };
+        }
+
+
+        /// @brief Slice Operator
+        ///
+        /// @details Returns a slice of the box. The slice is
+        /// std::span over the indicated row of the box. The
+        /// span is a view over the underlying data. Calls
+        /// `box::slice`.
+        /// 
+        /// @param ridx 
+        /// @return std::span<value_type> 
+        constexpr auto 
+        operator[](size_type ridx)
+            -> std::span<value_type>
+        { return slice(ridx); }
+
+        /// @brief Two Dimensional Element Access (Point Access).
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
