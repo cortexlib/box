@@ -1,4 +1,4 @@
-# Cortex Library
+# Cortex : { box }
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/github/license/cortexlib/box)](LICENSE.md)
@@ -21,7 +21,7 @@ Box is part of a larger library called the [Cortex Library](https://github.com/c
 
 ## Contents
 
-- [Cortex Library](#cortex-library)
+- [Cortex : { box }](#cortex---box-)
   - [Contents](#contents)
   - [Features](#features)
   - [Adding Box to your BPT/DDS Project](#adding-box-to-your-bptdds-project)
