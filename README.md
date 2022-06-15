@@ -52,7 +52,7 @@ dds pkg repo add "https://trovepi.dev"
 
 This will allow BPT/DDS to find the packages host by Trove. Once you've added the repo, go to your package.json5 file within your pojects directory and add box as a dependency.
 
-```json
+```json5
 {
     name: 'package',
     version: 'x.x.x',
@@ -66,7 +66,7 @@ This will allow BPT/DDS to find the packages host by Trove. Once you've added th
 
 Finally, any library that uses Box needs to declare that it is in use. This is done in the library.json5 files corresponding to the indiviual libraries. More information on BPT/DDS package structures and libraries can be found [here](https://dds.pizza/docs/guide/packages.html).
 
-```json
+```json5
 {
     name: 'library',
     uses: [
