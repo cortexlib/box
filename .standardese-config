@@ -1,0 +1,8 @@
+[compilation]
+standard=c++20
+include_dir=/home/tyler/.local/share/dds/pkg/cortex-iterators@0.4.1/src
+include_dir=/home/tyler/.local/share/dds/pkg/cortex-concepts@0.2.1/src
+
+[input]
+soure_ext=hpp
+extract_private=true
