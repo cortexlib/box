@@ -748,21 +748,21 @@ namespace cortex
         }
 
 
-        /// @brief Slice Operator
+        /// \brief Slice Operator
         ///
-        /// @details Returns a slice of the box. The slice is
+        /// \details Returns a slice of the box. The slice is
         /// std::span over the indicated row of the box. The
         /// span is a view over the underlying data. Calls
         /// `box::slice`.
         /// 
-        /// @param ridx 
-        /// @return std::span<value_type> 
+        /// \param ridx 
+        /// \return std::span<value_type> 
         constexpr auto 
         operator[](size_type ridx)
             -> std::span<value_type>
         { return slice(ridx); }
 
-        /// @brief Two Dimensional Element Access (Point Access).
+        /// \brief Two Dimensional Element Access (Point Access).
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
