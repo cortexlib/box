@@ -1,6 +1,6 @@
 {
     name: 'cortexlib',
-    version: '1.0.0-alpha-1',
+    version: '1.0.0-alpha-2',
     namespace: 'cortex',
     test_driver: 'Catch-Main'
 }
