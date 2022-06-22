@@ -1,4 +1,4 @@
-PROJECT_NAME = Cortex Library
+PROJECT_NAME = Cortex-Library
 
 HTML_OUTPUT = docs/doxygen
 MULTILINE_CPP_IS_BRIEF = YES
