@@ -10,4 +10,8 @@ namespace cortex
 }
 ```
 
-reverse.hpp \\author Tyler Swann (oraqlle@github.com)
+An iterator for iterating through a container in reverse order.
+
+reverse.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.0 \\date 2022-03-31
+
+\\copyright Copyright (c) 2022

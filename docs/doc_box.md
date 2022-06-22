@@ -1,6 +1,14 @@
 # Header file `box.hpp`
 
 ``` cpp
+#include "iterators/column.hpp"
+
+#include "concepts.hpp"
+
+#include "iterators/normal.hpp"
+
+#include "iterators/row.hpp"
+
 #define CORTEX_BOX_H
 
 #define lexicographical_compare_bug
@@ -733,11 +741,13 @@ Returns a slice of the box. The slice is std::span over the indicated row of the
 constexpr std::span<value_type> operator[]('hidden' ridx);
 ```
 
-@brief Slice Operator
+Slice Operator
 
-@details Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data. Calls `box::slice`.
+Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data. Calls `box::slice`.
 
-@param ridx @return std::span\<value\_type\>
+#### Parameters
+
+  - `ridx` - \\return std::span\<value\_type\>
 
 -----
 
@@ -747,7 +757,7 @@ constexpr std::span<value_type> operator[]('hidden' ridx);
 constexpr 'hidden' at('hidden' row, 'hidden' column);
 ```
 
-@brief Two Dimensional Element Access (Point Access).
+Two Dimensional Element Access (Point Access).
 
 Returns a reference to the element that is at the point position (column, row) of the box.
 

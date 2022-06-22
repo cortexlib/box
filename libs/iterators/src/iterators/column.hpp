@@ -1,8 +1,8 @@
 /// -*- C++ -*- Header compatibility <column.hpp>
 
+/// \brief Column Iterator
 /// \file column.hpp
 /// \author Tyler Swann (oraqlle@github.com)
-/// \brief Column Iterator
 /// \version 1.0.1
 /// \date 2022-05-20
 /// 

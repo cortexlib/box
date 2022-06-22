@@ -61,7 +61,11 @@ namespace cortex
 }
 ```
 
-concepts.hpp \\author Tyler Swann (oraqlle@github.com)
+Some generalised concepts for use throughout the Cortex Library
+
+concepts.hpp \\author Tyler Swann (oraqlle@github.com) \\version 0.1.0 \\date 2022-05-03
+
+\\copyright Copyright (c) 2022
 
 ### Unexposed entity `cortex::AddableWith`
 

@@ -1,10 +1,10 @@
 // -*- C++ -*- Header compatibility <enumerate.hpp>
 
 /**
- * \file enumerate.hpp
- * \author Tyler Swann (oraqlle@github.com)
  * \brief An adaptor for creating an iterator
  * and index pair in a for loop.
+ * \file enumerate.hpp
+ * \author Tyler Swann (oraqlle@github.com)
  * \version 1.0.0
  * \date 2022-04-01
  * 

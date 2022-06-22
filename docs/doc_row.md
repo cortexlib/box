@@ -24,7 +24,13 @@ namespace cortex
 }
 ```
 
-row.hpp \\author Tyler Swann (oraqlle@github.com)
+Row Iterator
+
+row.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
+
+\\ingroup %iterators
+
+\\copyright Copyright (c) 2022
 
 ### Class `cortex::row_iterator`
 

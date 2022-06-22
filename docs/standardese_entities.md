@@ -1,5 +1,7 @@
 # Project index
 
+  - [`CORTEX_BOX_H`](doc_box.md#standardese-box-hpp)
+
   - [`CORTEX_COLUMN_ITERATOR_HPP`](doc_column.md#standardese-column-hpp)
 
   - [`CORTEX_CONCEPTS_H`](doc_concepts.md#standardese-concepts-hpp)
@@ -78,13 +80,17 @@
         
           - [`operator|`](doc_enumerate.md#standardese-cortex__adaptors__operator--_Container-_Tp-_Up--_Containerconst--enumerate_proxy-_Tp-_Up-const--) - operator| overload for piping the index\_proxy object returnd by indexed to the enumerate function.
     
+      - [`box`](doc_box.md#standardese-cortex__box-T-Alloc-) - Box - Two Dimensional Array
+    
       - [`column_iterator`](doc_column.md#standardese-cortex__column_iterator-_Iterator-) - Column Iterator
     
       - [`enumerate`](doc_enumerate.md#standardese-cortex__enumerate-_Tp-_Iterator---_Tp--int-int-) - Moves a container to the iterable\_wrapper object.
     
       - [`normal_iterator`](doc_normal.md#standardese-cortex)
     
-      - [`operator<`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than Operator
+      - [`operator!=`](doc_box.md#standardese-cortex__operator---_ElemL-_ElemR--box-_ElemL-const--box-_ElemR-const--) - Compares two matrices for inequality.
+    
+      - [`operator<`](doc_column.md#standardese-cortex__operator--_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than Operator
     
       - [`operator<=`](doc_column.md#standardese-cortex__operator---_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than or Equal Operator
     
@@ -101,3 +107,9 @@
       - [`row_iterator`](doc_row.md#standardese-cortex__row_iterator-_Iterator-) - Row Iterator
     
       - [`two_dim_iterator`](doc_two_dim.md#standardese-cortex__two_dim_iterator-_Iterator-) - Two Dimensional Iterator
+
+  - [`lexicographical_compare_bug`](doc_box.md#standardese-box-hpp)
+
+  - ## Namespace `std`
+    
+      - [`swap`](http://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search=std::swap\<T\>\(cortex::box\<T\>&,cortex::box\<T\>&\)) - Uses std::swaps to swap the contents of two matrices.

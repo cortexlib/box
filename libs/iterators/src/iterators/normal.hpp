@@ -1,9 +1,9 @@
 // -*- C++ -*- Header compatibility <normal.hpp>
 
-/// \file normal.hpp
-/// \author Tyler Swann (oraqlle@github.com)
 /// \brief Adapts a non-object iterator to an object iterator 
 /// without changing its semantics.
+/// \file normal.hpp
+/// \author Tyler Swann (oraqlle@github.com)
 /// \version 1.1.0
 /// \date 2022-03-31
 /// 

@@ -10,4 +10,10 @@ namespace cortex
 }
 ```
 
-normal.hpp \\author Tyler Swann (oraqlle@github.com)
+Adapts a non-object iterator to an object iterator without changing its semantics.
+
+normal.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.1.0 \\date 2022-03-31
+
+\\ingroup %iterators
+
+\\copyright Copyright (c) 2022

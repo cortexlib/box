@@ -1,9 +1,9 @@
 /// -*- C++ -*- Header compatibility <row.hpp>
 
 
+/// \brief Row Iterator
 /// \file row.hpp
 /// \author Tyler Swann (oraqlle@github.com)
-/// \brief Row Iterator
 /// \version 1.0.1
 /// \date 2022-05-20
 /// 

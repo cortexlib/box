@@ -1,9 +1,9 @@
 /// -*- C++ -*- Header compatiability <reverse.hpp>
 
-/// \file reverse.hpp
-/// \author Tyler Swann (oraqlle@github.com)
 /// \brief An iterator for iterating through a container in 
 /// reverse order.
+/// \file reverse.hpp
+/// \author Tyler Swann (oraqlle@github.com)
 /// \version 1.0.0
 /// \date 2022-03-31
 /// 

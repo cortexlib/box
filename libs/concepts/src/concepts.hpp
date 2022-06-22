@@ -1,10 +1,10 @@
 /// -*- C++ -*- Header compatiability <concpets.hpp>
 
 
+/// \brief Some generalised concepts for use throughout
+/// the Cortex Library
 /// \file concepts.hpp
 /// \author Tyler Swann (oraqlle@github.com)
-/// \brief Some generalised concepts for use throughout
-/// the Cortex Libraries
 /// \version 0.1.0
 /// \date 2022-05-03
 /// 
