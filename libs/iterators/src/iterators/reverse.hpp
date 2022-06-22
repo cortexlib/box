@@ -1,13 +1,13 @@
 /// -*- C++ -*- Header compatiability <reverse.hpp>
 
-/// \brief An iterator for iterating through a container in 
+/// @brief An iterator for iterating through a container in 
 /// reverse order.
-/// \file reverse.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 1.0.0
-/// \date 2022-03-31
+/// @file reverse.hpp
+/// @author Tyler Swann (oraqlle@github.com)
+/// @version 1.0.0
+/// @date 2022-03-31
 /// 
-/// \copyright Copyright (c) 2022
+/// @copyright Copyright (c) 2022
 /// 
 
 
@@ -34,13 +34,13 @@ namespace cortex
 {
 
     
-    /// \brief Reverse Iterator 
+    /// @brief Reverse Iterator 
     /// 
-    /// \details This iterator applies the inverse operation to
+    /// @details This iterator applies the inverse operation to
     /// an underlying iterator of type _Iterator, thus allowing 
     /// for reversed traversel through a container.
     /// 
-    /// \tparam _Iterator 
+    /// @tparam _Iterator 
     
     template<typename _Iterator>
     class reverse_iterator
@@ -65,9 +65,9 @@ namespace cortex
 
 
         
-        /// \brief Default Constructor
+        /// @brief Default Constructor
         /// 
-        /// \details Initialises m_current to the default value of 
+        /// @details Initialises m_current to the default value of 
         /// the type _Iterator. 
         /// 
         /// [constexpr]
@@ -79,14 +79,14 @@ namespace cortex
             
 
         
-        /// \brief Copy Constructor. 
+        /// @brief Copy Constructor. 
         /// 
-        /// \details Uses copy semantics to initialise m_current from
+        /// @details Uses copy semantics to initialise m_current from
         /// an object as the same type as iterator_type. Because the 
         /// the underlying types must be the same, m_current can be 
         /// directly initialised from __other.
         /// 
-        /// \param __other const reference to an object of type iterator_type.
+        /// @param __other const reference to an object of type iterator_type.
         /// 
         /// [explicit]
         /// [constexpr]
@@ -97,15 +97,15 @@ namespace cortex
 
 
         
-        /// \brief Copy Constructor.
+        /// @brief Copy Constructor.
         /// 
-        /// \details Uses copy semantics to initialise m_current from
+        /// @details Uses copy semantics to initialise m_current from
         /// another %reverse_iterator object. Uses the \code {.cpp}
         /// %reverse_iterator::base()
-        /// \endcode
+        /// @endcode
         /// method to access __other's underlying iterator. 
         /// 
-        /// \param __other const reference to a %reverse_iterator object.
+        /// @param __other const reference to a %reverse_iterator object.
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -116,17 +116,17 @@ namespace cortex
         
         
         
-        /// \brief Copy Assignment.
+        /// @brief Copy Assignment.
         /// 
-        /// \details Uses copy semantics to assign m_current to the
+        /// @details Uses copy semantics to assign m_current to the
         /// underlying iterator of __other. Uses the \code {.cpp}
         /// %reverse_iterator::base()
-        /// \endcode
+        /// @endcode
         /// method to access __other's underlying iterator.
         /// Returns a reference to this.
         /// 
-        /// \param __other
-        /// \return constexpr reverse_iterator&
+        /// @param __other
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -141,14 +141,14 @@ namespace cortex
 
 
         
-        /// \brief Copy Assignment.
+        /// @brief Copy Assignment.
         /// 
-        /// \details Uses copy semantics to assign m_current to 
+        /// @details Uses copy semantics to assign m_current to 
         /// __other. __other must be of type  terator_type.
         /// Returns a reference to this.
         /// 
-        /// \param __other
-        /// \return constexpr reverse_iterator&
+        /// @param __other
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -163,13 +163,13 @@ namespace cortex
         
         
         
-        /// \brief Bool Operator Overload.
+        /// @brief Bool Operator Overload.
         /// 
-        /// \details Returns true if m_current does not point
+        /// @details Returns true if m_current does not point
         /// to a valid address. Returns a boolean.
         /// 
-        /// \return true 
-        /// \return false 
+        /// @return true 
+        /// @return false 
         /// 
         /// [explicit]
         /// [constexpr]
@@ -181,13 +181,13 @@ namespace cortex
 
 
         
-        /// \brief Dereference Operator Overload. 
+        /// @brief Dereference Operator Overload. 
         /// 
-        /// \details Creates a tempory value of type
+        /// @details Creates a tempory value of type
         /// iterator_type equal to m_current. Prefix 
         /// decrements and
         /// 
-        /// \return constexpr reference (T&)
+        /// @return constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -201,20 +201,20 @@ namespace cortex
 
 
         
-        /// \brief Arrow Deference Operator Overload. 
+        /// @brief Arrow Deference Operator Overload. 
         /// 
-        /// \details Creates a tempory value of type
+        /// @details Creates a tempory value of type
         /// iterator_type equal to m_current. Prefix 
         /// decrements is applied to the tempory variable
         /// before passing it to _S_to_pointer. The 
         /// return value of _S_to_pointer is returned 
         /// to the caller.
         /// 
-        /// \requires The type _Iterator meets the conditions
+        /// @requires The type _Iterator meets the conditions
         /// a being a pointer or that some variable, __t
         /// supports __t.operator->().
         /// 
-        /// \return constexpr pointer (T*)
+        /// @return constexpr pointer (T*)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -233,12 +233,12 @@ namespace cortex
 
 
         
-        /// \brief Prefix Increment Operator Overload.
+        /// @brief Prefix Increment Operator Overload.
         /// 
-        /// \details Applies the prefix decrement operator to
+        /// @details Applies the prefix decrement operator to
         /// m_current and returns a reference to this.
         /// 
-        /// \return constexpr reverse_iterator&
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -251,15 +251,15 @@ namespace cortex
 
 
         
-        /// \brief Postfix Increment Operator Overload.
+        /// @brief Postfix Increment Operator Overload.
         /// 
-        /// \details Constructs tempory variable of type
+        /// @details Constructs tempory variable of type
         /// %reverse_iterator from *this and applies the 
         /// prefix decrement operator on m_current. It 
         /// then returns a newly constructed %reverse_iterator 
         /// from the tempory variable.
         /// 
-        /// \return constexpr reverse_iterator
+        /// @return constexpr reverse_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -273,12 +273,12 @@ namespace cortex
 
 
         
-        /// \brief Prefix Decrement Operator Overload.
+        /// @brief Prefix Decrement Operator Overload.
         /// 
-        /// \details Applies the prefix increment operator to
+        /// @details Applies the prefix increment operator to
         /// m_current and returns a reference to this.
         /// 
-        /// \return constexpr reverse_iterator&
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -291,15 +291,15 @@ namespace cortex
 
 
         
-        /// \brief Postfix Decrement Operator Overload.
+        /// @brief Postfix Decrement Operator Overload.
         /// 
-        /// \details Constructs tempory variable of type
+        /// @details Constructs tempory variable of type
         /// %reverse_iterator from *this and applies the 
         /// prefix decrement operator on m_current. It 
         /// then returns a newly constructed %reverse_iterator 
         /// from the tempory variable. 
         /// 
-        /// \return constexpr reverse_iterator
+        /// @return constexpr reverse_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -313,14 +313,14 @@ namespace cortex
 
 
         
-        /// \brief Subscript Operator Overload.
+        /// @brief Subscript Operator Overload.
         /// 
-        /// \details Accesses the element at an offset to m_current's
+        /// @details Accesses the element at an offset to m_current's
         /// location in memory and returns a reference to the value
         /// stored at that location.
         /// 
-        /// \param __n 
-        /// \return constexpr reference (T&)
+        /// @param __n 
+        /// @return constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -331,14 +331,14 @@ namespace cortex
 
 
          
-        /// \brief Additive Assignment Operator Overload. 
+        /// @brief Additive Assignment Operator Overload. 
         ///
-        /// \details Decreases the m_current's pointer value by 
+        /// @details Decreases the m_current's pointer value by 
         /// __step and assigns m_current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// \param __step 
-        /// \return constexpr reverse_iterator&
+        /// @param __step 
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -351,14 +351,14 @@ namespace cortex
 
 
         
-        /// \brief Subtraction Assignment Operator Overload. 
+        /// @brief Subtraction Assignment Operator Overload. 
         ///
-        /// \details Increases the m_current's pointer value by 
+        /// @details Increases the m_current's pointer value by 
         /// __step and assigns m_current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// \param __step 
-        /// \return constexpr reverse_iterator&
+        /// @param __step 
+        /// @return constexpr reverse_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -371,13 +371,13 @@ namespace cortex
 
 
          
-        /// \brief Addition Operator Overload.
+        /// @brief Addition Operator Overload.
         /// 
-        /// \details Constructs a new iterator from the substitution 
+        /// @details Constructs a new iterator from the substitution 
         /// of m_current and __step. 
         /// 
-        /// \param __step 
-        /// \return constexpr reverse_iterator 
+        /// @param __step 
+        /// @return constexpr reverse_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -387,13 +387,13 @@ namespace cortex
 
 
         
-        /// \brief Subtraction Operator Overload.
+        /// @brief Subtraction Operator Overload.
         /// 
-        /// \details Constructs a new iterator from the addition 
+        /// @details Constructs a new iterator from the addition 
         /// of m_current and __step. 
         /// 
-        /// \param __step 
-        /// \return constexpr reverse_iterator 
+        /// @param __step 
+        /// @return constexpr reverse_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -403,11 +403,11 @@ namespace cortex
 
 
         
-        /// \brief Base Member Access. 
+        /// @brief Base Member Access. 
         /// 
-        /// \details Returns a raw copy of m_current.
+        /// @details Returns a raw copy of m_current.
         /// 
-        /// \return constexpr iterator_type (_Iterator)
+        /// @return constexpr iterator_type (_Iterator)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -420,13 +420,13 @@ namespace cortex
 
     private:
         
-        /// \brief Returns a pointer.
+        /// @brief Returns a pointer.
         /// 
-        /// \tparam _Tp 
-        /// \param __p 
-        /// \return static constexpr _Tp* 
+        /// @tparam _Tp 
+        /// @param __p 
+        /// @return static constexpr _Tp* 
         /// 
-        /// \noop
+        /// @noop
         /// 
         /// [static]
         /// [constexpr]
@@ -438,14 +438,14 @@ namespace cortex
 
 
         
-        /// \brief Returns a pointer.
+        /// @brief Returns a pointer.
         /// 
-        /// \details If a object is passed, the object's arrow
+        /// @details If a object is passed, the object's arrow
         /// operator is called and the result is returned.
         /// 
-        /// \tparam _Tp 
-        /// \param __t 
-        /// \return static constexpr _Tp* 
+        /// @tparam _Tp 
+        /// @param __t 
+        /// @return static constexpr _Tp* 
         /// 
         /// [static]
         /// [constexpr]
@@ -460,33 +460,33 @@ namespace cortex
 #if __cpp_lib_three_way_comparison /// C++20
 
     
-    /// \brief Equality Operator Overload.
+    /// @brief Equality Operator Overload.
     /// 
-    /// \details Performs an equality comparison of two 
+    /// @details Performs an equality comparison of two 
     /// %reverse_iterator's whose _Iterator types can be 
     /// different but of they share the same _Container 
     /// type. 
     /// 
-    /// \requires \code {.cpp}
+    /// @requires \code {.cpp}
     /// { __lhsI == __rhsI } -> bool
-    /// \endcode
+    /// @endcode
     /// That the underlying _Iterator types are equality comparable.
     /// 
-    /// \exception \code {.cpp}
+    /// @exception \code {.cpp}
     /// code noexcept (noexcept(__lhs.base() == __rhs.base()))
-    /// \endcode
+    /// @endcode
     /// Ensures that the comparison of __lhs.base() and 
     /// __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// @note _IteratorL can equal _IteratorR.
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr true
-    /// \return constexpr false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr true
+    /// @return constexpr false
     /// 
     /// [constexpr]
     /// [noexcept.noexcept-clause]
@@ -503,27 +503,27 @@ namespace cortex
 
 
     
-    /// \brief Spaceship Operator Overload.
+    /// @brief Spaceship Operator Overload.
     /// 
-    /// \details Performs a 3-way comparison of two 
+    /// @details Performs a 3-way comparison of two 
     /// %reverse_iterator's whose _Iterator types can be 
     /// different but of they share the same _Container 
     /// type. 
     /// 
-    /// \exception \code {.cpp}
+    /// @exception \code {.cpp}
     /// code noexcept (noexcept(__lhs.base() <=> __rhs.base()))
-    /// \endcode
+    /// @endcode
     /// Ensures that the 3-way comparison of __lhs.base() and 
     /// __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// @note _IteratorL can equal _IteratorR.
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr auto of [std::strong_ordering]
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr auto of [std::strong_ordering]
     ///                         : [std::weak_ordering]
     ///                         : [std::partial_ordering]
     /// 
@@ -542,20 +542,20 @@ namespace cortex
 
 
     
-    /// \brief Equality Operator Overload.
+    /// @brief Equality Operator Overload.
     /// 
-    /// \details Performs an equality comparison of two 
+    /// @details Performs an equality comparison of two 
     /// %reverse_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -570,18 +570,18 @@ namespace cortex
 
 
     
-    /// \brief Equality Operator Overload.
+    /// @brief Equality Operator Overload.
     /// 
-    /// \details Performs an equality comparison of two 
+    /// @details Performs an equality comparison of two 
     /// %reverse_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -596,20 +596,20 @@ namespace cortex
 
 
     
-    /// \brief Inequality Operator Overload.
+    /// @brief Inequality Operator Overload.
     /// 
-    /// \details Performs an equality comparison of two 
+    /// @details Performs an equality comparison of two 
     /// %reverse_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type.  
     /// 
-    /// \tparam _IteratorL
-    /// \tparam _IteratorR
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL
+    /// @tparam _IteratorR
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -624,18 +624,18 @@ namespace cortex
 
 
     
-    /// \brief Inequality Operator Overload.
+    /// @brief Inequality Operator Overload.
     /// 
-    /// \details Performs an inequality comparison of two 
+    /// @details Performs an inequality comparison of two 
     /// %reverse_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -650,20 +650,20 @@ namespace cortex
 
 
     
-    /// \brief Less-than Operator Overload.
+    /// @brief Less-than Operator Overload.
     /// 
-    /// \details Performs an less-than comparison of two 
+    /// @details Performs an less-than comparison of two 
     /// %reverse_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -678,18 +678,18 @@ namespace cortex
 
 
     
-    /// \brief Less-than Operator Overload.
+    /// @brief Less-than Operator Overload.
     /// 
-    /// \details Performs an less-than comparison of two 
+    /// @details Performs an less-than comparison of two 
     /// %reverse_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -704,20 +704,20 @@ namespace cortex
 
 
     
-    /// \brief Greater-than Operator Overload.
+    /// @brief Greater-than Operator Overload.
     /// 
-    /// \details Performs an greater-than comparison of two 
+    /// @details Performs an greater-than comparison of two 
     /// %reverse_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -732,18 +732,18 @@ namespace cortex
 
 
     
-    /// \brief Greater-than Operator Overload.
+    /// @brief Greater-than Operator Overload.
     /// 
-    /// \details Performs an greater-than comparison 
+    /// @details Performs an greater-than comparison 
     /// of two %reverse_iterator's whose _Iterator types 
     /// and _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -758,20 +758,20 @@ namespace cortex
 
 
     
-    /// \brief Less-than-or-Equal Operator Overload.
+    /// @brief Less-than-or-Equal Operator Overload.
     /// 
-    /// \details Performs an less-than-or-equal comparison 
+    /// @details Performs an less-than-or-equal comparison 
     /// of two %reverse_iterator's whose _Iterator types can 
     /// be different but of they share the same _Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -786,18 +786,18 @@ namespace cortex
 
 
     
-    /// \brief Less-than-or-Equal Operator Overload.
+    /// @brief Less-than-or-Equal Operator Overload.
     /// 
-    /// \details Performs an less-than-or-equal comparison 
+    /// @details Performs an less-than-or-equal comparison 
     /// of two %reverse_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -812,20 +812,20 @@ namespace cortex
 
 
     
-    /// \brief Greater-than-or-Equal Operator Overload.
+    /// @brief Greater-than-or-Equal Operator Overload.
     /// 
-    /// \details Performs an greater-than-or-equal comparison 
+    /// @details Performs an greater-than-or-equal comparison 
     /// of two %reverse_iterator's whose _Iterator types can 
     /// be different but of they share the same _Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -840,18 +840,18 @@ namespace cortex
 
 
     
-    /// \brief Greater-than-or-Equal Operator Overload.
+    /// @brief Greater-than-or-Equal Operator Overload.
     /// 
-    /// \details Performs an greater-than-or-equal comparison 
+    /// @details Performs an greater-than-or-equal comparison 
     /// of two %reverse_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// @tparam _Iterator
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline true
+    /// @return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -869,22 +869,22 @@ namespace cortex
 
 
     
-    /// \brief Difference Operator Overload.
+    /// @brief Difference Operator Overload.
     /// 
-    /// \details Performs a difference operation between 
+    /// @details Performs a difference operation between 
     /// two %reverse_iterator's whose _Iterator types can 
     /// be different but share the same _Container type.
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \if __cplusplus >= 201103L
-    /// \return constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
-    /// \ifnot __cplusplus >= 201103L
-    /// \return inline typename reverse_iterator<_IteratorL, _Container>::difference_type
-    /// \endif
+    /// @tparam _IteratorL 
+    /// @tparam _IteratorR
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @if __cplusplus >= 201103L
+    /// @return constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
+    /// @ifnot __cplusplus >= 201103L
+    /// @return inline typename reverse_iterator<_IteratorL, _Container>::difference_type
+    /// @endif
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -906,17 +906,17 @@ namespace cortex
 
 
     
-    /// \brief Difference Operator Overload.
+    /// @brief Difference Operator Overload.
     /// 
-    /// \details Performs a difference operation between
+    /// @details Performs a difference operation between
     /// two %reverse_iterator's whose _Iterator types and
     /// _Container type are the same.
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \return constexpr inline typename reverse_iterator<_Iterator, _Container>::difference_type 
+    /// @tparam _Iterator 
+    /// @tparam _Container 
+    /// @param __lhs 
+    /// @param __rhs 
+    /// @return constexpr inline typename reverse_iterator<_Iterator, _Container>::difference_type 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -931,17 +931,17 @@ namespace cortex
 
 
     
-    /// \brief Addition Operator Overload.
+    /// @brief Addition Operator Overload.
     /// 
-    /// \details Takes an offset \param __n and a %reverse_iterator 
-    /// \param __i. Constructs a new %reverse_iterator by adding
-    /// \param __n to \param __i.base().
+    /// @details Takes an offset \param __n and a %reverse_iterator 
+    /// @param __i. Constructs a new %reverse_iterator by adding
+    /// @param __n to \param __i.base().
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __n 
-    /// \param __i 
-    /// \return constexpr inline reverse_iterator<_Iterator, _Container> 
+    /// @tparam _Iterator 
+    /// @tparam _Container 
+    /// @param __n 
+    /// @param __i 
+    /// @return constexpr inline reverse_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -956,18 +956,18 @@ namespace cortex
 
 
     
-    /// \brief Makes a new %reverse_iterator.
+    /// @brief Makes a new %reverse_iterator.
     /// 
-    /// \details An adaptor for turning STL container iterators 
+    /// @details An adaptor for turning STL container iterators 
     /// into %reverse_iterators.
     /// 
-    /// \code {.cpp}
+    /// @code {.cpp}
     /// auto it = make_reverse_iterator<std::container>(c.begin()); 
-    /// \endcode 
+    /// @endcode 
     /// 
-    /// \tparam _Container 
-    /// \param __i 
-    /// \return constexpr auto -> reverse_iterator<typename _Container::iterator, _Container>
+    /// @tparam _Container 
+    /// @param __i 
+    /// @return constexpr auto -> reverse_iterator<typename _Container::iterator, _Container>
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -982,19 +982,19 @@ namespace cortex
 
 
     
-    /// \brief Makes a new %reverse_iterator.
+    /// @brief Makes a new %reverse_iterator.
     /// 
-    /// \details An adaptor for making C-style array pointers 
+    /// @details An adaptor for making C-style array pointers 
     /// into %reverse_iterators.
     /// 
-    /// \code {.cpp}
+    /// @code {.cpp}
     /// auto it =  make_normal<int*, int[]>(arr);
-    /// \endcode
+    /// @endcode
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __i 
-    /// \return constexpr auto -> reverse_iterator<_Iterator, _Container> 
+    /// @tparam _Iterator 
+    /// @tparam _Container 
+    /// @param __i 
+    /// @return constexpr auto -> reverse_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -1010,22 +1010,22 @@ namespace cortex
 
 #   if __cplusplus >= 201703L /// C++17
     
-    /// \brief Makes a new %reverse_iterator.
+    /// @brief Makes a new %reverse_iterator.
     /// 
-    /// \details An adaptor for making STL container iterators
+    /// @details An adaptor for making STL container iterators
     /// into %reverse_iterators using C++17 type deduction.
     /// 
-    /// \code {.cpp}
+    /// @code {.cpp}
     /// auto it = make_normal(c, c.begin());
-    /// \endcode
+    /// @endcode
     /// 
-    /// \note \param __c has the attribute [[maybe_unused]]
+    /// @note \param __c has the attribute [[maybe_unused]]
     /// 
-    /// \tparam _Container 
-    /// \tparam _Iterator 
-    /// \param __c 
-    /// \param __i 
-    /// \return constexpr auto -> reverse_iterator<_Iterator, _Container> 
+    /// @tparam _Container 
+    /// @tparam _Iterator 
+    /// @param __c 
+    /// @param __i 
+    /// @return constexpr auto -> reverse_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]

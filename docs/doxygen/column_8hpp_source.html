@@ -71,15 +71,15 @@ $(function() {
 <div class="contents">
 <a href="column_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/// -*- C++ -*- Header compatibility &lt;column.hpp&gt;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"></span><span class="comment"></span> </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">/// \brief Column Iterator</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">/// \file column.hpp</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">/// \author Tyler Swann (oraqlle@github.com)</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">/// \version 1.0.1</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">/// \date 2022-05-20</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">/// @brief Column Iterator</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">/// @file column.hpp</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">/// @author Tyler Swann (oraqlle@github.com)</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">/// @version 1.0.1</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">/// @date 2022-05-20</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">/// </span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/// \ingroup %iterators</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/// @ingroup %iterators</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">/// </span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">/// \copyright Copyright (c) 2022</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">/// @copyright Copyright (c) 2022</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#ifndef CORTEX_COLUMN_ITERATOR_HPP</span></div>
@@ -105,9 +105,9 @@ $(function() {
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>cortex</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{    <span class="comment"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    /// \brief Column Iterator</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">    /// @brief Column Iterator</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">    ///</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    /// \details A column iterator is an iterator that iterates a</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">    /// @details A column iterator is an iterator that iterates a</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">    /// given two dimensional space in column order. Incrementing</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">    /// moves the iterator to the next item in that column and </span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">    /// vice versa for decrementing. Incrementing from the last item </span></div>
@@ -117,7 +117,7 @@ $(function() {
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">    /// the previous column. A column iterator is derived from the base </span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">    /// %cortex::two_dim_iterator. </span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">    /// \tparam _Iterator </span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">    /// @tparam _Iterator </span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Iterator&gt;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">class </span>column_iterator </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    : <span class="keyword">public</span> two_dim_iterator&lt;_Iterator&gt;</div>
@@ -144,26 +144,26 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">        /// \brief Default Constructor</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">        /// @brief Default Constructor</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">        /// \details Constructs a column iterator with </span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="comment">        /// @details Constructs a column iterator with </span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">        /// the two_dim_iterators default constrcutor.</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span>        constexpr column_iterator() noexcept</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        : _Base()</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        { }</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">        /// \brief Explicit Value Constructor</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">        /// @brief Explicit Value Constructor</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">        /// </span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">        /// \details Constructs a column iterator from a reference to</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">        /// @details Constructs a column iterator from a reference to</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">        /// an iterator of the underlying iterator type, the dimensions</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">        /// the column iterator can move through and the current point </span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">        /// index the iterator points to. Calls the base class constructor.</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">        /// \param ptr type: iterator_type | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">        /// \param ridx type: size_type</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">        /// \param cidx type: size_type</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">        /// \param rows type: size_type</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">        /// \param columns type: size_type</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">        /// @param ptr type: iterator_type | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">        /// @param ridx type: size_type</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">        /// @param cidx type: size_type</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">        /// @param rows type: size_type</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">        /// @param columns type: size_type</span></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment"></span>        constexpr column_iterator(<span class="keyword">const</span> iterator_type&amp; ptr</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                                , size_type ridx, size_type cidx</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                                , size_type rows, size_type columns) noexcept</div>
@@ -171,13 +171,13 @@ $(function() {
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        { }</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">        /// \brief Pre Increment Operator</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">        /// @brief Pre Increment Operator</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">        /// \details Increments the iterator to the next item in the</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">        /// @details Increments the iterator to the next item in the</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">        /// column. If the iterator is at the last item in the column,</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">        /// the iterator is set to the first item in the next column.</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">        /// </span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">        /// \return constexpr column_iterator&amp; </span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">        /// @return constexpr column_iterator&amp; </span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment"></span>        constexpr column_iterator&amp; operator++ () noexcept</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        {</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keyword">auto</span> old_ridx { this-&gt;m_ridx };</div>
@@ -198,14 +198,14 @@ $(function() {
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        }</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">        /// \brief Post Increment Operator</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">        /// @brief Post Increment Operator</span></div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">        /// \details Increments the iterator to the next item in the</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="comment">        /// @details Increments the iterator to the next item in the</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">        /// column. If the iterator is at the last item in the column,</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">        /// the iterator is set to the first item in the next column.</span></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">        /// Returns the column iterator before the increment.</span></div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">        /// \return constexpr column_iterator</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="comment">        /// @return constexpr column_iterator</span></div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment"></span>        constexpr column_iterator operator++ (<span class="keywordtype">int</span>) noexcept</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        {</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;            <span class="keyword">auto</span> old { column_iterator(*<span class="keyword">this</span>) };</div>
@@ -225,13 +225,13 @@ $(function() {
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment">        /// \brief Pre Decrement Operator</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment">        /// @brief Pre Decrement Operator</span></div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="comment">        /// \details Decrements the iterator to the previous item in the</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="comment">        /// @details Decrements the iterator to the previous item in the</span></div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">        /// column. If the iterator is at the first item in the column,</span></div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="comment">        /// the iterator is set to the last item in the previous column.</span></div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="comment">        /// \return constexpr column_iterator&amp;</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="comment">        /// @return constexpr column_iterator&amp;</span></div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment"></span>        constexpr column_iterator&amp; operator-- () noexcept</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        {</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keyword">auto</span> old_ridx { this-&gt;m_ridx };</div>
@@ -252,14 +252,14 @@ $(function() {
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        }</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">        /// \brief Post Decrement Operator</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="comment">        /// @brief Post Decrement Operator</span></div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">        /// \details Decrements the iterator to the previous item in the</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment">        /// @details Decrements the iterator to the previous item in the</span></div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment">        /// column. If the iterator is at the first item in the column,</span></div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="comment">        /// the iterator is set to the last item in the previous column.</span></div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">        /// Returns the column iterator before the decrement.</span></div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="comment">        ///</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">        /// \return constexpr column_iterator</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">        /// @return constexpr column_iterator</span></div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="comment"></span>        constexpr column_iterator operator-- (<span class="keywordtype">int</span>) noexcept</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        {</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            <span class="keyword">auto</span> old { column_iterator(*<span class="keyword">this</span>) };</div>
@@ -334,17 +334,17 @@ $(function() {
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="comment"></span></div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">    /// \brief Addition Operator Overload.</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">    /// @brief Addition Operator Overload.</span></div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment">    /// \details Takes an offset \param __n and a %column_iterator </span></div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment">    /// \param __i. Constructs a new %column_iterator by adding</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment">    /// \param __n to \param __i.base().</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment">    /// @details Takes an offset \param __n and a %column_iterator </span></div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="comment">    /// @param __i. Constructs a new %column_iterator by adding</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="comment">    /// @param __n to \param __i.base().</span></div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment">    /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="comment">    /// \tparam _Container </span></div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="comment">    /// \param __n </span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">    /// \param __i </span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">    /// \return constexpr inline column_iterator&lt;_Iterator, _Container&gt; </span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="comment">    /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="comment">    /// @tparam _Container </span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="comment">    /// @param __n </span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">    /// @param __i </span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">    /// @return constexpr inline column_iterator&lt;_Iterator, _Container&gt; </span></div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="comment">    /// </span></div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">    /// [constexpr]</span></div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment">    /// [noexcept]</span></div>
@@ -367,19 +367,19 @@ $(function() {
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="comment">// }</span></div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment">    /// \brief Less Than Operator</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="comment">    /// @brief Less Than Operator</span></div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment">    /// \details Performs less-than comparison of two column </span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="comment">    /// @details Performs less-than comparison of two column </span></div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment">    /// iterators. A column iterator is considered less than </span></div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="comment">    /// another firstly, if it is at a lower column index. If the</span></div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="comment">    /// column indices are equal, the column iterator is considered</span></div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="comment">    /// less than another if it is at a lower row index.</span></div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="comment">    /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="comment">    /// \param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="comment">    /// \param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment">    /// \return true </span></div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="comment">    /// \return false </span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="comment">    /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="comment">    /// @param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="comment">    /// @param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="comment">    /// @return true </span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="comment">    /// @return false </span></div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="comment"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Iterator&gt;</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    constexpr <span class="keyword">inline</span> <span class="keywordtype">bool</span></div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    operator&lt; (<span class="keyword">const</span> column_iterator&lt;_Iterator&gt;&amp; __lhs, </div>
@@ -392,19 +392,19 @@ $(function() {
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    }</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment">    /// \brief Greater Than Operator Overload</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="comment">    /// @brief Greater Than Operator Overload</span></div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="comment">    ///</span></div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment">    /// \details Performs greater-than comparison of two column</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment">    /// @details Performs greater-than comparison of two column</span></div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment">    /// iterators. A column iterator is considered greater than</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="comment">    /// another firstly, if it is at a higher column index. If the</span></div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="comment">    /// column indices are equal, the column iterator is considered</span></div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="comment">    /// greater than another if it is at a higher row index. </span></div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="comment">    /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment">    /// \param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="comment">    /// \param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment">    /// \return true </span></div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment">    /// \return false </span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="comment">    /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment">    /// @param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="comment">    /// @param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="comment">    /// @return true </span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment">    /// @return false </span></div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Iterator&gt;</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    constexpr <span class="keyword">inline</span> <span class="keywordtype">bool</span></div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    operator&gt; (<span class="keyword">const</span> column_iterator&lt;_Iterator&gt;&amp; __lhs, </div>
@@ -417,18 +417,18 @@ $(function() {
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    }</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment">    /// \brief Less Than or Equal Operator</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment">    /// @brief Less Than or Equal Operator</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="comment">    ///</span></div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="comment">    /// \details Performs less-than-or-equal comparison of two column</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="comment">    /// @details Performs less-than-or-equal comparison of two column</span></div>
 <div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="comment">    /// iterators. A column iterator is considered less than or equal</span></div>
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="comment">    /// to another firstly, if they compare equal, secondly if they</span></div>
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="comment">    /// compare less than.</span></div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="comment">    ///</span></div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="comment">    /// \tparam _Iterator</span></div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="comment">    /// \param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="comment">    /// \param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment">    /// \return true</span></div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">    /// \return false</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="comment">    /// @tparam _Iterator</span></div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="comment">    /// @param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="comment">    /// @param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment">    /// @return true</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">    /// @return false</span></div>
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Iterator&gt;</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    constexpr <span class="keyword">inline</span> <span class="keywordtype">bool</span></div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    operator&lt;= (<span class="keyword">const</span> column_iterator&lt;_Iterator&gt;&amp; __lhs, </div>
@@ -441,18 +441,18 @@ $(function() {
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    }</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment">    /// \brief Greater Than or Equal Operator</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment">    /// @brief Greater Than or Equal Operator</span></div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment">    ///</span></div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">    /// \details Performs greater-than-or-equal comparison of two column</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">    /// @details Performs greater-than-or-equal comparison of two column</span></div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment">    /// iterators. A column iterator is considered greater than or equal</span></div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment">    /// to another firstly, if they compare equal, secondly if they</span></div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment">    /// compare greater than.</span></div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="comment">    /// </span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment">    /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment">    /// \param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment">    /// \param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment">    /// \return true </span></div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="comment">    /// \return false </span></div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment">    /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="comment">    /// @param __lhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="comment">    /// @param __rhs type: column_iterator&lt;_Iterator&gt; | qualifiers: [const, ref]</span></div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="comment">    /// @return true </span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="comment">    /// @return false </span></div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="comment"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Iterator&gt;</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    constexpr <span class="keyword">inline</span> <span class="keywordtype">bool</span></div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    operator&gt;= (<span class="keyword">const</span> column_iterator&lt;_Iterator&gt;&amp; __lhs, </div>
@@ -466,18 +466,18 @@ $(function() {
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160; </div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="comment">//     </span></div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="comment">//     /// \brief Makes a new %column_iterator.</span></div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="comment">//     /// @brief Makes a new %column_iterator.</span></div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment">//     /// \details An adaptor for turning STL container iterators </span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="comment">//     /// @details An adaptor for turning STL container iterators </span></div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="comment">//     /// into %column_iterators.</span></div>
 <div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="comment">//     /// \code {.cpp}</span></div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="comment">//     /// @code {.cpp}</span></div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="comment">//     /// auto it = make_column_iterator&lt;std::container&gt;(c.begin()); </span></div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment">//     /// \endcode </span></div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment">//     /// @endcode </span></div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="comment">//     /// \tparam _Container </span></div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment">//     /// \param __i </span></div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="comment">//     /// \return constexpr auto -&gt; column_iterator&lt;typename _Container::iterator, _Container&gt;</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="comment">//     /// @tparam _Container </span></div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment">//     /// @param __i </span></div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="comment">//     /// @return constexpr auto -&gt; column_iterator&lt;typename _Container::iterator, _Container&gt;</span></div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="comment">//     /// </span></div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment">//     /// [constexpr]</span></div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="comment">//     /// [noexcept]</span></div>
@@ -492,19 +492,19 @@ $(function() {
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment">//     </span></div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment">//     /// \brief Makes a new %column_iterator.</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="comment">//     /// @brief Makes a new %column_iterator.</span></div>
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment">//     /// \details An adaptor for making C-style array pointers </span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="comment">//     /// @details An adaptor for making C-style array pointers </span></div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="comment">//     /// into %column_iterators.</span></div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment">//     /// \code {.cpp}</span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="comment">//     /// @code {.cpp}</span></div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="comment">//     /// auto it =  make_normal&lt;int*, int[]&gt;(arr);</span></div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment">//     /// \endcode</span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="comment">//     /// @endcode</span></div>
 <div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment">//     /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment">//     /// \tparam _Container </span></div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment">//     /// \param __i </span></div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment">//     /// \return constexpr auto -&gt; column_iterator&lt;_Iterator, _Container&gt; </span></div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="comment">//     /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="comment">//     /// @tparam _Container </span></div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="comment">//     /// @param __i </span></div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;<span class="comment">//     /// @return constexpr auto -&gt; column_iterator&lt;_Iterator, _Container&gt; </span></div>
 <div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="comment">//     /// </span></div>
 <div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="comment">//     /// [constexpr]</span></div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;<span class="comment">//     /// [noexcept]</span></div>
@@ -519,22 +519,22 @@ $(function() {
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="comment">// #   if __cplusplus &gt;= 201703L // C++17</span></div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;<span class="comment">//     </span></div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="comment">//     /// \brief Makes a new %column_iterator.</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="comment">//     /// @brief Makes a new %column_iterator.</span></div>
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;<span class="comment">//     /// \details An adaptor for making STL container iterators</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;<span class="comment">//     /// @details An adaptor for making STL container iterators</span></div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;<span class="comment">//     /// into %column_iterators using C++17 type deduction.</span></div>
 <div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment">//     /// \code {.cpp}</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="comment">//     /// @code {.cpp}</span></div>
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="comment">//     /// auto it = make_normal(c, c.begin());</span></div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="comment">//     /// \endcode</span></div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="comment">//     /// @endcode</span></div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="comment">//     /// \note \param __c has the attribute [[maybe_unused]]</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="comment">//     /// @note \param __c has the attribute [[maybe_unused]]</span></div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="comment">//     /// </span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="comment">//     /// \tparam _Container </span></div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="comment">//     /// \tparam _Iterator </span></div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;<span class="comment">//     /// \param __c </span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="comment">//     /// \param __i </span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="comment">//     /// \return constexpr auto -&gt; column_iterator&lt;_Iterator, _Container&gt; </span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="comment">//     /// @tparam _Container </span></div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="comment">//     /// @tparam _Iterator </span></div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;<span class="comment">//     /// @param __c </span></div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="comment">//     /// @param __i </span></div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="comment">//     /// @return constexpr auto -&gt; column_iterator&lt;_Iterator, _Container&gt; </span></div>
 <div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="comment">//     /// </span></div>
 <div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="comment">//     /// [constexpr]</span></div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;<span class="comment">//     /// [noexcept]</span></div>
