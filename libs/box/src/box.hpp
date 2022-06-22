@@ -1,7 +1,7 @@
 /// -*- C++ -*- Header compatibility <box.hpp>
 
 /// \brief Two Dimensional Access To Contiguous Data
-/// \file box
+/// \file box.hpp
 /// \author Tyler Swann (oraqlle@github.com)
 /// \version 2.3.0
 /// \date 12-06-2022

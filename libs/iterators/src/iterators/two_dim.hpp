@@ -1,7 +1,7 @@
 /// -*- C++ -*- Header compatibility <two_dim.hpp>
 
 /// \brief Two Dimensional Iterator Base Class
-/// \file two_dim_iterator.hpp
+/// \file two_dim.hpp
 /// \author Tyler Swann (oraqlle@github.com)
 /// \version 1.0.1
 /// \date 2022-05-20
