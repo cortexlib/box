@@ -18,11 +18,17 @@ namespace cortex
 
 Two Dimensional Iterator Base Class
 
-two\_dim.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
+Author: Tyler Swann (oraqlle@github.com)
 
-\\ingroup %iterators
+Header Version: v1.0.1
 
-\\copyright Copyright (c) 2022
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+two\_dim.hpp
 
 ### Class `cortex::two_dim_iterator`
 
@@ -63,9 +69,9 @@ public:
 
 Two Dimensional Iterator
 
-The base class for a two dimensional iterator. Constructs the underlying iterator and the given position of the iterator and dimensions of in which it occupies.
+*Notes:* Potential problem incrementing or decrementing the default constructed object as it refers to the the default constructed iterator type and causes segmentation fault on dereference.
 
-\\note Potential problem incrementing or decrementing the default constructed object as it refers to the the default constructed iterator type and causes segmentation fault on dereference.
+The base class for a two dimensional iterator. Constructs the underlying iterator and the given position of the iterator and dimensions of in which it occupies.
 
 ### Constructor `cortex::two_dim_iterator::two_dim_iterator`
 
@@ -129,9 +135,11 @@ constexpr two_dim_iterator<_Iterator>& operator=(const two_dim_iterator<_Iterato
 
 Copy Assignment
 
+*Return values:* constexpr two\_dim\_iterator&
+
 #### Parameters
 
-  - `__other` - type: two\_dim\_iterator | qualifiers: \[const, ref\] \\return constexpr two\_dim\_iterator&
+  - `__other` - type: two\_dim\_iterator | qualifiers: \[const, ref\]
 
 -----
 
@@ -143,9 +151,9 @@ constexpr 'hidden' operator*() noexcept;
 
 Deference Operator
 
-Dereferences the underlying iterator.
+*Return values:* reference
 
-\\return reference
+Dereferences the underlying iterator.
 
 -----
 
@@ -157,9 +165,9 @@ constexpr 'hidden' operator*() const noexcept;
 
 Deference Operator
 
-Dereferences the underlying iterator and returns a constant value.
+*Return values:* constexpr reference
 
-\\return constexpr reference
+Dereferences the underlying iterator and returns a constant value.
 
 -----
 
@@ -173,9 +181,9 @@ Indirection Operator
 
 *Requires:* The underlying iterator must be a pointer type or support the indirectin operator itself.
 
-Returns a pointer to the underlying iterator.
+*Return values:* constexpr pointer
 
-\\return constexpr pointer
+Returns a pointer to the underlying iterator.
 
 -----
 
@@ -189,9 +197,9 @@ Indirection Operator
 
 *Requires:* The underlying iterator must be a pointer type or support the indirectin operator itself.
 
-Returns a pointer to the underlying iterator and returns a constant value.
+*Return values:* constexpr pointer
 
-\\return constexpr pointer
+Returns a pointer to the underlying iterator and returns a constant value.
 
 -----
 
@@ -203,9 +211,9 @@ constexpr 'hidden'& base() const noexcept;
 
 Base Iterator
 
-Returns the underlying iterator.
+*Return values:* constexpr const iterator\_type&
 
-\\return constexpr const iterator\_type&
+Returns the underlying iterator.
 
 -----
 
@@ -217,9 +225,9 @@ constexpr 'hidden' rows() const noexcept;
 
 Occupied Rows
 
-Returns the number of rows the iterator moves through.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the number of rows the iterator moves through.
 
 -----
 
@@ -231,9 +239,9 @@ constexpr 'hidden' columns() const noexcept;
 
 Occupied Columns
 
-Returns the number of columns the iterator moves through.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the number of columns the iterator moves through.
 
 -----
 
@@ -245,9 +253,9 @@ constexpr 'hidden' row_index() const noexcept;
 
 Row Index
 
-Returns the current row index of the iterator.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the current row index of the iterator.
 
 -----
 
@@ -259,9 +267,9 @@ constexpr 'hidden' column_index() const noexcept;
 
 Column Index
 
-Returns the current column index of the iterator.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the current column index of the iterator.
 
 -----
 
@@ -278,17 +286,17 @@ Equality Operator Overload.
 
 *Requires:* That the underlying \_Iterator types are equality comparable. \\code {.cpp} { \_\_lhsI == \_\_rhsI } -\> bool \\endcode
 
+*Notes:* \_IteratorL can equal \_IteratorR.
+
+*Return values:* constexpr true
+
+*Return values:* constexpr false
+
 Performs an equality comparison of two %two\_dim\_iterator’s whose \_Iterator types can be different but of they share the same \_Container type.
 
 \\exception Ensures that \_\_lhs.base() == \_\_rhs.base() is noexcept.
 
-\\note \_IteratorL can equal \_IteratorR.
-
 \[constexpr\] \[noexcept.noexcept-clause\]
-
-#### Parameters
-
-  - `__rhs` - \\return constexpr true \\return constexpr false
 
 -----
 
@@ -301,16 +309,14 @@ constexpr auto operator<=>(two_dim_iterator<_IteratorL> const& __lhs, two_dim_it
 
 Spaceship Operator Overload.
 
+*Notes:* \_IteratorL can equal \_IteratorR.
+
+*Return values:* constexpr auto of \[std::strong\_ordering\] : \[std::weak\_ordering\] : \[std::partial\_ordering\]
+
 Performs a 3-way comparison of two %two\_dim\_iterator’s whose \_Iterator types can be different but of they share the same \_Container type.
 
 \\exception \\code {.cpp} code noexcept (noexcept(\_\_lhs.base() \<=\> \_\_rhs.base())) \\endcode Ensures that the 3-way comparison of \_\_lhs.base() and \_\_rhs.base() is noexcept.
 
-\\note \_IteratorL can equal \_IteratorR.
-
 \[constexpr\] \[noexcept.noexcept-clause\]
-
-#### Parameters
-
-  - `__rhs` - \\return constexpr auto of \[std::strong\_ordering\] : \[std::weak\_ordering\] : \[std::partial\_ordering\]
 
 -----

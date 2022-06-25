@@ -1,16 +1,18 @@
 /// -*- C++ -*- Header compatiability <concpets.hpp>
 
-
 /// \brief Some generalised concepts for use throughout
 /// the Cortex Library
+///
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v1.0.1
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
 /// \file concepts.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 0.1.0
-/// \date 2022-05-03
-/// 
-/// \copyright Copyright (c) 2022
-/// 
-
 
 
 #ifndef CORTEX_CONCEPTS_H

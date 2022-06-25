@@ -26,11 +26,17 @@ namespace cortex
 
 Column Iterator
 
-column.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
+Author: Tyler Swann (oraqlle@github.com)
 
-\\ingroup %iterators
+Header Version: v1.0.1
 
-\\copyright Copyright (c) 2022
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+column.hpp
 
 ### Class `cortex::column_iterator`
 
@@ -98,9 +104,9 @@ constexpr column_iterator<_Iterator>& operator++() noexcept;
 
 Pre Increment Operator
 
-Increments the iterator to the next item in the column. If the iterator is at the last item in the column, the iterator is set to the first item in the next column.
+*Return values:* constexpr column\_iterator&
 
-\\return constexpr column\_iterator&
+Increments the iterator to the next item in the column. If the iterator is at the last item in the column, the iterator is set to the first item in the next column.
 
 -----
 
@@ -112,9 +118,9 @@ constexpr column_iterator<_Iterator> operator++(int) noexcept;
 
 Post Increment Operator
 
-Increments the iterator to the next item in the column. If the iterator is at the last item in the column, the iterator is set to the first item in the next column. Returns the column iterator before the increment.
+*Return values:* constexpr column\_iterator
 
-\\return constexpr column\_iterator
+Increments the iterator to the next item in the column. If the iterator is at the last item in the column, the iterator is set to the first item in the next column. Returns the column iterator before the increment.
 
 -----
 
@@ -126,9 +132,9 @@ constexpr column_iterator<_Iterator>& operator--() noexcept;
 
 Pre Decrement Operator
 
-Decrements the iterator to the previous item in the column. If the iterator is at the first item in the column, the iterator is set to the last item in the previous column.
+*Return values:* constexpr column\_iterator&
 
-\\return constexpr column\_iterator&
+Decrements the iterator to the previous item in the column. If the iterator is at the first item in the column, the iterator is set to the last item in the previous column.
 
 -----
 
@@ -140,9 +146,9 @@ constexpr column_iterator<_Iterator> operator--(int) noexcept;
 
 Post Decrement Operator
 
-Decrements the iterator to the previous item in the column. If the iterator is at the first item in the column, the iterator is set to the last item in the previous column. Returns the column iterator before the decrement.
+*Return values:* constexpr column\_iterator
 
-\\return constexpr column\_iterator
+Decrements the iterator to the previous item in the column. If the iterator is at the first item in the column, the iterator is set to the last item in the previous column. Returns the column iterator before the decrement.
 
 -----
 
@@ -157,12 +163,16 @@ constexpr bool operator<(column_iterator<_Iterator> const& __lhs, column_iterato
 
 Less Than Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs less-than comparison of two column iterators. A column iterator is considered less than another firstly, if it is at a lower column index. If the column indices are equal, the column iterator is considered less than another if it is at a lower row index.
 
 #### Parameters
 
   - `__lhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
-  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
 
 -----
 
@@ -175,12 +185,16 @@ constexpr bool operator>(column_iterator<_Iterator> const& __lhs, column_iterato
 
 Greater Than Operator Overload
 
+*Return values:* true
+
+*Return values:* false
+
 Performs greater-than comparison of two column iterators. A column iterator is considered greater than another firstly, if it is at a higher column index. If the column indices are equal, the column iterator is considered greater than another if it is at a higher row index.
 
 #### Parameters
 
   - `__lhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
-  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
 
 -----
 
@@ -193,12 +207,16 @@ constexpr bool operator<=(column_iterator<_Iterator> const& __lhs, column_iterat
 
 Less Than or Equal Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs less-than-or-equal comparison of two column iterators. A column iterator is considered less than or equal to another firstly, if they compare equal, secondly if they compare less than.
 
 #### Parameters
 
   - `__lhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
-  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
 
 -----
 
@@ -211,11 +229,15 @@ constexpr bool operator>=(column_iterator<_Iterator> const& __lhs, column_iterat
 
 Greater Than or Equal Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs greater-than-or-equal comparison of two column iterators. A column iterator is considered greater than or equal to another firstly, if they compare equal, secondly if they compare greater than.
 
 #### Parameters
 
   - `__lhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
-  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: column\_iterator\<\_Iterator\> | qualifiers: \[const, ref\]
 
 -----

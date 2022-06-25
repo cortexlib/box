@@ -12,11 +12,17 @@ namespace cortex
 
 Adapts a non-object iterator to an object iterator without changing its semantics.
 
-normal.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.1.0 \\date 2022-03-31
+Author: Tyler Swann (oraqlle@github.com)
 
-\\ingroup %iterators
+Header Version: v1.1.0
 
-\\copyright Copyright (c) 2022
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+normal.hpp
 
 ### Class `cortex::normal_iterator`
 

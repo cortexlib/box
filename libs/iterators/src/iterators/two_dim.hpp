@@ -1,14 +1,17 @@
 /// -*- C++ -*- Header compatibility <two_dim.hpp>
 
 /// \brief Two Dimensional Iterator Base Class
+///
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v1.0.1
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
 /// \file two_dim.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 1.0.1
-/// \date 2022-05-20
-/// 
-/// \ingroup %iterators
-/// 
-/// \copyright Copyright (c) 2022
 
 
 #ifndef CORTEX_TWO_DIM_ITERATOR_HPP
@@ -38,7 +41,7 @@ namespace cortex
     /// Constructs the underlying iterator and the given position 
     /// of the iterator and dimensions of in which it occupies.
     ///
-    /// \note Potential problem incrementing or decrementing the 
+    /// \notes Potential problem incrementing or decrementing the 
     /// default constructed object as it refers to the the default
     /// constructed iterator type and causes segmentation fault on
     /// dereference.
@@ -139,7 +142,7 @@ namespace cortex
         /// \brief Copy Assignment
         /// 
         /// \param __other type: two_dim_iterator | qualifiers: [const, ref]
-        /// \return constexpr two_dim_iterator& 
+        /// \returns constexpr two_dim_iterator& 
         constexpr two_dim_iterator& operator= (const two_dim_iterator& __other) noexcept
         { 
             m_current = __other.base();
@@ -158,7 +161,7 @@ namespace cortex
         ///
         /// \details Dereferences the underlying iterator. 
         /// 
-        /// \return reference
+        /// \returns reference
         constexpr reference operator* () noexcept
         { return *m_current; }
 
@@ -168,7 +171,7 @@ namespace cortex
         /// \details Dereferences the underlying iterator
         /// and returns a constant value.
         /// 
-        /// \return constexpr reference 
+        /// \returns constexpr reference 
         constexpr reference operator* () const noexcept
         { return *m_current; }
 
@@ -180,7 +183,7 @@ namespace cortex
         /// \requires The underlying iterator must be a pointer type
         /// or support the indirectin operator itself.
         /// 
-        /// \return constexpr pointer 
+        /// \returns constexpr pointer 
         constexpr pointer operator-> () noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
@@ -197,7 +200,7 @@ namespace cortex
         /// \requires The underlying iterator must be a pointer type
         /// or support the indirectin operator itself.
         ///
-        /// \return constexpr pointer
+        /// \returns constexpr pointer
         constexpr pointer operator-> () const noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
@@ -210,7 +213,7 @@ namespace cortex
         /// 
         /// \details Returns the underlying iterator. 
         /// 
-        /// \return constexpr const iterator_type& 
+        /// \returns constexpr const iterator_type& 
         constexpr const iterator_type& base() const noexcept
         { return m_current; }
 
@@ -220,7 +223,7 @@ namespace cortex
         /// \details Returns the number of rows the iterator
         /// moves through. 
         /// 
-        /// \return constexpr size_type 
+        /// \returns constexpr size_type 
         constexpr size_type rows() const noexcept
         { return m_rows; }
 
@@ -230,7 +233,7 @@ namespace cortex
         /// \details Returns the number of columns the iterator
         /// moves through.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type columns() const noexcept
         { return m_columns; }
 
@@ -239,7 +242,7 @@ namespace cortex
         ///
         /// \details Returns the current row index of the iterator.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type row_index() const noexcept
         { return m_ridx; }
 
@@ -248,7 +251,7 @@ namespace cortex
         ///
         /// \details Returns the current column index of the iterator.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type column_index() const noexcept
         { return m_cidx; }
 
@@ -259,7 +262,7 @@ protected:
         /// \details Returns the current offset of the iterator 
         /// from some starting posistion.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr auto _M_index(auto row, auto column) const noexcept
             -> decltype(m_columns * row + column)
         { return m_columns * row + column;}
@@ -270,11 +273,11 @@ protected:
         ///
         /// \details Returns a pointer to the underlying iterator.
         ///
-        /// \note This function is only available if the underlying
+        /// \notes This function is only available if the underlying
         /// iterator is a pointer type.
         ///
         /// \tparam _Tp
-        /// \return static constexpr _Tp*
+        /// \returns static constexpr _Tp*
         template<typename _Tp>
 	    static constexpr _Tp*
 	    _S_to_pointer(_Tp* __p)
@@ -285,12 +288,12 @@ protected:
         ///
         /// \details Returns a pointer to the underlying iterator.
         ///
-        /// \note This function is only available if the underlying
+        /// \notes This function is only available if the underlying
         /// iterator is class type and thus calls the tyoes indirection
         /// operator.
         ///
         /// \tparam _Tp
-        /// \return static constexpr pointer
+        /// \returns static constexpr pointer
         template<typename _Tp>
         static constexpr pointer
 	    _S_to_pointer(_Tp __t)
@@ -316,15 +319,15 @@ protected:
     /// \exception 
     /// Ensures that __lhs.base() == __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// \notes _IteratorL can equal _IteratorR.
     /// 
     /// \tparam _IteratorL 
     /// \tparam _IteratorR 
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr true
-    /// \return constexpr false
+    /// \returns constexpr true
+    /// \returns constexpr false
     /// 
     /// [constexpr]
     /// [noexcept.noexcept-clause]
@@ -352,14 +355,14 @@ protected:
     /// Ensures that the 3-way comparison of __lhs.base() and 
     /// __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// \notes _IteratorL can equal _IteratorR.
     /// 
     /// \tparam _IteratorL 
     /// \tparam _IteratorR 
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr auto of [std::strong_ordering]
+    /// \returns constexpr auto of [std::strong_ordering]
     ///                         : [std::weak_ordering]
     ///                         : [std::partial_ordering]
     /// 
@@ -388,8 +391,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -411,8 +414,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs type: two_dim_iterator<_Iterator> | qualifier: [const, ref]
     /// \param __rhs type: two_dim_iterator<_Iterator> | qualifier: [const, ref]
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator== (const two_dim_iterator<_Iterator>& __lhs, 
@@ -433,8 +436,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _IteratorL, typename _IteratorR>
     constexpr inline bool
     operator!= (const two_dim_iterator<_IteratorL>& __lhs, 
@@ -453,8 +456,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator!= (const two_dim_iterator<_Iterator>& __lhs, 
@@ -475,8 +478,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _IteratorL, typename _IteratorR>
     constexpr inline bool
     operator< (const two_dim_iterator<_IteratorL>& __lhs, 
@@ -495,8 +498,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator< (const two_dim_iterator<_Iterator>& __lhs, 
@@ -517,8 +520,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _IteratorL, typename _IteratorR>
     constexpr inline bool
     operator> (const two_dim_iterator<_IteratorL>& __lhs, 
@@ -537,8 +540,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator> (const two_dim_iterator<_Iterator>& __lhs, 
@@ -559,8 +562,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _IteratorL, typename _IteratorR>
     constexpr inline bool
     operator<= (const two_dim_iterator<_IteratorL>& __lhs, 
@@ -579,8 +582,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator<= (const two_dim_iterator<_Iterator>& __lhs, 
@@ -601,8 +604,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _IteratorL, typename _IteratorR>
     constexpr inline bool
     operator>= (const two_dim_iterator<_IteratorL>& __lhs, 
@@ -621,8 +624,8 @@ protected:
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     template<typename _Iterator>
     constexpr inline bool
     operator>= (const two_dim_iterator<_Iterator>& __lhs, 

@@ -1,6 +1,6 @@
 # Project files
 
-  - [`box.hpp`](doc_box.md#standardese-box-hpp) - Two Dimensional Access To Contiguous Data
+  - [`box.hpp`](doc_box.md#standardese-box-hpp) - Two Dimensional Access To Contiguous Data.
 
   - [`column.hpp`](doc_column.md#standardese-column-hpp) - Column Iterator
 

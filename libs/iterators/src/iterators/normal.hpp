@@ -2,14 +2,17 @@
 
 /// \brief Adapts a non-object iterator to an object iterator 
 /// without changing its semantics.
+///
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v1.1.0
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
 /// \file normal.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 1.1.0
-/// \date 2022-03-31
-/// 
-/// \ingroup %iterators
-/// 
-/// \copyright Copyright (c) 2022
 
 #ifndef CORTEX_NORMAL_ITERATOR_HPP
 #   define CORTEX_NORMAL_ITERATOR_HPP 
@@ -151,7 +154,7 @@ namespace cortex
 
 
         
-        /// \note No explicit destructor is required.
+        /// \notes No explicit destructor is required.
         
 
 
@@ -167,7 +170,7 @@ namespace cortex
         /// Returns a reference to this.
         /// 
         /// \param __other
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -189,7 +192,7 @@ namespace cortex
         /// Returns a reference to this.
         /// 
         /// \param __other
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -207,7 +210,7 @@ namespace cortex
         /// \details Dereferences m_current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// \return constexpr reference (T&)
+        /// \returns constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -222,7 +225,7 @@ namespace cortex
         /// \details Dereferences m_current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// \return constexpr reference (T&)
+        /// \returns constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -240,7 +243,7 @@ namespace cortex
         /// m_current is a class or object type throught
         /// "indirection chaining".
         /// 
-        /// \return constexpr pointer (T*)
+        /// \returns constexpr pointer (T*)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -260,7 +263,7 @@ namespace cortex
         /// m_current is a class or object type throught
         /// "indirection chaining".
         /// 
-        /// \return constexpr pointer (T*)
+        /// \returns constexpr pointer (T*)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -280,7 +283,7 @@ namespace cortex
         /// \details Applies the prefix increment operator to
         /// m_current and returns a reference to this.
         /// 
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -301,7 +304,7 @@ namespace cortex
         /// for this while creating a new iterator with its 
         /// m_current equal to the last value of this m_current. 
         /// 
-        /// \return constexpr normal_iterator
+        /// \returns constexpr normal_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -316,7 +319,7 @@ namespace cortex
         /// \details Applies the prefix decrement operator to
         /// m_current and returns a reference to this.
         /// 
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -337,7 +340,7 @@ namespace cortex
         /// for this while creating a new iterator with its 
         /// m_current equal to the last value of this m_current. 
         /// 
-        /// \return constexpr normal_iterator
+        /// \returns constexpr normal_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -354,7 +357,7 @@ namespace cortex
         /// stored at that location.
         /// 
         /// \param __n 
-        /// \return constexpr reference (T&)
+        /// \returns constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -372,7 +375,7 @@ namespace cortex
         /// and returns a reference to this. 
         /// 
         /// \param __step 
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -392,7 +395,7 @@ namespace cortex
         /// and returns a reference to this. 
         /// 
         /// \param __step 
-        /// \return constexpr normal_iterator&
+        /// \returns constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -411,7 +414,7 @@ namespace cortex
         /// of m_current and __step. 
         /// 
         /// \param __step 
-        /// \return constexpr normal_iterator 
+        /// \returns constexpr normal_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -427,7 +430,7 @@ namespace cortex
         /// of m_current and __step. 
         /// 
         /// \param __step 
-        /// \return constexpr normal_iterator 
+        /// \returns constexpr normal_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -441,7 +444,7 @@ namespace cortex
         /// 
         /// \details Returns a raw copy of m_current.
         /// 
-        /// \return constexpr iterator_type (_Iterator)
+        /// \returns constexpr iterator_type (_Iterator)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -484,15 +487,15 @@ namespace cortex
     /// \exception 
     /// Ensures that __lhs.base() == __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// \notes _IteratorL can equal _IteratorR.
     /// 
     /// \tparam _IteratorL 
     /// \tparam _IteratorR 
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr true
-    /// \return constexpr false
+    /// \returns constexpr true
+    /// \returns constexpr false
     /// 
     /// [constexpr]
     /// [noexcept.noexcept-clause]
@@ -522,14 +525,14 @@ namespace cortex
     /// Ensures that the 3-way comparison of __lhs.base() and 
     /// __rhs.base() is noexcept.
     /// 
-    /// \note _IteratorL can equal _IteratorR.
+    /// \notes _IteratorL can equal _IteratorR.
     /// 
     /// \tparam _IteratorL 
     /// \tparam _IteratorR 
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr auto of [std::strong_ordering]
+    /// \returns constexpr auto of [std::strong_ordering]
     ///                         : [std::weak_ordering]
     ///                         : [std::partial_ordering]
     /// 
@@ -560,8 +563,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -586,8 +589,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -614,8 +617,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -640,8 +643,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -668,8 +671,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -694,8 +697,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -722,8 +725,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -748,8 +751,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -776,8 +779,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -802,8 +805,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -830,8 +833,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -856,8 +859,8 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline true
-    /// \return constexpr inline false
+    /// \returns constexpr inline true
+    /// \returns constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -887,9 +890,9 @@ namespace cortex
     /// \param __lhs 
     /// \param __rhs 
     /// \if __cplusplus >= 201103L
-    /// \return constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
+    /// \returns constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
     /// \ifnot __cplusplus >= 201103L
-    /// \return inline typename normal_iterator<_IteratorL, _Container>::difference_type
+    /// \returns inline typename normal_iterator<_IteratorL, _Container>::difference_type
     /// \endif
     /// 
     /// [constexpr]
@@ -922,7 +925,7 @@ namespace cortex
     /// \tparam _Container 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type 
+    /// \returns constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -947,7 +950,7 @@ namespace cortex
     /// \tparam _Container 
     /// \param __n 
     /// \param __i 
-    /// \return constexpr inline normal_iterator<_Iterator, _Container> 
+    /// \returns constexpr inline normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -973,7 +976,7 @@ namespace cortex
     /// 
     /// \tparam _Container 
     /// \param __i 
-    /// \return constexpr auto -> normal_iterator<typename _Container::iterator, _Container>
+    /// \returns constexpr auto -> normal_iterator<typename _Container::iterator, _Container>
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -1000,7 +1003,7 @@ namespace cortex
     /// \tparam _Iterator 
     /// \tparam _Container 
     /// \param __i 
-    /// \return constexpr auto -> normal_iterator<_Iterator, _Container> 
+    /// \returns constexpr auto -> normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -1024,13 +1027,13 @@ namespace cortex
     /// auto it = make_normal(c, c.begin());
     /// \endcode
     /// 
-    /// \note \param __c has the attribute [[maybe_unused]]
+    /// \notes \param __c has the attribute [[maybe_unused]]
     /// 
     /// \tparam _Container 
     /// \tparam _Iterator 
     /// \param __c 
     /// \param __i 
-    /// \return constexpr auto -> normal_iterator<_Iterator, _Container> 
+    /// \returns constexpr auto -> normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]

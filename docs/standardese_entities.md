@@ -90,17 +90,17 @@
     
       - [`operator!=`](doc_box.md#standardese-cortex__operator---_ElemL-_ElemR--box-_ElemL-const--box-_ElemR-const--) - Compares two matrices for inequality.
     
-      - [`operator<`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than Operator
+      - [`operator<`](doc_column.md#standardese-cortex__operator--_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than Operator
     
-      - [`operator<=`](doc_row.md#standardese-cortex__operator---_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than or Equal Operator
+      - [`operator<=`](doc_column.md#standardese-cortex__operator---_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than or Equal Operator
     
       - [`operator<=>`](doc_two_dim.md#standardese-cortex__operator----_IteratorL-_IteratorR--two_dim_iterator-_IteratorL-const--two_dim_iterator-_IteratorR-const--) - Spaceship Operator Overload.
     
       - [`operator==`](doc_two_dim.md#standardese-cortex__operator---_IteratorL-_IteratorR--two_dim_iterator-_IteratorL-const--two_dim_iterator-_IteratorR-const--) - Equality Operator Overload.
     
-      - [`operator>`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Greater Than Operator
+      - [`operator>`](doc_column.md#standardese-cortex__operator--_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Greater Than Operator Overload
     
-      - [`operator>=`](doc_row.md#standardese-cortex__operator---_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Greater Than or Equal Operator
+      - [`operator>=`](doc_column.md#standardese-cortex__operator---_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Greater Than or Equal Operator
     
       - [`reverse_iterator`](doc_reverse.md#standardese-cortex__reverse_iterator-_Iterator-) - Reverse Iterator
     

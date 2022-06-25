@@ -24,11 +24,17 @@ namespace cortex
 
 An adaptor for creating an iterator and index pair in a for loop.
 
-enumerate.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.0 \\date 2022-04-01
+Author: Tyler Swann (oraqlle@github.com)
 
-\\ingroup adaptors
+Header Version: v1.0.0
 
-\\copyright Copyright (c) 2022
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+enumerate.hpp
 
 ### Function `cortex::enumerate`
 

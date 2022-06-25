@@ -1,14 +1,17 @@
 /// -*- C++ -*- Header compatibility <column.hpp>
 
 /// \brief Column Iterator
+///
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v1.0.1
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
 /// \file column.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 1.0.1
-/// \date 2022-05-20
-/// 
-/// \ingroup %iterators
-/// 
-/// \copyright Copyright (c) 2022
 
 
 #ifndef CORTEX_COLUMN_ITERATOR_HPP
@@ -106,7 +109,7 @@ namespace cortex
         /// column. If the iterator is at the last item in the column,
         /// the iterator is set to the first item in the next column.
         /// 
-        /// \return constexpr column_iterator& 
+        /// \returns constexpr column_iterator& 
         constexpr column_iterator& operator++ () noexcept
         {
             auto old_ridx { this->m_ridx };
@@ -134,7 +137,7 @@ namespace cortex
         /// the iterator is set to the first item in the next column.
         /// Returns the column iterator before the increment.
         ///
-        /// \return constexpr column_iterator
+        /// \returns constexpr column_iterator
         constexpr column_iterator operator++ (int) noexcept
         {
             auto old { column_iterator(*this) };
@@ -160,7 +163,7 @@ namespace cortex
         /// column. If the iterator is at the first item in the column,
         /// the iterator is set to the last item in the previous column.
         ///
-        /// \return constexpr column_iterator&
+        /// \returns constexpr column_iterator&
         constexpr column_iterator& operator-- () noexcept
         {
             auto old_ridx { this->m_ridx };
@@ -188,7 +191,7 @@ namespace cortex
         /// the iterator is set to the last item in the previous column.
         /// Returns the column iterator before the decrement.
         ///
-        /// \return constexpr column_iterator
+        /// \returns constexpr column_iterator
         constexpr column_iterator operator-- (int) noexcept
         {
             auto old { column_iterator(*this) };
@@ -273,7 +276,7 @@ namespace cortex
     /// \tparam _Container 
     /// \param __n 
     /// \param __i 
-    /// \return constexpr inline column_iterator<_Iterator, _Container> 
+    /// \returns constexpr inline column_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -307,8 +310,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
     /// \param __rhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator< (const column_iterator<_Iterator>& __lhs, 
@@ -332,8 +335,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
     /// \param __rhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator> (const column_iterator<_Iterator>& __lhs, 
@@ -356,8 +359,8 @@ namespace cortex
     /// \tparam _Iterator
     /// \param __lhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
     /// \param __rhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template<typename _Iterator>
     constexpr inline bool
     operator<= (const column_iterator<_Iterator>& __lhs, 
@@ -380,8 +383,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
     /// \param __rhs type: column_iterator<_Iterator> | qualifiers: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator>= (const column_iterator<_Iterator>& __lhs, 
@@ -406,7 +409,7 @@ namespace cortex
 //     /// 
 //     /// \tparam _Container 
 //     /// \param __i 
-//     /// \return constexpr auto -> column_iterator<typename _Container::iterator, _Container>
+//     /// \returns constexpr auto -> column_iterator<typename _Container::iterator, _Container>
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]
@@ -433,7 +436,7 @@ namespace cortex
 //     /// \tparam _Iterator 
 //     /// \tparam _Container 
 //     /// \param __i 
-//     /// \return constexpr auto -> column_iterator<_Iterator, _Container> 
+//     /// \returns constexpr auto -> column_iterator<_Iterator, _Container> 
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]
@@ -457,13 +460,13 @@ namespace cortex
 //     /// auto it = make_normal(c, c.begin());
 //     /// \endcode
 //     /// 
-//     /// \note \param __c has the attribute [[maybe_unused]]
+//     /// \notes \param __c has the attribute [[maybe_unused]]
 //     /// 
 //     /// \tparam _Container 
 //     /// \tparam _Iterator 
 //     /// \param __c 
 //     /// \param __i 
-//     /// \return constexpr auto -> column_iterator<_Iterator, _Container> 
+//     /// \returns constexpr auto -> column_iterator<_Iterator, _Container> 
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]

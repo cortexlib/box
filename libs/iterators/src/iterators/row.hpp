@@ -2,15 +2,17 @@
 
 
 /// \brief Row Iterator
+///
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v1.0.1
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
 /// \file row.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 1.0.1
-/// \date 2022-05-20
-/// 
-/// \ingroup %iterators
-/// 
-/// \copyright Copyright (c) 2022
-/// 
 
 
 #ifndef CORTEX_ROW_ITERATOR_HPP
@@ -104,7 +106,7 @@ namespace cortex
         /// row. If the iterator is at the end of the row, the iterator
         /// jumps to the first item in the next row. 
         /// 
-        /// \return constexpr row_iterator& 
+        /// \returns constexpr row_iterator& 
         constexpr row_iterator& operator++ () noexcept
         {
             auto old_ridx { this->m_ridx };
@@ -132,7 +134,7 @@ namespace cortex
         /// jumps to the first item in the next row. Returns the iterator
         /// before the increment.
         /// 
-        /// \return constexpr row_iterator 
+        /// \returns constexpr row_iterator 
         constexpr row_iterator operator++ (int) noexcept
         {
             auto old { row_iterator(*this) };
@@ -158,7 +160,7 @@ namespace cortex
         /// row. If the iterator is at the first item in the row, the
         /// iterator jumps to the last item in the previous row.
         ///
-        /// \return constexpr row_iterator&
+        /// \returns constexpr row_iterator&
         constexpr row_iterator& operator-- () noexcept
         {
             auto old_ridx { this->m_ridx };
@@ -186,7 +188,7 @@ namespace cortex
         /// iterator jumps to the last item in the previous row. Returns
         /// the iterator before the decrement.
         ///
-        /// \return constexpr row_iterator
+        /// \returns constexpr row_iterator
         constexpr row_iterator operator-- (int) noexcept
         {
             auto old { row_iterator(*this) };
@@ -266,7 +268,7 @@ namespace cortex
     /// \tparam _Container 
     /// \param __n 
     /// \param __i 
-    /// \return constexpr inline row_iterator<_Iterator, _Container> 
+    /// \returns constexpr inline row_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -299,8 +301,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: row_iterator<_Iterator> | qualifier: [const, ref]
     /// \param __rhs type: row_iterator<_Iterator> | qualifier: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator< (const row_iterator<_Iterator>& __lhs, 
@@ -324,8 +326,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: row_iterator<_Iterator> | qualifier: [const, ref]
     /// \param __rhs type: row_iterator<_Iterator> | qualifier: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator> (const row_iterator<_Iterator>& __lhs, 
@@ -348,8 +350,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs type: row_iterator<_Iterator> | qualifier: [const, ref]
     /// \param __rhs type: row_iterator<_Iterator> | qualifier: [const, ref]
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator<= (const row_iterator<_Iterator>& __lhs, 
@@ -372,8 +374,8 @@ namespace cortex
     /// \tparam _Iterator 
     /// \param __lhs 
     /// \param __rhs 
-    /// \return true 
-    /// \return false 
+    /// \returns true 
+    /// \returns false 
     template<typename _Iterator>
     constexpr inline bool
     operator>= (const row_iterator<_Iterator>& __lhs, 
@@ -398,7 +400,7 @@ namespace cortex
 //     /// 
 //     /// \tparam _Container 
 //     /// \param __i 
-//     /// \return constexpr auto -> row_iterator<typename _Container::iterator, _Container>
+//     /// \returns constexpr auto -> row_iterator<typename _Container::iterator, _Container>
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]
@@ -425,7 +427,7 @@ namespace cortex
 //     /// \tparam _Iterator 
 //     /// \tparam _Container 
 //     /// \param __i 
-//     /// \return constexpr auto -> row_iterator<_Iterator, _Container> 
+//     /// \returns constexpr auto -> row_iterator<_Iterator, _Container> 
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]
@@ -449,13 +451,13 @@ namespace cortex
 //     /// auto it = make_normal(c, c.begin());
 //     /// \endcode
 //     /// 
-//     /// \note \param __c has the attribute [[maybe_unused]]
+//     /// \notes \param __c has the attribute [[maybe_unused]]
 //     /// 
 //     /// \tparam _Container 
 //     /// \tparam _Iterator 
 //     /// \param __c 
 //     /// \param __i 
-//     /// \return constexpr auto -> row_iterator<_Iterator, _Container> 
+//     /// \returns constexpr auto -> row_iterator<_Iterator, _Container> 
 //     /// 
 //     /// [constexpr]
 //     /// [noexcept]

@@ -26,11 +26,17 @@ namespace cortex
 
 Row Iterator
 
-row.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
+Author: Tyler Swann (oraqlle@github.com)
 
-\\ingroup %iterators
+Header Version: v1.0.1
 
-\\copyright Copyright (c) 2022
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+row.hpp
 
 ### Class `cortex::row_iterator`
 
@@ -94,9 +100,9 @@ constexpr row_iterator<_Iterator>& operator++() noexcept;
 
 Pre Increment Operator
 
-Increments the iterator to the next item in the row. If the iterator is at the end of the row, the iterator jumps to the first item in the next row.
+*Return values:* constexpr row\_iterator&
 
-\\return constexpr row\_iterator&
+Increments the iterator to the next item in the row. If the iterator is at the end of the row, the iterator jumps to the first item in the next row.
 
 -----
 
@@ -108,9 +114,9 @@ constexpr row_iterator<_Iterator> operator++(int) noexcept;
 
 Post Increment Operator
 
-Increments the iterator to the next item in the row. If the iterator is at the end of the row, the iterator jumps to the first item in the next row. Returns the iterator before the increment.
+*Return values:* constexpr row\_iterator
 
-\\return constexpr row\_iterator
+Increments the iterator to the next item in the row. If the iterator is at the end of the row, the iterator jumps to the first item in the next row. Returns the iterator before the increment.
 
 -----
 
@@ -122,9 +128,9 @@ constexpr row_iterator<_Iterator>& operator--() noexcept;
 
 Pre Decrement Operator
 
-Decrements the iterator to the previous item in the row. If the iterator is at the first item in the row, the iterator jumps to the last item in the previous row.
+*Return values:* constexpr row\_iterator&
 
-\\return constexpr row\_iterator&
+Decrements the iterator to the previous item in the row. If the iterator is at the first item in the row, the iterator jumps to the last item in the previous row.
 
 -----
 
@@ -136,9 +142,9 @@ constexpr row_iterator<_Iterator> operator--(int) noexcept;
 
 Post Decrement Operator
 
-Decrements the iterator to the previous item in the row. If the iterator is at the first item in the row, the iterator jumps to the last item in the previous row. Returns the iterator before the decrement.
+*Return values:* constexpr row\_iterator
 
-\\return constexpr row\_iterator
+Decrements the iterator to the previous item in the row. If the iterator is at the first item in the row, the iterator jumps to the last item in the previous row. Returns the iterator before the decrement.
 
 -----
 
@@ -153,12 +159,16 @@ constexpr bool operator<(row_iterator<_Iterator> const& __lhs, row_iterator<_Ite
 
 Less Than Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs less-than comparison of two row iterators. A row iterator is considered less than  another firstly, if it is at a lower row index. If the row indices are equal, the row iterator is considered less than another if it is at a lower column index.
 
 #### Parameters
 
   - `__lhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
-  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
 
 -----
 
@@ -171,12 +181,16 @@ constexpr bool operator>(row_iterator<_Iterator> const& __lhs, row_iterator<_Ite
 
 Greater Than Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs greater-than comparison of two row iterators. A row iterator is considered greater than another firstly, if it is at a higher row index. If the row indices are equal, the row iterator is considered greater than another if it is at a higher column index.
 
 #### Parameters
 
   - `__lhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
-  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
 
 -----
 
@@ -189,12 +203,16 @@ constexpr bool operator<=(row_iterator<_Iterator> const& __lhs, row_iterator<_It
 
 Less Than or Equal Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs less-than-or-equal comparison of two row iterators. A row iterator is considered less than or equal to another firstly, if they compare equal, secondly if they compare less than.
 
 #### Parameters
 
   - `__lhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
-  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\] \\return true \\return false
+  - `__rhs` - type: row\_iterator\<\_Iterator\> | qualifier: \[const, ref\]
 
 -----
 
@@ -207,10 +225,10 @@ constexpr bool operator>=(row_iterator<_Iterator> const& __lhs, row_iterator<_It
 
 Greater Than or Equal Operator
 
+*Return values:* true
+
+*Return values:* false
+
 Performs greater-than-or-equal comparison of two row iterators. A row iterator is considered greater than or equal to another firstly, if they compare equal, secondly if they compare greater than.
-
-#### Parameters
-
-  - `__rhs` - \\return true \\return false
 
 -----

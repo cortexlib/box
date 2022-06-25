@@ -1,12 +1,17 @@
 /// -*- C++ -*- Header compatibility <box.hpp>
 
-/// \brief Two Dimensional Access To Contiguous Data
-/// \file box.hpp
-/// \author Tyler Swann (oraqlle@github.com)
-/// \version 2.3.0
-/// \date 12-06-2022
+/// \brief Two Dimensional Access To Contiguous Data.
 ///
-/// \copyright Copyright (c) 2022
+/// Author: Tyler Swann (oraqlle@github.com)
+/// 
+/// Header Version: v2.3.1
+///
+/// Date: 25-06-2022
+///
+/// License: MIT
+///
+/// Copyright: Copyright (c) 2022
+/// \file box.hpp
 
 #ifndef CORTEX_BOX_H
 #define CORTEX_BOX_H 1
@@ -291,7 +296,7 @@ namespace cortex
         /// then///this is returned immediately.
         ///
         /// \param other type: [box] | qualifiers: [const, ref]
-        /// \return constexpr box&
+        /// \returns constexpr box&
         constexpr box& operator= (const box& other)
         {
             if (*this != other)
@@ -314,7 +319,7 @@ namespace cortex
         /// occurs then///this is returned immediately.
         ///
         /// \param other type: [box] | qualifiers: [move]
-        /// \return constexpr box&
+        /// \returns constexpr box&
         constexpr box& operator= (box&& other) noexcept
         {
             if (*this != other)
@@ -341,7 +346,7 @@ namespace cortex
         /// ownership is moved to the box's memory.
         ///
         /// \param list type: [std::initializer_list<std::initializer_list<value_type>>]
-        /// \return constexpr box&
+        /// \returns constexpr box&
         constexpr box& operator= (std::initializer_list<std::initializer_list<value_type>> list)
         {
             m_allocator = allocator_type();
@@ -545,7 +550,7 @@ namespace cortex
         /// and resets it to value_type().
         ///
         /// \param position type: [const_iterator]
-        /// \return constexpr iterator | attribute: [[maybe_unused]]
+        /// \returns constexpr iterator | attribute: [[maybe_unused]]
         [[maybe_unused]] constexpr iterator 
         erase(const_iterator position)
         {
@@ -563,7 +568,7 @@ namespace cortex
         ///
         /// \param first type: [const_iterator]
         /// \param last type: [const_iterator]
-        /// \return constexpr iterator | attribute: [[maybe_unused]]
+        /// \returns constexpr iterator | attribute: [[maybe_unused]]
         [[maybe_unused]] constexpr iterator 
         erase(const_iterator first, const_iterator last)
         {
@@ -633,7 +638,7 @@ namespace cortex
         ///
         /// \details Returns the allocator used by the box.
         ///
-        /// \return constexpr allocator_type
+        /// \returns constexpr allocator_type
         constexpr allocator_type get_allocator() const noexcept
         { return m_allocator; }
 
@@ -642,7 +647,7 @@ namespace cortex
         /// 
         /// \details Returns the overall size of the box.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type size() const noexcept
         { return empty() ? size_type(0) : _M_size(m_rows, m_columns); }
 
@@ -651,7 +656,7 @@ namespace cortex
         /// 
         /// \details Returns the number of the rows of the box.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type rows() const noexcept
         { return m_rows; }
 
@@ -660,7 +665,7 @@ namespace cortex
         /// 
         /// \details Returns the the number of columns in the box.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type columns() const noexcept
         { return m_columns; }
 
@@ -670,7 +675,7 @@ namespace cortex
         /// \details Returns the maximum number of elements that
         /// can be stored in the box.
         ///
-        /// \return constexpr size_type
+        /// \returns constexpr size_type
         constexpr size_type max_size() const noexcept
         { return alloc_traits::max_size(m_allocator); }
 
@@ -680,7 +685,7 @@ namespace cortex
         /// \details Returns a structured binding of the box's
         /// dimensions.
         ///
-        /// \return constexpr auto
+        /// \returns constexpr auto
         constexpr auto dimensions() const noexcept
         { return std::tie(m_rows, m_columns); }
 
@@ -690,8 +695,8 @@ namespace cortex
         /// \details If the number of rows and columns 
         /// are equal, the box is square.
         ///
-        /// \return true
-        /// \return false
+        /// \returns true
+        /// \returns false
         constexpr bool is_square() const noexcept
         { return m_rows == m_columns; }
 
@@ -700,8 +705,8 @@ namespace cortex
         ///
         /// \details Checks whether the box is empty.
         ///
-        /// \return true
-        /// \return false
+        /// \returns true
+        /// \returns false
         constexpr bool empty() const noexcept
         { return m_start == m_finish; }
 
@@ -710,7 +715,7 @@ namespace cortex
         ///
         /// \details Returns the underlying data pointer.
         ///
-        /// \return pointer
+        /// \returns pointer
         pointer data() noexcept
         { return _M_data_ptr(m_start); }
 
@@ -718,7 +723,7 @@ namespace cortex
         /// 
         /// \details Returns the underlying data pointer.
         ///
-        /// \return const_pointer
+        /// \returns const_pointer
         const_pointer data() const noexcept
         { return _M_data_ptr(m_start); }
 
@@ -733,7 +738,7 @@ namespace cortex
         /// out of range of the box, the exception is thrown.
         /// 
         /// \param ridx type: size_type
-        /// \return std::span<value_type> 
+        /// \returns std::span<value_type> 
         constexpr auto
         slice(size_type ridx) const
             -> std::span<value_type>
@@ -756,7 +761,7 @@ namespace cortex
         /// `box::slice`.
         /// 
         /// \param ridx 
-        /// \return std::span<value_type> 
+        /// \returns std::span<value_type> 
         constexpr auto 
         operator[](size_type ridx)
             -> std::span<value_type>
@@ -772,7 +777,7 @@ namespace cortex
         ///
         /// \param column type: size_type
         /// \param row type: size_type
-        /// \return constexpr reference
+        /// \returns constexpr reference
         constexpr reference at(size_type row, size_type column)
         {
             _M_range_check(row, column);
@@ -789,7 +794,7 @@ namespace cortex
         ///
         /// \param column type: size_type
         /// \param row type: size_type
-        /// \return constexpr const_reference
+        /// \returns constexpr const_reference
         constexpr const_reference at(size_type row, size_type column) const
         {
             _M_range_check(row, column);
@@ -805,7 +810,7 @@ namespace cortex
         ///
         /// \param column type: size_type
         /// \param row type: size_type
-        /// \return constexpr reference
+        /// \returns constexpr reference
         constexpr reference operator()(size_type row, size_type column)
         { return at(row, column); }
 
@@ -818,7 +823,7 @@ namespace cortex
         ///
         /// \param column type: size_type
         /// \param row type: size_type
-        /// \return constexpr const_reference
+        /// \returns constexpr const_reference
         constexpr const_reference operator()(size_type row, size_type column) const
         { return at(row, column); }
 
@@ -827,7 +832,7 @@ namespace cortex
         /// \details Returns a reference to the front element
         /// of the box.
         ///
-        /// \return constexpr reference
+        /// \returns constexpr reference
         constexpr reference front() noexcept
         { return *begin(); }
 
@@ -836,7 +841,7 @@ namespace cortex
         /// \details Returns a reference to the front element
         /// of the box.
         ///
-        /// \return constexpr const_reference
+        /// \returns constexpr const_reference
         constexpr const_reference front() const noexcept
         { return *begin(); }
 
@@ -845,7 +850,7 @@ namespace cortex
         /// \details Returns a reference to the back element
         /// of the box.
         ///
-        /// \return constexpr reference
+        /// \returns constexpr reference
         constexpr reference back() noexcept
         { return *(end() - 1); }
 
@@ -854,7 +859,7 @@ namespace cortex
         /// \details Returns a reference to the back element
         /// of the box.
         ///
-        /// \return constexpr const_reference
+        /// \returns constexpr const_reference
         constexpr const_reference back() const noexcept
         { return *(this->end() - 1); }
 
@@ -863,7 +868,7 @@ namespace cortex
         /// \details Creates a std::vector of the box's elements
         /// in row major order.
         ///
-        /// \return constexpr std::vector<value_type>
+        /// \returns constexpr std::vector<value_type>
         constexpr std::vector<value_type> flatten() const noexcept
         {
             std::vector<value_type> vec(_M_size(m_rows, m_columns));
@@ -876,7 +881,7 @@ namespace cortex
         /// \details Iterator to the beginning of 
         /// the box's data.
         ///
-        /// \return constexpr iterator
+        /// \returns constexpr iterator
         constexpr iterator begin() noexcept
         { return iterator(m_start); }
 
@@ -885,7 +890,7 @@ namespace cortex
         /// \details Constant iterator to the beginning 
         /// of the box's data.
         ///
-        /// \return constexpr const_iterator
+        /// \returns constexpr const_iterator
         constexpr const_iterator begin() const noexcept
         { return const_iterator(m_start); }
 
@@ -894,7 +899,7 @@ namespace cortex
         /// \details Constant iterator to the beginning 
         /// of the box.
         ///
-        /// \return constexpr const_iterator
+        /// \returns constexpr const_iterator
         constexpr const_iterator cbegin() const noexcept
         { return const_iterator(m_start); }
 
@@ -903,7 +908,7 @@ namespace cortex
         /// \details Iterator to the reversed beginning
         /// of the box's data.
         ///
-        /// \return constexpr reverse_iterator
+        /// \returns constexpr reverse_iterator
         constexpr reverse_iterator rbegin() noexcept
         { return reverse_iterator(end()); }
 
@@ -912,7 +917,7 @@ namespace cortex
         /// \details Constant iterator to the reversed 
         /// beginning of the box's data.
         ///
-        /// \return constexpr const_reverse_iterator
+        /// \returns constexpr const_reverse_iterator
         constexpr const_reverse_iterator rbegin() const noexcept
         { return const_reverse_iterator(end()); }
 
@@ -921,7 +926,7 @@ namespace cortex
         /// \details Constant iterator to the reversed
         /// beginning of the box's data.
         ///
-        /// \return constexpr const_reverse_iterator
+        /// \returns constexpr const_reverse_iterator
         constexpr const_reverse_iterator crbegin() const noexcept
         { return const_reverse_iterator(end()); }
 
@@ -930,7 +935,7 @@ namespace cortex
         /// \details Iterator to the end of the 
         /// box's data.
         ///
-        /// \return constexpr iterator
+        /// \returns constexpr iterator
         constexpr iterator end() noexcept
         { return iterator(m_finish); }
 
@@ -939,7 +944,7 @@ namespace cortex
         /// \details Constant iterator to the 
         /// end of the box's data.
         ///
-        /// \return constexpr const_iterator
+        /// \returns constexpr const_iterator
         constexpr const_iterator end() const noexcept
         { return const_iterator(m_finish); }
 
@@ -948,7 +953,7 @@ namespace cortex
         /// \details Constant iterator to the
         /// end of the box's data.
         ///
-        /// \return constexpr const_iterator
+        /// \returns constexpr const_iterator
         constexpr const_iterator cend() const noexcept
         { return const_iterator(m_finish); }
 
@@ -957,7 +962,7 @@ namespace cortex
         /// \details Iterator to the reversed end
         /// of the box's data.
         ///
-        /// \return constexpr reverse_iterator
+        /// \returns constexpr reverse_iterator
         constexpr reverse_iterator rend() noexcept
         { return reverse_iterator(begin()); }
 
@@ -966,7 +971,7 @@ namespace cortex
         /// \details Constant iterator to the reversed
         /// end of the box's data.
         ///
-        /// \return constexpr const_reverse_iterator
+        /// \returns constexpr const_reverse_iterator
         constexpr const_reverse_iterator rend() const noexcept
         { return const_reverse_iterator(begin()); }
 
@@ -975,7 +980,7 @@ namespace cortex
         /// \details Constant iterator to the reversed
         /// end of the box's data.
         ///
-        /// \return constexpr const_reverse_iterator
+        /// \returns constexpr const_reverse_iterator
         constexpr const_reverse_iterator crend() const noexcept
         { return const_reverse_iterator(begin()); }
 
@@ -985,7 +990,7 @@ namespace cortex
         /// of the indicated row.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr row_iterator
+        /// \returns constexpr row_iterator
         constexpr row_iterator row_begin(size_type row = 0uL)
         {
             _M_range_check(row, 0uL);
@@ -998,7 +1003,7 @@ namespace cortex
         /// of the indicated row.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr const_row_iterator
+        /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_begin(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1011,7 +1016,7 @@ namespace cortex
         /// beginning of the indicated row.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr const_row_iterator
+        /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_cbegin(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1024,7 +1029,7 @@ namespace cortex
         /// beginning of the indicated reversed row.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr reverse_row_iterator
+        /// \returns constexpr reverse_row_iterator
         constexpr reverse_row_iterator row_rbegin(size_type row = 0uL)
         {
             _M_range_check(row, 0uL);
@@ -1037,7 +1042,7 @@ namespace cortex
         /// to the beginning of the indicated reversed row.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr const_reverse_row_iterator
+        /// \returns constexpr const_reverse_row_iterator
         constexpr const_reverse_row_iterator row_rbegin(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1050,7 +1055,7 @@ namespace cortex
         /// to the beginning of the indicated reversed row.
         ///
         /// \param row
-        /// \return constexpr const_reverse_row_iterator
+        /// \returns constexpr const_reverse_row_iterator
         constexpr const_reverse_row_iterator row_crbegin(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1065,7 +1070,7 @@ namespace cortex
         /// row index is one plus the indicated positon.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr row_iterator
+        /// \returns constexpr row_iterator
         constexpr row_iterator row_end(size_type row = 0uL)
         {
             _M_range_check(row, 0uL);
@@ -1081,7 +1086,7 @@ namespace cortex
         /// positon.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr const_row_iterator
+        /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_end(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1097,7 +1102,7 @@ namespace cortex
         /// positon.
         ///
         /// \param row type: size_type | default: 0uL
-        /// \return constexpr const_row_iterator
+        /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_cend(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1110,7 +1115,7 @@ namespace cortex
         /// end of the indicated reversed row.
         ///
         /// \param row
-        /// \return constexpr reverse_row_iterator
+        /// \returns constexpr reverse_row_iterator
         constexpr reverse_row_iterator row_rend(size_type row = 0uL)
         {
             _M_range_check(row, 0uL);
@@ -1123,7 +1128,7 @@ namespace cortex
         /// to the end of the indicated reversed row.
         ///
         /// \param row
-        /// \return constexpr const_reverse_row_iterator
+        /// \returns constexpr const_reverse_row_iterator
         constexpr const_reverse_row_iterator row_rend(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1136,7 +1141,7 @@ namespace cortex
         /// to the end of the indicated reversed row.
         ///
         /// \param row
-        /// \return constexpr const_reverse_row_iterator
+        /// \returns constexpr const_reverse_row_iterator
         constexpr const_reverse_row_iterator row_crend(size_type row = 0uL) const
         {
             _M_range_check(row, 0uL);
@@ -1149,7 +1154,7 @@ namespace cortex
         /// beginning of the indicated column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr column_iterator
+        /// \returns constexpr column_iterator
         constexpr column_iterator column_begin(size_type column = 0uL)
         {
             _M_range_check(0uL, column);
@@ -1162,7 +1167,7 @@ namespace cortex
         /// beginning of the indicated column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_column_iterator
+        /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_begin(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1175,7 +1180,7 @@ namespace cortex
         /// beginning of the indicated column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_column_iterator
+        /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_cbegin(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1188,7 +1193,7 @@ namespace cortex
         /// beginning of the reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr reverse_column_iterator
+        /// \returns constexpr reverse_column_iterator
         constexpr reverse_column_iterator column_rbegin(size_type column = 0uL)
         {
             _M_range_check(0uL, column);
@@ -1201,7 +1206,7 @@ namespace cortex
         /// the beginning of the indicated reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_reverse_column_iterator
+        /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_rbegin(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1214,7 +1219,7 @@ namespace cortex
         /// the beginning of the indicated reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_reverse_column_iterator
+        /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_crbegin(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1230,7 +1235,7 @@ namespace cortex
         /// position.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr column_iterator
+        /// \returns constexpr column_iterator
         constexpr column_iterator column_end(size_type column = 0uL)
         {
             _M_range_check(0uL, column);
@@ -1246,7 +1251,7 @@ namespace cortex
         /// position.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_column_iterator
+        /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_end(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1262,7 +1267,7 @@ namespace cortex
         /// position.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_column_iterator
+        /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_cend(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1275,7 +1280,7 @@ namespace cortex
         /// reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr reverse_column_iterator
+        /// \returns constexpr reverse_column_iterator
         constexpr reverse_column_iterator column_rend(size_type column = 0uL)
         {
             _M_range_check(0uL, column);
@@ -1288,7 +1293,7 @@ namespace cortex
         /// the reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_reverse_column_iterator
+        /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_rend(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1301,7 +1306,7 @@ namespace cortex
         /// the reversed column.
         ///
         /// \param column type: size_type | default: 0uL
-        /// \return constexpr const_reverse_column_iterator
+        /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_crend(size_type column = 0uL) const
         {
             _M_range_check(0uL, column);
@@ -1321,7 +1326,7 @@ namespace cortex
         ///
         /// \tparam _ElemT
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto : A box whose element's type
+        /// \returns constexpr auto : A box whose element's type
         /// is the sum of the two input matrices element types.
         template <Addable _ElemT>
             requires AddableWith<value_type, _ElemT>
@@ -1351,7 +1356,7 @@ namespace cortex
         ///
         /// \tparam _ElemT
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto : A box whose element type
+        /// \returns constexpr auto : A box whose element type
         /// is the difference of the two input matrices element types.
         template <Subtractable _ElemT>
             requires SubtractableWith<value_type, _ElemT>
@@ -1381,7 +1386,7 @@ namespace cortex
         ///
         /// \tparam _ElemT
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto : A box whose element type
+        /// \returns constexpr auto : A box whose element type
         /// is the product of the two input matrices element types.
         template <Any _ElemT>
             requires MultiplicableWith<value_type, _ElemT>
@@ -1410,7 +1415,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires MultiplicableWith<value_type, _ScalarT>
         constexpr auto 
@@ -1437,13 +1442,13 @@ namespace cortex
         /// \requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `DivisibleWith`.
         ///
-        /// \note When dividing two matrices, if both matrices elements
+        /// \notes When dividing two matrices, if both matrices elements
         /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         ///
         /// \tparam _ElemT
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto : A box whose element type
+        /// \returns constexpr auto : A box whose element type
         /// is the quotient of the two input matrices element types.
         template <Any _ElemT>
             requires DivisibleWith<value_type, _ElemT>
@@ -1469,13 +1474,13 @@ namespace cortex
         /// the type denoted _ScalarT.
         /// \requires The type denoted _ScalarT be `Divisible`.
         ///
-        /// \note When dividing two matrices, if both matrices elements
+        /// \notes When dividing two matrices, if both matrices elements
         /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         ///
         /// \tparam _ScalarT
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires DivisibleWith<value_type, _ScalarT>
         constexpr auto 
@@ -1503,7 +1508,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: Modulo | requires: ModuloWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires ModuloWith<value_type, _ElemT>
         constexpr auto 
@@ -1530,7 +1535,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: Modulo | requires: ModuloWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires ModuloWith<value_type, _ScalarT>
         constexpr auto 
@@ -1556,7 +1561,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: BitXor | requires: BitXorWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires BitXorWith<value_type, _ElemT>
         constexpr auto 
@@ -1583,7 +1588,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: BitXor | requires: BitXorWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires BitXorWith<value_type, _ScalarT>
         constexpr auto 
@@ -1610,7 +1615,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: BitAnd | requires: BitAndWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires BitAndWith<value_type, _ElemT>
         constexpr auto 
@@ -1637,7 +1642,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: BitAnd | requires: BitAndWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires BitAndWith<value_type, _ScalarT>
         constexpr auto 
@@ -1664,7 +1669,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: BitOr | requires: BitOrWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires BitOrWith<value_type, _ElemT>
         constexpr auto 
@@ -1691,7 +1696,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: BitOr | requires: BitOrWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires BitOrWith<value_type, _ScalarT>
         constexpr auto 
@@ -1718,7 +1723,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires LeftBitShiftWith<value_type, _ElemT>
         constexpr auto 
@@ -1745,7 +1750,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires LeftBitShiftWith<value_type, _ScalarT>
         constexpr auto 
@@ -1772,7 +1777,7 @@ namespace cortex
         ///
         /// \tparam _ElemT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ElemT>
         /// \param other type: box<_ElemT> | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ElemT>
             requires RightBitShiftWith<value_type, _ElemT>
         constexpr auto 
@@ -1799,7 +1804,7 @@ namespace cortex
         ///
         /// \tparam _ScalarT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ScalarT>
         /// \param scalar type: _ScalarT | qualifiers: [const, ref]
-        /// \return constexpr auto
+        /// \returns constexpr auto
         template <Any _ScalarT>
             requires RightBitShiftWith<value_type, _ScalarT>
         constexpr auto 
@@ -1826,7 +1831,7 @@ namespace cortex
         ///
         /// \requires BitNot<value_type>
         ///
-        /// \return constexpr auto
+        /// \returns constexpr auto
         constexpr auto bit_not() const
             requires BitNot<value_type>
         {
@@ -1848,7 +1853,7 @@ namespace cortex
         /// iterator is required to be std::constructible_v which
         /// column_iterator doesn't satisfy yet.
         ///
-        /// \return constexpr auto
+        /// \returns constexpr auto
         constexpr auto 
         transpose()
         {
@@ -1870,7 +1875,7 @@ namespace cortex
         /// 
         /// \tparam F concept: std::copy_constructible
         /// \param func type: F 
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         template<std::copy_constructible F>
         constexpr auto
         map(F func)
@@ -1897,7 +1902,7 @@ namespace cortex
         /// \tparam F concept: std::copy_constructible
         /// \param rng type Rng | qualifiers: [move-semantics]
         /// \param func type F
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         template<std::ranges::input_range Rng, std::copy_constructible F>
         constexpr auto
         map(Rng&& rng, F func)
@@ -1926,7 +1931,7 @@ namespace cortex
         /// \param first type: It 
         /// \param last type It
         /// \param func type: F
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         template<std::input_iterator It, std::copy_constructible F>
         constexpr auto
         map(It first, It last, F func)
@@ -1951,7 +1956,7 @@ namespace cortex
         /// `this` box is empty, an empty box is returned
         /// with no memory allocated to it.
         /// 
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         constexpr auto vflip() const
         {
             if (empty())
@@ -1974,7 +1979,7 @@ namespace cortex
         /// `this` box is empty, an empty box is returned
         /// with no memory allocated to it.
         /// 
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         constexpr auto hflip() const
         {
             if (empty())
@@ -1996,7 +2001,7 @@ namespace cortex
         /// dimension sizes of the box. If `this` box is empty,
         /// an empty box is returned with no memory allocated to it.
         /// 
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         constexpr auto rrotate() const
         {
             if (empty())
@@ -2019,7 +2024,7 @@ namespace cortex
         /// the dimension sizes of the box. If `this` box is empty,
         /// an empty box is returned with no memory allocated to it.
         /// 
-        /// \return constexpr auto 
+        /// \returns constexpr auto 
         constexpr auto lrotate() const
         {
             if (empty())
@@ -2043,10 +2048,10 @@ namespace cortex
         /// std::allocator_traits to get the allocators
         /// relevant methods.
         ///
-        /// \note Default allocator is std::allocator<value_type>.
+        /// \notes Default allocator is std::allocator<value_type>.
         ///
         /// \param __n type: size_type
-        /// \return constexpr pointer
+        /// \returns constexpr pointer
         constexpr pointer _M_allocate(size_type __n)
         { return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer(); }
 
@@ -2090,7 +2095,7 @@ namespace cortex
         ///
         /// \tparam _Up
         /// \param __ptr type: _Up*
-        /// \return _Up*
+        /// \returns _Up*
         template <typename _Up>
         _Up *_M_data_ptr(_Up *__ptr) const noexcept
         { return __ptr; }
@@ -2105,7 +2110,7 @@ namespace cortex
         ///
         /// \tparam _Ptr
         /// \param __ptr type: _Ptr
-        /// \return typename std::pointer_traits<_Ptr>::element_type*
+        /// \returns typename std::pointer_traits<_Ptr>::element_type*
         template <typename _Ptr>
         typename std::pointer_traits<_Ptr>::element_type *
         _M_data_ptr(_Ptr __ptr) const
@@ -2119,7 +2124,7 @@ namespace cortex
         ///
         /// \tparam _Up
         /// \param __ptr type: _Up*
-        /// \return _Up*
+        /// \returns _Up*
         template <typename _Up>
         _Up *_M_data_ptr(_Up *__ptr) noexcept
         {
@@ -2146,8 +2151,8 @@ namespace cortex
     /// \rparam rhsE type: [_ElemR]
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
 #if __cpluscplus >= 202002L
         requires requires(_ElemL lhsE, _ElemR rhsE)
@@ -2186,7 +2191,7 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
-    /// \return constexpr inline auto
+    /// \returns constexpr inline auto
     template <typename _ElemL, typename _ElemR>
     constexpr inline auto
     operator<=> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2205,8 +2210,8 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
     inline bool
     operator!= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2221,8 +2226,8 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
     inline bool
     operator< (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2240,8 +2245,8 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
     inline bool
     operator> (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2261,8 +2266,8 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
     inline bool
     operator<= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2280,8 +2285,8 @@ namespace cortex
     /// \tparam _ElemR
     /// \param lhs type: [box<_ElemL>] | qualifiers: [const, ref]
     /// \param rhs type: [box<_ElemR>] | qualifiers: [const, ref]
-    /// \return true
-    /// \return false
+    /// \returns true
+    /// \returns false
     template <typename _ElemL, typename _ElemR>
     inline bool
     operator>= (const box<_ElemL>& lhs, const box<_ElemR>& rhs)
@@ -2307,7 +2312,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2343,7 +2348,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2379,7 +2384,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2415,7 +2420,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2452,7 +2457,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2490,7 +2495,7 @@ namespace cortex
     ///
     /// \param bx type: [box<_ElemT>] | qualifiers: [const, ref]
     /// \param scalar type: [_ElemT] | qualifiers: [const, ref]
-    /// \return box<bool>
+    /// \returns box<bool>
     template <typename _ElemT>
 #if __cpluscplus >= 202002L
         requires requires(_ElemT lhsE, _ElemT rhsE)
@@ -2521,7 +2526,7 @@ namespace cortex
     /// \tparam _RxT 
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Addable _LxT, Addable _RxT>
         requires AddableWith<_LxT, _RxT>
     constexpr auto
@@ -2535,8 +2540,8 @@ namespace cortex
     /// Calls lx `add` method on rx and assigns the result 
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type but be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type but be
     /// able to to store the resulting type of the
     /// call to `add`.
     ///
@@ -2547,7 +2552,7 @@ namespace cortex
     /// \tparam _RxT concept: Addable
     /// \param lx type: box<_LxT> | qualifiers: [ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr void
+    /// \returns constexpr void
     template<Addable _LxT, Addable _RxT>
         requires AddableWith<_LxT, _RxT>
     constexpr void
@@ -2570,7 +2575,7 @@ namespace cortex
     /// \tparam _RxT 
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Subtractable _LxT, Subtractable _RxT>
         requires SubtractableWith<_LxT, _RxT>
     constexpr auto
@@ -2584,8 +2589,8 @@ namespace cortex
     /// Calls lx `sub` method on rx and assigns the result 
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type but be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type but be
     /// able to to store the resulting type of the
     /// call to `sub`.
     ///
@@ -2596,7 +2601,7 @@ namespace cortex
     /// \tparam _RxT concept: Subtractable
     /// \param lx type: box<_LxT> | qualifiers: [ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr void
+    /// \returns constexpr void
     template<Subtractable _LxT, Subtractable _RxT>
         requires SubtractableWith<_LxT, _RxT>
     constexpr void
@@ -2619,7 +2624,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires MultiplicableWith<_LxT, _RxT>
     constexpr auto
@@ -2637,7 +2642,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires MultiplicableWith<_ElemT, _ScalarT>
     constexpr auto
@@ -2655,7 +2660,7 @@ namespace cortex
     /// \tparam _ElemT concept: Any
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ScalarT, Any _ElemT>
         requires MultiplicableWith<_ScalarT, _ElemT>
     constexpr auto
@@ -2669,8 +2674,8 @@ namespace cortex
     /// Calls lx `mul` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `mul`.
     /// 
@@ -2678,7 +2683,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires MultiplicableWith<_LxT, _RxT>
     constexpr void
@@ -2697,15 +2702,15 @@ namespace cortex
     /// Calls bx `mul` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires MultiplicableWith<_ElemT, _ScalarT>
     constexpr void
@@ -2728,7 +2733,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires DivisibleWith<_LxT, _RxT>
     constexpr auto
@@ -2746,7 +2751,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires DivisibleWith<_ElemT, _ScalarT>
     constexpr auto
@@ -2760,8 +2765,8 @@ namespace cortex
     /// Calls lx `div` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `div`.
     /// 
@@ -2769,7 +2774,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires DivisibleWith<_LxT, _RxT>
     constexpr void
@@ -2788,15 +2793,15 @@ namespace cortex
     /// Calls bx `div` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires DivisibleWith<_ElemT, _ScalarT>
     constexpr void
@@ -2819,7 +2824,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires ModuloWith<_LxT, _RxT>
     constexpr auto
@@ -2837,7 +2842,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires ModuloWith<_ElemT, _ScalarT>
     constexpr auto
@@ -2851,8 +2856,8 @@ namespace cortex
     /// Calls lx `mod` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `mod`.
     /// 
@@ -2860,7 +2865,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires ModuloWith<_LxT, _RxT>
     constexpr void
@@ -2879,15 +2884,15 @@ namespace cortex
     /// Calls bx `mod` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires ModuloWith<_ElemT, _ScalarT>
     constexpr void
@@ -2910,7 +2915,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires BitAndWith<_LxT, _RxT>
     constexpr auto
@@ -2928,7 +2933,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitAndWith<_ElemT, _ScalarT>
     constexpr auto
@@ -2946,7 +2951,7 @@ namespace cortex
     /// \tparam _ElemT concept: Any
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ScalarT, Any _ElemT>
         requires BitAndWith<_ScalarT, _ElemT>
     constexpr auto
@@ -2960,8 +2965,8 @@ namespace cortex
     /// Calls lx `bit_and` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_and`.
     /// 
@@ -2969,7 +2974,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires BitAndWith<_LxT, _RxT>
     constexpr void
@@ -2988,15 +2993,15 @@ namespace cortex
     /// Calls bx `bit_and` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitAndWith<_ElemT, _ScalarT>
     constexpr void
@@ -3019,7 +3024,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires BitOrWith<_LxT, _RxT>
     constexpr auto
@@ -3037,7 +3042,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitOrWith<_ElemT, _ScalarT>
     constexpr auto
@@ -3055,7 +3060,7 @@ namespace cortex
     /// \tparam _ElemT concept: Any
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ScalarT, Any _ElemT>
         requires BitOrWith<_ScalarT, _ElemT>
     constexpr auto
@@ -3069,8 +3074,8 @@ namespace cortex
     /// Calls lx `bit_or` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_or`.
     /// 
@@ -3078,7 +3083,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires BitOrWith<_LxT, _RxT>
     constexpr void
@@ -3097,15 +3102,15 @@ namespace cortex
     /// Calls bx `bit_or` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitOrWith<_ElemT, _ScalarT>
     constexpr void
@@ -3128,7 +3133,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires BitXorWith<_LxT, _RxT>
     constexpr auto
@@ -3146,7 +3151,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitXorWith<_ElemT, _ScalarT>
     constexpr auto
@@ -3164,7 +3169,7 @@ namespace cortex
     /// \tparam _ElemT concept: Any
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ScalarT, Any _ElemT>
         requires BitXorWith<_ScalarT, _ElemT>
     constexpr auto
@@ -3178,8 +3183,8 @@ namespace cortex
     /// Calls lx `bit_xor` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_xor`.
     /// 
@@ -3187,7 +3192,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires BitXorWith<_LxT, _RxT>
     constexpr void
@@ -3206,15 +3211,15 @@ namespace cortex
     /// Calls bx `bit_xor` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires BitXorWith<_ElemT, _ScalarT>
     constexpr void
@@ -3237,7 +3242,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires LeftBitShiftWith<_LxT, _RxT>
     constexpr auto
@@ -3255,7 +3260,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires LeftBitShiftWith<_ElemT, _ScalarT>
     constexpr auto
@@ -3269,8 +3274,8 @@ namespace cortex
     /// Calls lx `shift_left` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `shift_left`.
     /// 
@@ -3278,7 +3283,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires LeftBitShiftWith<_LxT, _RxT>
     constexpr void
@@ -3297,15 +3302,15 @@ namespace cortex
     /// Calls bx `shift_left` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The left-hand-side box is mutable.
-    /// \note The left-hand-side boxes type must be
+    /// \notes The left-hand-side box is mutable.
+    /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires LeftBitShiftWith<_ElemT, _ScalarT>
     constexpr void
@@ -3328,7 +3333,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _LxT, Any _RxT>
         requires RightBitShiftWith<_LxT, _RxT>
     constexpr auto
@@ -3346,7 +3351,7 @@ namespace cortex
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires RightBitShiftWith<_ElemT, _ScalarT>
     constexpr auto
@@ -3360,8 +3365,8 @@ namespace cortex
     /// Calls lx `shift_right` method on rx and assigns the result
     /// to lx.
     ///
-    /// \note The right-hand-side box is mutable.
-    /// \note The right-hand-side boxes type must be
+    /// \notes The right-hand-side box is mutable.
+    /// \notes The right-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `shift_right`.
     /// 
@@ -3369,7 +3374,7 @@ namespace cortex
     /// \tparam _RxT concept: Any
     /// \param lx type: box<_LxT> | qualifiers: [const, ref]
     /// \param rx type: box<_RxT> | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _LxT, Any _RxT>
         requires RightBitShiftWith<_LxT, _RxT>
     constexpr void
@@ -3388,15 +3393,15 @@ namespace cortex
     /// Calls bx `shift_right` method on scalar sx and assigns 
     /// the result to bx.
     ///
-    /// \note The right-hand-side box is mutable.
-    /// \note The right-hand-side boxes type must be
+    /// \notes The right-hand-side box is mutable.
+    /// \notes The right-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
     /// \tparam _ElemT concept: Any
     /// \tparam _ScalarT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
     /// \param sx type: _ScalarT | qualifiers: [const, ref]
-    /// \return requires constexpr 
+    /// \returns requires constexpr 
     template<Any _ElemT, Any _ScalarT>
         requires RightBitShiftWith<_ElemT, _ScalarT>
     constexpr void
@@ -3417,7 +3422,7 @@ namespace cortex
     /// 
     /// \tparam _ElemT : concept: BitNot
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<BitNot _ElemT>
     constexpr auto
     operator~ (box<_ElemT> bx)
@@ -3432,7 +3437,7 @@ namespace cortex
     /// 
     /// \tparam _ElemT concept: Any
     /// \param bx type: box<_ElemT> | qualifiers: [const, ref]
-    /// \return constexpr auto 
+    /// \returns constexpr auto 
     template<Any _ElemT>
     constexpr auto
     operator! (box<_ElemT> bx)
@@ -3460,7 +3465,7 @@ namespace std
     /// \tparam T
     /// \param x type: [cortex::box<T>] | qualifiers: [const, ref]
     /// \param y type: [cortex::box<T>] | qualifiers: [const, ref]
-    /// \return inline void
+    /// \returns inline void
     template <typename T>
     inline void swap(cortex::box<T>& x, cortex::box<T>& y) noexcept
     { x.swap(y); }

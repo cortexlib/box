@@ -12,9 +12,17 @@ namespace cortex
 
 An iterator for iterating through a container in reverse order.
 
-reverse.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.0 \\date 2022-03-31
+Author: Tyler Swann (oraqlle@github.com)
 
-\\copyright Copyright (c) 2022
+Header Version: v1.0.0
+
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+reverse.hpp
 
 ### Class `cortex::reverse_iterator`
 
