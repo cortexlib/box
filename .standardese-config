@@ -1,7 +1,8 @@
 [compilation]
 standard=c++20
-include_dir=/home/tyler/.local/share/dds/pkg/cortex-iterators@0.4.1/src
-include_dir=/home/tyler/.local/share/dds/pkg/cortex-concepts@0.2.1/src
+include_dir=/home/tyler/dev/cortexlib/matrix/libs/concepts/src
+include_dir=/home/tyler/dev/cortexlib/matrix/libs/iterators/src
+include_dir=/home/tyler/dev/cortexlib/matrix/libs/box/src
 
 [input]
 soure_ext=hpp

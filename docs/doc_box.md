@@ -1,6 +1,14 @@
 # Header file `box.hpp`
 
 ``` cpp
+#include "iterators/column.hpp"
+
+#include "concepts.hpp"
+
+#include "iterators/normal.hpp"
+
+#include "iterators/row.hpp"
+
 #define CORTEX_BOX_H
 
 #define lexicographical_compare_bug
@@ -54,11 +62,19 @@ namespace std
 }
 ```
 
-Two Dimensional Access To Contiguous Data
+Two Dimensional Access To Contiguous Data.
 
-box \\author Tyler Swann (oraqlle@github.com) \\version 2.3.0 \\date 12-06-2022
+Author: Tyler Swann (oraqlle@github.com)
 
-\\copyright Copyright (c) 2022
+Header Version: v2.3.1
+
+Date: 25-06-2022
+
+License: MIT
+
+Copyright: Copyright (c) 2022
+
+box.hpp
 
 ### Class `cortex::box`
 
@@ -400,11 +416,13 @@ constexpr box<T, Alloc>& operator=(const box<T, Alloc>& other);
 
 Copy Assignment
 
+*Return values:* constexpr box&
+
 Copies the contents of another box into this box and returns///this. If self assignment occurs then///this is returned immediately.
 
 #### Parameters
 
-  - `other` - type: \[box\] | qualifiers: \[const, ref\] \\return constexpr box&
+  - `other` - type: \[box\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -416,11 +434,13 @@ constexpr box<T, Alloc>& operator=(box<T, Alloc>&& other) noexcept;
 
 Move Assignment
 
+*Return values:* constexpr box&
+
 Moves the ownership of other’s resources to this box and leaves the other box in a default constructed state. Returns///this. If self assignment occurs then///this is returned immediately.
 
 #### Parameters
 
-  - `other` - type: \[box\] | qualifiers: \[move\] \\return constexpr box&
+  - `other` - type: \[box\] | qualifiers: \[move\]
 
 -----
 
@@ -432,11 +452,13 @@ constexpr box<T, Alloc>& operator=(std::initializer_list<std::initializer_list<v
 
 Initialiser List Assignment
 
+*Return values:* constexpr box&
+
 Uses std::initializer\_list to create a box from an initializer list of initializer lists. Elements ownership is moved to the box’s memory.
 
 #### Parameters
 
-  - `list` - type: \[std::initializer\_list\<std::initializer\_list\<value\_type\>\>\] \\return constexpr box&
+  - `list` - type: \[std::initializer\_list\<std::initializer\_list\<value\_type\>\>\]
 
 -----
 
@@ -499,11 +521,13 @@ constexpr 'hidden' erase('hidden' position);
 
 Erases element indicated by position
 
+*Return values:* constexpr iterator | attribute: \[\[maybe\_unused\]\]
+
 Erases the value of the box at position and resets it to value\_type().
 
 #### Parameters
 
-  - `position` - type: \[const\_iterator\] \\return constexpr iterator | attribute: \[\[maybe\_unused\]\]
+  - `position` - type: \[const\_iterator\]
 
 -----
 
@@ -515,12 +539,14 @@ constexpr 'hidden' erase('hidden' first, 'hidden' last);
 
 Erases value between first and last
 
+*Return values:* constexpr iterator | attribute: \[\[maybe\_unused\]\]
+
 Elements between first and last and then resets memory to value\_type()
 
 #### Parameters
 
   - `first` - type: \[const\_iterator\]
-  - `last` - type: \[const\_iterator\] \\return constexpr iterator | attribute: \[\[maybe\_unused\]\]
+  - `last` - type: \[const\_iterator\]
 
 -----
 
@@ -577,9 +603,9 @@ constexpr 'hidden' get_allocator() const noexcept;
 
 Get Allocator
 
-Returns the allocator used by the box.
+*Return values:* constexpr allocator\_type
 
-\\return constexpr allocator\_type
+Returns the allocator used by the box.
 
 -----
 
@@ -591,9 +617,9 @@ constexpr 'hidden' size() const noexcept;
 
 Box Size
 
-Returns the overall size of the box.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the overall size of the box.
 
 -----
 
@@ -605,9 +631,9 @@ constexpr 'hidden' rows() const noexcept;
 
 Row Size
 
-Returns the number of the rows of the box.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the number of the rows of the box.
 
 -----
 
@@ -619,9 +645,9 @@ constexpr 'hidden' columns() const noexcept;
 
 Column Size
 
-Returns the the number of columns in the box.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the the number of columns in the box.
 
 -----
 
@@ -633,9 +659,9 @@ constexpr 'hidden' max_size() const noexcept;
 
 Max Box Size
 
-Returns the maximum number of elements that can be stored in the box.
+*Return values:* constexpr size\_type
 
-\\return constexpr size\_type
+Returns the maximum number of elements that can be stored in the box.
 
 -----
 
@@ -647,9 +673,9 @@ constexpr auto dimensions() const noexcept;
 
 Dimensions
 
-Returns a structured binding of the box’s dimensions.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Returns a structured binding of the box’s dimensions.
 
 -----
 
@@ -661,9 +687,11 @@ constexpr bool is_square() const noexcept;
 
 Is Square
 
-If the number of rows and columns are equal, the box is square.
+*Return values:* true
 
-\\return true \\return false
+*Return values:* false
+
+If the number of rows and columns are equal, the box is square.
 
 -----
 
@@ -675,9 +703,11 @@ constexpr bool empty() const noexcept;
 
 Empty
 
-Checks whether the box is empty.
+*Return values:* true
 
-\\return true \\return false
+*Return values:* false
+
+Checks whether the box is empty.
 
 -----
 
@@ -689,9 +719,9 @@ Checks whether the box is empty.
 
 Data
 
-Returns the underlying data pointer.
+*Return values:* pointer
 
-\\return pointer
+Returns the underlying data pointer.
 
 -----
 
@@ -703,9 +733,9 @@ Returns the underlying data pointer.
 
 Data
 
-Returns the underlying data pointer.
+*Return values:* const\_pointer
 
-\\return const\_pointer
+Returns the underlying data pointer.
 
 -----
 
@@ -717,13 +747,15 @@ constexpr std::span<value_type> slice('hidden' ridx) const;
 
 Slice
 
+*Return values:* std::span\<value\_type\>
+
 Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data.
 
 \\exception std::out\_of\_range - if the row index is out of range of the box, the exception is thrown.
 
 #### Parameters
 
-  - `ridx` - type: size\_type \\return std::span\<value\_type\>
+  - `ridx` - type: size\_type
 
 -----
 
@@ -733,11 +765,11 @@ Returns a slice of the box. The slice is std::span over the indicated row of the
 constexpr std::span<value_type> operator[]('hidden' ridx);
 ```
 
-@brief Slice Operator
+Slice Operator
 
-@details Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data. Calls `box::slice`.
+*Return values:* std::span\<value\_type\>
 
-@param ridx @return std::span\<value\_type\>
+Returns a slice of the box. The slice is std::span over the indicated row of the box. The span is a view over the underlying data. Calls `box::slice`.
 
 -----
 
@@ -747,7 +779,9 @@ constexpr std::span<value_type> operator[]('hidden' ridx);
 constexpr 'hidden' at('hidden' row, 'hidden' column);
 ```
 
-@brief Two Dimensional Element Access (Point Access).
+Two Dimensional Element Access (Point Access).
+
+*Return values:* constexpr reference
 
 Returns a reference to the element that is at the point position (column, row) of the box.
 
@@ -755,7 +789,7 @@ Returns a reference to the element that is at the point position (column, row) o
 
 #### Parameters
 
-  - `row` - type: size\_type \\return constexpr reference
+  - `row` - type: size\_type
   - `column` - type: size\_type
 
 -----
@@ -768,13 +802,15 @@ constexpr 'hidden' at('hidden' row, 'hidden' column) const;
 
 At
 
+*Return values:* constexpr const\_reference
+
 Returns a reference to the element that is at the point position (column, row) of the box.
 
 \\exception std::out\_of\_range
 
 #### Parameters
 
-  - `row` - type: size\_type \\return constexpr const\_reference
+  - `row` - type: size\_type
   - `column` - type: size\_type
 
 -----
@@ -787,13 +823,15 @@ constexpr 'hidden' operator()('hidden' row, 'hidden' column);
 
 Point Access Operator
 
+*Return values:* constexpr reference
+
 Provides point access to box’s elements. Overloads the invokation operator. Utilises the at() method.
 
 \\exception std::out\_of\_range
 
 #### Parameters
 
-  - `row` - type: size\_type \\return constexpr reference
+  - `row` - type: size\_type
   - `column` - type: size\_type
 
 -----
@@ -806,13 +844,15 @@ constexpr 'hidden' operator()('hidden' row, 'hidden' column) const;
 
 Point Access Operator
 
+*Return values:* constexpr const\_reference
+
 Provides point access to box’s elements. Overloads the invokation operator. Utilises the at() method.
 
 \\exception std::out\_of\_range
 
 #### Parameters
 
-  - `row` - type: size\_type \\return constexpr const\_reference
+  - `row` - type: size\_type
   - `column` - type: size\_type
 
 -----
@@ -825,9 +865,9 @@ constexpr 'hidden' front() noexcept;
 
 Front
 
-Returns a reference to the front element of the box.
+*Return values:* constexpr reference
 
-\\return constexpr reference
+Returns a reference to the front element of the box.
 
 -----
 
@@ -839,9 +879,9 @@ constexpr 'hidden' front() const noexcept;
 
 Front
 
-Returns a reference to the front element of the box.
+*Return values:* constexpr const\_reference
 
-\\return constexpr const\_reference
+Returns a reference to the front element of the box.
 
 -----
 
@@ -853,9 +893,9 @@ constexpr 'hidden' back() noexcept;
 
 Back
 
-Returns a reference to the back element of the box.
+*Return values:* constexpr reference
 
-\\return constexpr reference
+Returns a reference to the back element of the box.
 
 -----
 
@@ -867,9 +907,9 @@ constexpr 'hidden' back() const noexcept;
 
 Back
 
-Returns a reference to the back element of the box.
+*Return values:* constexpr const\_reference
 
-\\return constexpr const\_reference
+Returns a reference to the back element of the box.
 
 -----
 
@@ -881,9 +921,9 @@ constexpr std::vector<value_type> flatten() const noexcept;
 
 Flatten
 
-Creates a std::vector of the box’s elements in row major order.
+*Return values:* constexpr std::vector\<value\_type\>
 
-\\return constexpr std::vector\<value\_type\>
+Creates a std::vector of the box’s elements in row major order.
 
 -----
 
@@ -895,9 +935,9 @@ constexpr 'hidden' begin() noexcept;
 
 Begin Iterator
 
-Iterator to the beginning of the box’s data.
+*Return values:* constexpr iterator
 
-\\return constexpr iterator
+Iterator to the beginning of the box’s data.
 
 -----
 
@@ -909,9 +949,9 @@ constexpr 'hidden' begin() const noexcept;
 
 Begin Iterator (const)
 
-Constant iterator to the beginning of the box’s data.
+*Return values:* constexpr const\_iterator
 
-\\return constexpr const\_iterator
+Constant iterator to the beginning of the box’s data.
 
 -----
 
@@ -923,9 +963,9 @@ constexpr 'hidden' cbegin() const noexcept;
 
 Constant Begin Iterator
 
-Constant iterator to the beginning of the box.
+*Return values:* constexpr const\_iterator
 
-\\return constexpr const\_iterator
+Constant iterator to the beginning of the box.
 
 -----
 
@@ -937,9 +977,9 @@ constexpr 'hidden' rbegin() noexcept;
 
 Reverse Begin Iterator
 
-Iterator to the reversed beginning of the box’s data.
+*Return values:* constexpr reverse\_iterator
 
-\\return constexpr reverse\_iterator
+Iterator to the reversed beginning of the box’s data.
 
 -----
 
@@ -951,9 +991,9 @@ constexpr 'hidden' rbegin() const noexcept;
 
 Reverse Begin Iterator (const)
 
-Constant iterator to the reversed beginning of the box’s data.
+*Return values:* constexpr const\_reverse\_iterator
 
-\\return constexpr const\_reverse\_iterator
+Constant iterator to the reversed beginning of the box’s data.
 
 -----
 
@@ -965,9 +1005,9 @@ constexpr 'hidden' crbegin() const noexcept;
 
 Constant Reverse Begin Iterator
 
-Constant iterator to the reversed beginning of the box’s data.
+*Return values:* constexpr const\_reverse\_iterator
 
-\\return constexpr const\_reverse\_iterator
+Constant iterator to the reversed beginning of the box’s data.
 
 -----
 
@@ -979,9 +1019,9 @@ constexpr 'hidden' end() noexcept;
 
 End Iterator
 
-Iterator to the end of the box’s data.
+*Return values:* constexpr iterator
 
-\\return constexpr iterator
+Iterator to the end of the box’s data.
 
 -----
 
@@ -993,9 +1033,9 @@ constexpr 'hidden' end() const noexcept;
 
 End Iterator (const)
 
-Constant iterator to the end of the box’s data.
+*Return values:* constexpr const\_iterator
 
-\\return constexpr const\_iterator
+Constant iterator to the end of the box’s data.
 
 -----
 
@@ -1007,9 +1047,9 @@ constexpr 'hidden' cend() const noexcept;
 
 Constant End Iterator
 
-Constant iterator to the end of the box’s data.
+*Return values:* constexpr const\_iterator
 
-\\return constexpr const\_iterator
+Constant iterator to the end of the box’s data.
 
 -----
 
@@ -1021,9 +1061,9 @@ constexpr 'hidden' rend() noexcept;
 
 Reverse End Iterator
 
-Iterator to the reversed end of the box’s data.
+*Return values:* constexpr reverse\_iterator
 
-\\return constexpr reverse\_iterator
+Iterator to the reversed end of the box’s data.
 
 -----
 
@@ -1035,9 +1075,9 @@ constexpr 'hidden' rend() const noexcept;
 
 Reverse End Iterator (const)
 
-Constant iterator to the reversed end of the box’s data.
+*Return values:* constexpr const\_reverse\_iterator
 
-\\return constexpr const\_reverse\_iterator
+Constant iterator to the reversed end of the box’s data.
 
 -----
 
@@ -1049,9 +1089,9 @@ constexpr 'hidden' crend() const noexcept;
 
 Constant Reverse End Iterator
 
-Constant iterator to the reversed end of the box’s data.
+*Return values:* constexpr const\_reverse\_iterator
 
-\\return constexpr const\_reverse\_iterator
+Constant iterator to the reversed end of the box’s data.
 
 -----
 
@@ -1063,11 +1103,13 @@ constexpr 'hidden' row_begin('hidden' row = 0uL);
 
 Row Begin Iterator
 
+*Return values:* constexpr row\_iterator
+
 Returns an iterator to the beginning of the indicated row.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1079,11 +1121,13 @@ constexpr 'hidden' row_begin('hidden' row = 0uL) const;
 
 Row Begin Iterator (const)
 
+*Return values:* constexpr const\_row\_iterator
+
 Returns an iterator to the beginning of the indicated row.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr const\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1095,11 +1139,13 @@ constexpr 'hidden' row_cbegin('hidden' row = 0uL) const;
 
 Constant Row Begin Iterator
 
+*Return values:* constexpr const\_row\_iterator
+
 Returns a constant iterator to the beginning of the indicated row.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr const\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1111,11 +1157,13 @@ constexpr 'hidden' row_rbegin('hidden' row = 0uL);
 
 Reverse Row Begin Iterator
 
+*Return values:* constexpr reverse\_row\_iterator
+
 Returns a reverse iterator to the beginning of the indicated reversed row.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr reverse\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1127,11 +1175,13 @@ constexpr 'hidden' row_rbegin('hidden' row = 0uL) const;
 
 Reverse Row Begin Iterator (const)
 
+*Return values:* constexpr const\_reverse\_row\_iterator
+
 Returns a constant reverse iterator to the beginning of the indicated reversed row.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr const\_reverse\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1143,11 +1193,9 @@ constexpr 'hidden' row_crbegin('hidden' row = 0uL) const;
 
 Constant Reverse Row Begin Iterator
 
+*Return values:* constexpr const\_reverse\_row\_iterator
+
 Returns a constant reverse iterator to the beginning of the indicated reversed row.
-
-#### Parameters
-
-  - `row` - \\return constexpr const\_reverse\_row\_iterator
 
 -----
 
@@ -1159,11 +1207,13 @@ constexpr 'hidden' row_end('hidden' row = 0uL);
 
 Row End Iterator
 
+*Return values:* constexpr row\_iterator
+
 Returns an iterator to one past the end of the row, this happens to be the first element in the next row. This is why the iterator column index is set to 0 and the row index is one plus the indicated positon.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1175,11 +1225,13 @@ constexpr 'hidden' row_end('hidden' row = 0uL) const;
 
 Row End Iterator (const)
 
+*Return values:* constexpr const\_row\_iterator
+
 Returns an constant iterator to one past the end of the row, this happens to be the first element in the next row. This is why the iterator column index is set to 0 and the row index is one plus the indicated positon.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr const\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1191,11 +1243,13 @@ constexpr 'hidden' row_cend('hidden' row = 0uL) const;
 
 Constant Row End Iterator
 
+*Return values:* constexpr const\_row\_iterator
+
 Returns an constant iterator to one past the end of the row, this happens to be the first element in the next row. This is why the iterator column index is set to 0 and the row index is one plus the indicated positon.
 
 #### Parameters
 
-  - `row` - type: size\_type | default: 0uL \\return constexpr const\_row\_iterator
+  - `row` - type: size\_type | default: 0uL
 
 -----
 
@@ -1207,11 +1261,9 @@ constexpr 'hidden' row_rend('hidden' row = 0uL);
 
 Reverse Row End Iterator
 
+*Return values:* constexpr reverse\_row\_iterator
+
 Returns a reverse iterator to the end of the indicated reversed row.
-
-#### Parameters
-
-  - `row` - \\return constexpr reverse\_row\_iterator
 
 -----
 
@@ -1223,11 +1275,9 @@ constexpr 'hidden' row_rend('hidden' row = 0uL) const;
 
 Reverse Row End Iterator (const)
 
+*Return values:* constexpr const\_reverse\_row\_iterator
+
 Returns a constant reverse iterator to the end of the indicated reversed row.
-
-#### Parameters
-
-  - `row` - \\return constexpr const\_reverse\_row\_iterator
 
 -----
 
@@ -1239,11 +1289,9 @@ constexpr 'hidden' row_crend('hidden' row = 0uL) const;
 
 Constant Reverse Row End Iterator
 
+*Return values:* constexpr const\_reverse\_row\_iterator
+
 Returns a constant reverse iterator to the end of the indicated reversed row.
-
-#### Parameters
-
-  - `row` - \\return constexpr const\_reverse\_row\_iterator
 
 -----
 
@@ -1255,11 +1303,13 @@ constexpr 'hidden' column_begin('hidden' column = 0uL);
 
 Column Begin Iterator
 
+*Return values:* constexpr column\_iterator
+
 Returns an iterator to the beginning of the indicated column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1271,11 +1321,13 @@ constexpr 'hidden' column_begin('hidden' column = 0uL) const;
 
 Column Begin Iterator (const)
 
+*Return values:* constexpr const\_column\_iterator
+
 Returns a constant iterator to the beginning of the indicated column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1287,11 +1339,13 @@ constexpr 'hidden' column_cbegin('hidden' column = 0uL) const;
 
 Constant Column Begin Iterator
 
+*Return values:* constexpr const\_column\_iterator
+
 Returns a constant iterator to the beginning of the indicated column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1303,11 +1357,13 @@ constexpr 'hidden' column_rbegin('hidden' column = 0uL);
 
 Reverse Column Begin Iterator
 
+*Return values:* constexpr reverse\_column\_iterator
+
 Returns a reverse iterator to the beginning of the reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1319,11 +1375,13 @@ constexpr 'hidden' column_rbegin('hidden' column = 0uL) const;
 
 Reverse Column Begin Iterator (const)
 
+*Return values:* constexpr const\_reverse\_column\_iterator
+
 Returns a constant reverse iterator to the beginning of the indicated reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1335,11 +1393,13 @@ constexpr 'hidden' column_crbegin('hidden' column = 0uL) const;
 
 Constant Reverse Column Begin Iterator
 
+*Return values:* constexpr const\_reverse\_column\_iterator
+
 Returns a constant reverse iterator to the beginning of the indicated reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1351,11 +1411,13 @@ constexpr 'hidden' column_end('hidden' column = 0uL);
 
 Column End Iterator
 
+*Return values:* constexpr column\_iterator
+
 Returns an iterator to one past the end of the column, this happens to be the first element in the next column. This is why the iterator row index is set to 0 and the column index is one plus the indicated position.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1367,11 +1429,13 @@ constexpr 'hidden' column_end('hidden' column = 0uL) const;
 
 Column End Iterator (const)
 
+*Return values:* constexpr const\_column\_iterator
+
 Returns a constant iterator to one past the end of the column, this happens to be the first element in the next column. This is why the iterator row index is set to 0 and the column index is one plus the indicated position.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1383,11 +1447,13 @@ constexpr 'hidden' column_cend('hidden' column = 0uL) const;
 
 Constant Column End Iterator
 
+*Return values:* constexpr const\_column\_iterator
+
 Returns a constant iterator to one past the end of the column, this happens to be the first element in the next column. This is why the iterator row index is set to 0 and the column index is one plus the indicated position.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1399,11 +1465,13 @@ constexpr 'hidden' column_rend('hidden' column = 0uL);
 
 Reverse Column End Iterator
 
+*Return values:* constexpr reverse\_column\_iterator
+
 Returns a reverse iterator the end of the reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1415,11 +1483,13 @@ constexpr 'hidden' column_rend('hidden' column = 0uL) const;
 
 Reverse Column End Iterator (const)
 
+*Return values:* constexpr const\_reverse\_column\_iterator
+
 Returns a constant reverse iterator the end of the reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1431,11 +1501,13 @@ constexpr 'hidden' column_crend('hidden' column = 0uL) const;
 
 Constant Reverse Column End Iterator
 
+*Return values:* constexpr const\_reverse\_column\_iterator
+
 Returns a constant reverse iterator the end of the reversed column.
 
 #### Parameters
 
-  - `column` - type: size\_type | default: 0uL \\return constexpr const\_reverse\_column\_iterator
+  - `column` - type: size\_type | default: 0uL
 
 -----
 
@@ -1449,11 +1521,11 @@ Element-wise Bitwise Not
 
 *Requires:* BitNot\<value\_type\>
 
+*Return values:* constexpr auto
+
 Performs an element-wise bitwise not operation. The box must not be empty.
 
 \\exception std::invalid\_argument If the box is empty, std::invalid\_argument is thrown.
-
-\\return constexpr auto
 
 -----
 
@@ -1465,9 +1537,9 @@ constexpr auto transpose();
 
 Matrix Transpose
 
-Performs a box transpose. Uses std::copy over std::ranges::copy as the output iterator is required to be std::constructible\_v which column\_iterator doesn’t satisfy yet.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Performs a box transpose. Uses std::copy over std::ranges::copy as the output iterator is required to be std::constructible\_v which column\_iterator doesn’t satisfy yet.
 
 -----
 
@@ -1479,9 +1551,9 @@ constexpr auto vflip() const;
 
 Vertical Flip
 
-Performs a vertical flip of the box. ie. The order of the rows is reversed. If `this` box is empty, an empty box is returned with no memory allocated to it.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Performs a vertical flip of the box. ie. The order of the rows is reversed. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 -----
 
@@ -1493,9 +1565,9 @@ constexpr auto hflip() const;
 
 Horizontal Flip
 
-Performs a horizontal flip of the box. ie. The order of the columns is reversed. If `this` box is empty, an empty box is returned with no memory allocated to it.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Performs a horizontal flip of the box. ie. The order of the columns is reversed. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 -----
 
@@ -1507,9 +1579,9 @@ constexpr auto rrotate() const;
 
 Right Rotate
 
-Rotates the box 90 degrees clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Rotates the box 90 degrees clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 -----
 
@@ -1521,9 +1593,9 @@ constexpr auto lrotate() const;
 
 Left Rotate
 
-Rotates the box 90 degrees counter-clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
+*Return values:* constexpr auto
 
-\\return constexpr auto
+Rotates the box 90 degrees counter-clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 -----
 
@@ -1540,6 +1612,10 @@ Compares two matrices for equality.
 
 *Requires:* Matrix elements support equality comparison that converts to a bool
 
+*Return values:* true
+
+*Return values:* false
+
 Uses std::equal to compare the matrices. Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
 
 \\exception Operation is has no exception iff the comparison between box elements is noexcept and std::equal is noexcept across the range
@@ -1551,7 +1627,7 @@ Uses std::equal to compare the matrices. Takes at least O(n) where n = columns x
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1564,12 +1640,16 @@ bool operator!=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
 
 Compares two matrices for inequality.
 
+*Return values:* true
+
+*Return values:* false
+
 Inverts the result of a equality comparison between two matrices.
 
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1582,10 +1662,14 @@ bool operator<(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
 
 Compares if a box is lexicographically less than another.
 
+*Return values:* true
+
+*Return values:* false
+
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1598,12 +1682,16 @@ bool operator>(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
 
 Compares if a box is lexicographically greater than another.
 
+*Return values:* true
+
+*Return values:* false
+
 Uses less than comparison and swaps the order of the arguments.
 
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1616,12 +1704,16 @@ bool operator<=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
 
 Compares if a box is lexicographically less than or equal to another.
 
+*Return values:* true
+
+*Return values:* false
+
 Uses less than comparison and swaps the order of the arguments. If the rhs box is less than the lhs box, then the lhs box cannot be less then or equal to the rhs box.
 
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1634,12 +1726,16 @@ bool operator>=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
 
 Compares if a box is lexicographically greater than or equal to another.
 
+*Return values:* true
+
+*Return values:* false
+
 Inverts the result of a less than comparison between the two matrices.
 
 #### Parameters
 
   - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\] \\return true \\return false
+  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1654,6 +1750,8 @@ Scalar Equality Comparison
 
 *Requires:* Comparison of scalar type and box type support equality comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are equal as true and the everything else as false.
 
 \\exception Operation is noexcept iff the inequlity comparison between the scalar and the box element’s types is noexcept.
@@ -1661,7 +1759,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1676,6 +1774,8 @@ Scalar Inequality Comparison
 
 *Requires:* Comparison of scalar type and box type support inequality comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are inequal as true and the everything else as false.
 
 \\exception Operation is noexcept iff the inequlity comparison between the scalar and the box element’s types is noexcept.
@@ -1683,7 +1783,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1698,6 +1798,8 @@ Scalar Less-Then Comparison
 
 *Requires:* Comparison of scalar type and box type support less-than comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are less-than as true and the everything else as false.
 
 \\exception Operation is noexcept iff the less-than comparison between the scalar and the box element’s types is noexcept.
@@ -1705,7 +1807,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1720,6 +1822,8 @@ Scalar Greater-Then Comparison
 
 *Requires:* Comparison of scalar type and box type support greater-than comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are greater-than as true and the everything else as false.
 
 \\exception Operation is noexcept iff the greater-than comparison between the scalar and the box element’s types is noexcept.
@@ -1727,7 +1831,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1742,6 +1846,8 @@ Scalar Less-Then-Equal Comparison
 
 *Requires:* Comparison of scalar type and box type support less-than comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are less-than-eqaul as true and the everything else as false.
 
 \\exception Operation is noexcept iff the less-than-equal comparison between the scalar and the box element’s types is noexcept.
@@ -1749,7 +1855,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1764,6 +1870,8 @@ Scalar Greater-Then-Equal Comparison
 
 *Requires:* Comparison of scalar type and box type support greater-than-equal comparison that results in a bool.
 
+*Return values:* box\<bool\>
+
 Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are greater-than-equal as true and the everything else as false.
 
 \\exception Operation is noexcept iff the greater-than-equal comparison between the scalar and the box element’s types is noexcept.
@@ -1771,7 +1879,7 @@ Compares each value within the box to a given scalar. Creates a bit mask (or boo
 #### Parameters
 
   - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\] \\return box\<bool\>
+  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
@@ -1782,7 +1890,9 @@ template <typename T>
 void swap(cortex::box<T>& x, cortex::box<T>& y) noexcept;
 ```
 
-Uses std::swaps to swap the contents of two matrices.
+Uses std::swap to swap the contents of two matrices.
+
+*Return values:* inline void
 
 Swaps the contents of two matrices if they are of the same type.
 
@@ -1791,6 +1901,6 @@ Swaps the contents of two matrices if they are of the same type.
 #### Parameters
 
   - `x` - type: \[cortex::box\<T\>\] | qualifiers: \[const, ref\]
-  - `y` - type: \[cortex::box\<T\>\] | qualifiers: \[const, ref\] \\return inline void
+  - `y` - type: \[cortex::box\<T\>\] | qualifiers: \[const, ref\]
 
 -----
