@@ -59,6 +59,7 @@ Here is the full list of both the released and upcomming sub-libraries available
 
 - Allocators Library - Various types of allocators to provide more custom and precise control over memory management.
 - Literals Library - A unique set of literal types that allow for shorter more concise syntax.
+- Combinator Library - Combinator Patterns in C++
 
 ---
 
