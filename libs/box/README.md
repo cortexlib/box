@@ -1,7 +1,7 @@
 # Cortex : { box }
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
-[![License](https://img.shields.io/github/license/cortexlib/box)](LICENSE.md)
+[![License](https://img.shields.io/github/license/cortexlib/box)](LICENSE)
 ![Current Release](https://img.shields.io/github/v/release/cortexlib/box)
 ![DDS Version](https://img.shields.io/badge/DDS%20Version-alpha--6-blue)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B%20Standard-C%2B%2B20-red)

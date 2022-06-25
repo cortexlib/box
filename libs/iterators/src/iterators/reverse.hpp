@@ -41,7 +41,6 @@ namespace cortex
     /// for reversed traversel through a container.
     /// 
     /// @tparam _Iterator 
-    
     template<typename _Iterator>
     class reverse_iterator
     {

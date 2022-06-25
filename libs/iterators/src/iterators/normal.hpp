@@ -43,7 +43,6 @@ namespace cortex
     /// 
     /// @tparam _Iterator The underlying type of the iterator.
     /// @tparam _Container Allows classes to create different types of iterators even if the _Iterator type is the same.
-    
     template<typename _Iterator, typename _Container>
     class normal_iterator
     {
