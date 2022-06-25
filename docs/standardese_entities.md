@@ -86,23 +86,23 @@
     
       - [`enumerate`](doc_enumerate.md#standardese-cortex__enumerate-_Tp-_Iterator---_Tp--int-int-) - Moves a container to the iterable\_wrapper object.
     
-      - [`normal_iterator`](doc_normal.md#standardese-cortex)
+      - [`normal_iterator`](doc_normal.md#standardese-cortex__normal_iterator-_Iterator-_Container-) - Normal Iterator
     
       - [`operator!=`](doc_box.md#standardese-cortex__operator---_ElemL-_ElemR--box-_ElemL-const--box-_ElemR-const--) - Compares two matrices for inequality.
     
-      - [`operator<`](doc_column.md#standardese-cortex__operator--_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than Operator
+      - [`operator<`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than Operator
     
-      - [`operator<=`](doc_column.md#standardese-cortex__operator---_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Less Than or Equal Operator
+      - [`operator<=`](doc_row.md#standardese-cortex__operator---_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than or Equal Operator
     
       - [`operator<=>`](doc_two_dim.md#standardese-cortex__operator----_IteratorL-_IteratorR--two_dim_iterator-_IteratorL-const--two_dim_iterator-_IteratorR-const--) - Spaceship Operator Overload.
     
       - [`operator==`](doc_two_dim.md#standardese-cortex__operator---_IteratorL-_IteratorR--two_dim_iterator-_IteratorL-const--two_dim_iterator-_IteratorR-const--) - Equality Operator Overload.
     
-      - [`operator>`](doc_column.md#standardese-cortex__operator--_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Greater Than Operator Overload
+      - [`operator>`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Greater Than Operator
     
-      - [`operator>=`](doc_column.md#standardese-cortex__operator---_Iterator--column_iterator-_Iterator-const--column_iterator-_Iterator-const--) - Greater Than or Equal Operator
+      - [`operator>=`](doc_row.md#standardese-cortex__operator---_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Greater Than or Equal Operator
     
-      - [`reverse_iterator`](doc_reverse.md#standardese-cortex)
+      - [`reverse_iterator`](doc_reverse.md#standardese-cortex__reverse_iterator-_Iterator-) - Reverse Iterator
     
       - [`row_iterator`](doc_row.md#standardese-cortex__row_iterator-_Iterator-) - Row Iterator
     
@@ -112,4 +112,4 @@
 
   - ## Namespace `std`
     
-      - [`swap`](http://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search=std::swap\<T\>\(cortex::box\<T\>&,cortex::box\<T\>&\)) - Uses std::swaps to swap the contents of two matrices.
+      - [`swap`](http://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search=std::swap\<T\>\(cortex::box\<T\>&,cortex::box\<T\>&\)) - Uses std::swap to swap the contents of two matrices.

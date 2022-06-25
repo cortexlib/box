@@ -18,7 +18,7 @@ namespace cortex
 
 Two Dimensional Iterator Base Class
 
-two\_dim\_iterator.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
+two\_dim.hpp \\author Tyler Swann (oraqlle@github.com) \\version 1.0.1 \\date 2022-05-20
 
 \\ingroup %iterators
 

@@ -64,7 +64,7 @@ namespace std
 
 Two Dimensional Access To Contiguous Data
 
-box \\author Tyler Swann (oraqlle@github.com) \\version 2.3.0 \\date 12-06-2022
+box.hpp \\author Tyler Swann (oraqlle@github.com) \\version 2.3.0 \\date 12-06-2022
 
 \\copyright Copyright (c) 2022
 
@@ -1792,7 +1792,7 @@ template <typename T>
 void swap(cortex::box<T>& x, cortex::box<T>& y) noexcept;
 ```
 
-Uses std::swaps to swap the contents of two matrices.
+Uses std::swap to swap the contents of two matrices.
 
 Swaps the contents of two matrices if they are of the same type.
 

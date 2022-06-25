@@ -1,15 +1,15 @@
 // -*- C++ -*- Header compatibility <normal.hpp>
 
-/// @brief Adapts a non-object iterator to an object iterator 
+/// \brief Adapts a non-object iterator to an object iterator 
 /// without changing its semantics.
-/// @file normal.hpp
-/// @author Tyler Swann (oraqlle@github.com)
-/// @version 1.1.0
-/// @date 2022-03-31
+/// \file normal.hpp
+/// \author Tyler Swann (oraqlle@github.com)
+/// \version 1.1.0
+/// \date 2022-03-31
 /// 
-/// @ingroup %iterators
+/// \ingroup %iterators
 /// 
-/// @copyright Copyright (c) 2022
+/// \copyright Copyright (c) 2022
 
 #ifndef CORTEX_NORMAL_ITERATOR_HPP
 #   define CORTEX_NORMAL_ITERATOR_HPP 
@@ -33,16 +33,16 @@
 namespace cortex
 {    
     
-    /// @brief Normal Iterator
+    /// \brief Normal Iterator
     /// 
-    /// @details This iterator is used to adapt non-iterator 
+    /// \details This iterator is used to adapt non-iterator 
     /// objects into objects (ie. pointers). %normal_iterator 
     /// does not change the semantics of the operators of the
     /// underlying iterator of type _Iterator.
     /// 
     /// 
-    /// @tparam _Iterator The underlying type of the iterator.
-    /// @tparam _Container Allows classes to create different types of iterators even if the _Iterator type is the same.
+    /// \tparam _Iterator The underlying type of the iterator.
+    /// \tparam _Container Allows classes to create different types of iterators even if the _Iterator type is the same.
     template<typename _Iterator, typename _Container>
     class normal_iterator
     {
@@ -67,9 +67,9 @@ namespace cortex
 
 
         
-        /// @brief Default Constructor
+        /// \brief Default Constructor
         /// 
-        /// @details Initialises m_current to the default value of 
+        /// \details Initialises m_current to the default value of 
         /// the type _Iterator. 
         /// 
         /// [constexpr]
@@ -81,15 +81,15 @@ namespace cortex
 
 
         
-        /// @brief Copy Constructor.
+        /// \brief Copy Constructor.
         /// 
-        /// @details Uses copy semantics to initialise m_current from
+        /// \details Uses copy semantics to initialise m_current from
         /// another %normal_iterator object. Uses the \code {.cpp}
         /// %normal_iterator::base()
-        /// @endcode
+        /// \endcode
         /// method to access __other's underlying iterator. 
         /// 
-        /// @param __other const reference to a %normal_iterator object.
+        /// \param __other const reference to a %normal_iterator object.
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -100,14 +100,14 @@ namespace cortex
 
 
         
-        /// @brief Copy Constructor. 
+        /// \brief Copy Constructor. 
         /// 
-        /// @details Uses copy semantics to initialise m_current from
+        /// \details Uses copy semantics to initialise m_current from
         /// an object as the same type as iterator_type. Because the 
         /// the underlying types must be the same, m_current can be 
         /// directly initialised from __other.
         /// 
-        /// @param __other const reference to an object of type iterator_type.
+        /// \param __other const reference to an object of type iterator_type.
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -118,14 +118,14 @@ namespace cortex
 
 
         
-        /// @brief Move Constructor.
+        /// \brief Move Constructor.
         /// 
-        /// @details Deletes the default move constructor that the 
+        /// \details Deletes the default move constructor that the 
         /// compiler might generate that would move the \code {.cpp}
         /// %normal_iterator::m_current
-        /// @endcode from another %normal_iterator.
+        /// \endcode from another %normal_iterator.
         /// 
-        /// @param __other rvalue reference to a %normal_iterator object.
+        /// \param __other rvalue reference to a %normal_iterator object.
         /// 
         /// [constexpr]
         /// [deleted.constructor] 
@@ -135,13 +135,13 @@ namespace cortex
 
 
         
-        /// @brief Move Constructor.
+        /// \brief Move Constructor.
         /// 
-        /// @details Deletes the default move constructor that the 
+        /// \details Deletes the default move constructor that the 
         /// compiler might generate that would move __other from its 
         /// source.
         /// 
-        /// @param __other rvalue reference to an object of type iterator_type.
+        /// \param __other rvalue reference to an object of type iterator_type.
         /// 
         /// [constexpr]
         /// [deleted.constructor] 
@@ -151,23 +151,23 @@ namespace cortex
 
 
         
-        /// @note No explicit destructor is required.
+        /// \note No explicit destructor is required.
         
 
 
 
         
-        /// @brief Copy Assignment.
+        /// \brief Copy Assignment.
         /// 
-        /// @details Uses copy semantics to assign m_current to the
+        /// \details Uses copy semantics to assign m_current to the
         /// underlying iterator of __other. Uses the \code {.cpp}
         /// %normal_iterator::base()
-        /// @endcode
+        /// \endcode
         /// method to access __other's underlying iterator.
         /// Returns a reference to this.
         /// 
-        /// @param __other
-        /// @return constexpr normal_iterator&
+        /// \param __other
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -182,14 +182,14 @@ namespace cortex
 
 
         
-        /// @brief Copy Assignment.
+        /// \brief Copy Assignment.
         /// 
-        /// @details Uses copy semantics to assign m_current to 
+        /// \details Uses copy semantics to assign m_current to 
         /// __other. __other must be of type iterator_type.
         /// Returns a reference to this.
         /// 
-        /// @param __other
-        /// @return constexpr normal_iterator&
+        /// \param __other
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -202,12 +202,12 @@ namespace cortex
         }
 
         
-        /// @brief Dereference Operator Overload. 
+        /// \brief Dereference Operator Overload. 
         /// 
-        /// @details Dereferences m_current and returns a 
+        /// \details Dereferences m_current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// @return constexpr reference (T&)
+        /// \return constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -217,12 +217,12 @@ namespace cortex
 
 
         
-        /// @brief Dereference Operator Overload. 
+        /// \brief Dereference Operator Overload. 
         /// 
-        /// @details Dereferences m_current and returns a 
+        /// \details Dereferences m_current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// @return constexpr reference (T&)
+        /// \return constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -233,14 +233,14 @@ namespace cortex
 
 
         
-        /// @brief Arrow Deference Operator Overload. 
+        /// \brief Arrow Deference Operator Overload. 
         /// 
-        /// @details Returns a pointer of m_current, this
+        /// \details Returns a pointer of m_current, this
         /// allows for access to the internal members if
         /// m_current is a class or object type throught
         /// "indirection chaining".
         /// 
-        /// @return constexpr pointer (T*)
+        /// \return constexpr pointer (T*)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -253,14 +253,14 @@ namespace cortex
         { return _S_to_pointer(m_current); }
 
         
-        /// @brief Arrow Deference Operator Overload. 
+        /// \brief Arrow Deference Operator Overload. 
         /// 
-        /// @details Returns a pointer of m_current, this
+        /// \details Returns a pointer of m_current, this
         /// allows for access to the internal members if
         /// m_current is a class or object type throught
         /// "indirection chaining".
         /// 
-        /// @return constexpr pointer (T*)
+        /// \return constexpr pointer (T*)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -275,12 +275,12 @@ namespace cortex
 
 
         
-        /// @brief Prefix Increment Operator Overload.
+        /// \brief Prefix Increment Operator Overload.
         /// 
-        /// @details Applies the prefix increment operator to
+        /// \details Applies the prefix increment operator to
         /// m_current and returns a reference to this.
         /// 
-        /// @return constexpr normal_iterator&
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -293,15 +293,15 @@ namespace cortex
 
 
         
-        /// @brief Postfix Increment Operator Overload.
+        /// \brief Postfix Increment Operator Overload.
         /// 
-        /// @details Constructs a new iterator from m_current
+        /// \details Constructs a new iterator from m_current
         /// while applying the postifix increment operator on
         /// Construction. This effectively increments m_current 
         /// for this while creating a new iterator with its 
         /// m_current equal to the last value of this m_current. 
         /// 
-        /// @return constexpr normal_iterator
+        /// \return constexpr normal_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -311,12 +311,12 @@ namespace cortex
 
 
         
-        /// @brief Prefix Decrement Operator Overload.
+        /// \brief Prefix Decrement Operator Overload.
         /// 
-        /// @details Applies the prefix decrement operator to
+        /// \details Applies the prefix decrement operator to
         /// m_current and returns a reference to this.
         /// 
-        /// @return constexpr normal_iterator&
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -329,15 +329,15 @@ namespace cortex
 
 
         
-        /// @brief Postfix Decrement Operator Overload.
+        /// \brief Postfix Decrement Operator Overload.
         /// 
-        /// @details Constructs a new iterator from m_current
+        /// \details Constructs a new iterator from m_current
         /// while applying the postifix decrement operator on
         /// construction. This effectively decrements m_current 
         /// for this while creating a new iterator with its 
         /// m_current equal to the last value of this m_current. 
         /// 
-        /// @return constexpr normal_iterator
+        /// \return constexpr normal_iterator
         /// 
         /// [constexpr]
         /// [noexcept] 
@@ -347,14 +347,14 @@ namespace cortex
 
 
         
-        /// @brief Subscript Operator Overload.
+        /// \brief Subscript Operator Overload.
         /// 
-        /// @details Accesses the element at an offset to m_current's
+        /// \details Accesses the element at an offset to m_current's
         /// location in memory and returns a reference to the value
         /// stored at that location.
         /// 
-        /// @param __n 
-        /// @return constexpr reference (T&)
+        /// \param __n 
+        /// \return constexpr reference (T&)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -365,14 +365,14 @@ namespace cortex
 
 
         
-        /// @brief Additive Assignment Operator Overload. 
+        /// \brief Additive Assignment Operator Overload. 
         ///
-        /// @details Increases the m_current's pointer value by 
+        /// \details Increases the m_current's pointer value by 
         /// __step and assigns m_current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// @param __step 
-        /// @return constexpr normal_iterator&
+        /// \param __step 
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -385,14 +385,14 @@ namespace cortex
 
 
         
-        /// @brief Subtraction Assignment Operator Overload. 
+        /// \brief Subtraction Assignment Operator Overload. 
         ///
-        /// @details Decreases the m_current's pointer value by 
+        /// \details Decreases the m_current's pointer value by 
         /// __step and assigns m_current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// @param __step 
-        /// @return constexpr normal_iterator&
+        /// \param __step 
+        /// \return constexpr normal_iterator&
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -405,13 +405,13 @@ namespace cortex
 
 
         
-        /// @brief Addition Operator Overload.
+        /// \brief Addition Operator Overload.
         /// 
-        /// @details Constructs a new iterator from the addition 
+        /// \details Constructs a new iterator from the addition 
         /// of m_current and __step. 
         /// 
-        /// @param __step 
-        /// @return constexpr normal_iterator 
+        /// \param __step 
+        /// \return constexpr normal_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -421,13 +421,13 @@ namespace cortex
 
 
         
-        /// @brief Subtraction Operator Overload.
+        /// \brief Subtraction Operator Overload.
         /// 
-        /// @details Constructs a new iterator from the subtraction 
+        /// \details Constructs a new iterator from the subtraction 
         /// of m_current and __step. 
         /// 
-        /// @param __step 
-        /// @return constexpr normal_iterator 
+        /// \param __step 
+        /// \return constexpr normal_iterator 
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -437,11 +437,11 @@ namespace cortex
 
 
         
-        /// @brief Base Member Access. 
+        /// \brief Base Member Access. 
         /// 
-        /// @details Returns a raw copy of m_current.
+        /// \details Returns a raw copy of m_current.
         /// 
-        /// @return constexpr iterator_type (_Iterator)
+        /// \return constexpr iterator_type (_Iterator)
         /// 
         /// [constexpr]
         /// [noexcept]
@@ -468,31 +468,31 @@ namespace cortex
 #if __cpp_lib_three_way_comparison /// C++20
 
     
-    /// @brief Equality Operator Overload.
+    /// \brief Equality Operator Overload.
     /// 
-    /// @details Performs an equality comparison of two 
+    /// \details Performs an equality comparison of two 
     /// %normal_iterator's whose _Iterator types can be 
     /// different but of they share the same _Container 
     /// type. 
     /// 
-    /// @requires 
+    /// \requires 
     /// That the underlying _Iterator types are equality comparable.
-    /// @code {.cpp}
+    /// \code {.cpp}
     /// { __lhsI == __rhsI } -> bool
-    /// @endcode
+    /// \endcode
     /// 
-    /// @exception 
+    /// \exception 
     /// Ensures that __lhs.base() == __rhs.base() is noexcept.
     /// 
-    /// @note _IteratorL can equal _IteratorR.
+    /// \note _IteratorL can equal _IteratorR.
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr true
-    /// @return constexpr false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr true
+    /// \return constexpr false
     /// 
     /// [constexpr]
     /// [noexcept.noexcept-clause]
@@ -509,27 +509,27 @@ namespace cortex
 
 
     
-    /// @brief Spaceship Operator Overload.
+    /// \brief Spaceship Operator Overload.
     /// 
-    /// @details Performs a 3-way comparison of two 
+    /// \details Performs a 3-way comparison of two 
     /// %normal_iterator's whose _Iterator types can be 
     /// different but of they share the same _Container 
     /// type. 
     /// 
-    /// @exception \code {.cpp}
+    /// \exception \code {.cpp}
     /// code noexcept (noexcept(__lhs.base() <=> __rhs.base()))
-    /// @endcode
+    /// \endcode
     /// Ensures that the 3-way comparison of __lhs.base() and 
     /// __rhs.base() is noexcept.
     /// 
-    /// @note _IteratorL can equal _IteratorR.
+    /// \note _IteratorL can equal _IteratorR.
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr auto of [std::strong_ordering]
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr auto of [std::strong_ordering]
     ///                         : [std::weak_ordering]
     ///                         : [std::partial_ordering]
     /// 
@@ -548,20 +548,20 @@ namespace cortex
 
 
     
-    /// @brief Equality Operator Overload.
+    /// \brief Equality Operator Overload.
     /// 
-    /// @details Performs an equality comparison of two 
+    /// \details Performs an equality comparison of two 
     /// %normal_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -576,18 +576,18 @@ namespace cortex
 
 
    
-    /// @brief Equality Operator Overload.
+    /// \brief Equality Operator Overload.
     /// 
-    /// @details Performs an equality comparison of two 
+    /// \details Performs an equality comparison of two 
     /// %normal_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -602,20 +602,20 @@ namespace cortex
 
 
     
-    /// @brief Inequality Operator Overload.
+    /// \brief Inequality Operator Overload.
     /// 
-    /// @details Performs an equality comparison of two 
+    /// \details Performs an equality comparison of two 
     /// %normal_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type.  
     /// 
-    /// @tparam _IteratorL
-    /// @tparam _IteratorR
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL
+    /// \tparam _IteratorR
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -630,18 +630,18 @@ namespace cortex
 
 
     
-    /// @brief Inequality Operator Overload.
+    /// \brief Inequality Operator Overload.
     /// 
-    /// @details Performs an inequality comparison of two 
+    /// \details Performs an inequality comparison of two 
     /// %normal_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -656,20 +656,20 @@ namespace cortex
 
 
     
-    /// @brief Less-than Operator Overload.
+    /// \brief Less-than Operator Overload.
     /// 
-    /// @details Performs an less-than comparison of two 
+    /// \details Performs an less-than comparison of two 
     /// %normal_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -684,18 +684,18 @@ namespace cortex
 
 
     
-    /// @brief Less-than Operator Overload.
+    /// \brief Less-than Operator Overload.
     /// 
-    /// @details Performs an less-than comparison of two 
+    /// \details Performs an less-than comparison of two 
     /// %normal_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -710,20 +710,20 @@ namespace cortex
 
 
     
-    /// @brief Greater-than Operator Overload.
+    /// \brief Greater-than Operator Overload.
     /// 
-    /// @details Performs an greater-than comparison of two 
+    /// \details Performs an greater-than comparison of two 
     /// %normal_iterator's whose _Iterator types can be
     /// different but of they share the same _Container
     /// type. 
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -738,18 +738,18 @@ namespace cortex
 
 
     
-    /// @brief Greater-than Operator Overload.
+    /// \brief Greater-than Operator Overload.
     /// 
-    /// @details Performs an greater-than comparison 
+    /// \details Performs an greater-than comparison 
     /// of two %normal_iterator's whose _Iterator types 
     /// and _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -764,20 +764,20 @@ namespace cortex
 
 
     
-    /// @brief Less-than-or-Equal Operator Overload.
+    /// \brief Less-than-or-Equal Operator Overload.
     /// 
-    /// @details Performs an less-than-or-equal comparison 
+    /// \details Performs an less-than-or-equal comparison 
     /// of two %normal_iterator's whose _Iterator types can 
     /// be different but of they share the same _Container
     /// type. 
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -792,18 +792,18 @@ namespace cortex
 
 
     
-    /// @brief Less-than-or-Equal Operator Overload.
+    /// \brief Less-than-or-Equal Operator Overload.
     /// 
-    /// @details Performs an less-than-or-equal comparison 
+    /// \details Performs an less-than-or-equal comparison 
     /// of two %normal_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -818,20 +818,20 @@ namespace cortex
 
 
     
-    /// @brief Greater-than-or-Equal Operator Overload.
+    /// \brief Greater-than-or-Equal Operator Overload.
     /// 
-    /// @details Performs an greater-than-or-equal comparison 
+    /// \details Performs an greater-than-or-equal comparison 
     /// of two %normal_iterator's whose _Iterator types can 
     /// be different but of they share the same _Container
     /// type. 
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -846,18 +846,18 @@ namespace cortex
 
 
     
-    /// @brief Greater-than-or-Equal Operator Overload.
+    /// \brief Greater-than-or-Equal Operator Overload.
     /// 
-    /// @details Performs an greater-than-or-equal comparison 
+    /// \details Performs an greater-than-or-equal comparison 
     /// of two %normal_iterator's whose _Iterator types and 
     /// _Container type are the same. 
     /// 
-    /// @tparam _Iterator
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline true
-    /// @return constexpr inline false
+    /// \tparam _Iterator
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline true
+    /// \return constexpr inline false
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -875,22 +875,22 @@ namespace cortex
 
 
     
-    /// @brief Difference Operator Overload.
+    /// \brief Difference Operator Overload.
     /// 
-    /// @details Performs a difference operation between 
+    /// \details Performs a difference operation between 
     /// two %normal_iterator's whose _Iterator types can 
     /// be different but share the same _Container type.
     /// 
-    /// @tparam _IteratorL 
-    /// @tparam _IteratorR
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @if __cplusplus >= 201103L
-    /// @return constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
-    /// @ifnot __cplusplus >= 201103L
-    /// @return inline typename normal_iterator<_IteratorL, _Container>::difference_type
-    /// @endif
+    /// \tparam _IteratorL 
+    /// \tparam _IteratorR
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \if __cplusplus >= 201103L
+    /// \return constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
+    /// \ifnot __cplusplus >= 201103L
+    /// \return inline typename normal_iterator<_IteratorL, _Container>::difference_type
+    /// \endif
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -912,17 +912,17 @@ namespace cortex
 
 
     
-    /// @brief Difference Operator Overload.
+    /// \brief Difference Operator Overload.
     /// 
-    /// @details Performs a difference operation between
+    /// \details Performs a difference operation between
     /// two %normal_iterator's whose _Iterator types and
     /// _Container type are the same.
     /// 
-    /// @tparam _Iterator 
-    /// @tparam _Container 
-    /// @param __lhs 
-    /// @param __rhs 
-    /// @return constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type 
+    /// \tparam _Iterator 
+    /// \tparam _Container 
+    /// \param __lhs 
+    /// \param __rhs 
+    /// \return constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -937,17 +937,17 @@ namespace cortex
 
 
     
-    /// @brief Addition Operator Overload.
+    /// \brief Addition Operator Overload.
     /// 
-    /// @details Takes an offset \param __n and a %normal_iterator 
-    /// @param __i. Constructs a new %normal_iterator by adding
-    /// @param __n to \param __i.base().
+    /// \details Takes an offset \param __n and a %normal_iterator 
+    /// \param __i. Constructs a new %normal_iterator by adding
+    /// \param __n to \param __i.base().
     /// 
-    /// @tparam _Iterator 
-    /// @tparam _Container 
-    /// @param __n 
-    /// @param __i 
-    /// @return constexpr inline normal_iterator<_Iterator, _Container> 
+    /// \tparam _Iterator 
+    /// \tparam _Container 
+    /// \param __n 
+    /// \param __i 
+    /// \return constexpr inline normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -962,18 +962,18 @@ namespace cortex
 
 
     
-    /// @brief Makes a new %normal_iterator.
+    /// \brief Makes a new %normal_iterator.
     /// 
-    /// @details An adaptor for turning STL container iterators 
+    /// \details An adaptor for turning STL container iterators 
     /// into %normal_iterators.
     /// 
-    /// @code {.cpp}
+    /// \code {.cpp}
     /// auto it = make_normal_iterator<std::container>(c.begin()); 
-    /// @endcode 
+    /// \endcode 
     /// 
-    /// @tparam _Container 
-    /// @param __i 
-    /// @return constexpr auto -> normal_iterator<typename _Container::iterator, _Container>
+    /// \tparam _Container 
+    /// \param __i 
+    /// \return constexpr auto -> normal_iterator<typename _Container::iterator, _Container>
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -988,19 +988,19 @@ namespace cortex
 
 
     
-    /// @brief Makes a new %normal_iterator.
+    /// \brief Makes a new %normal_iterator.
     /// 
-    /// @details An adaptor for making C-style array pointers 
+    /// \details An adaptor for making C-style array pointers 
     /// into %normal_iterators.
     /// 
-    /// @code {.cpp}
+    /// \code {.cpp}
     /// auto it =  make_normal<int*, int[]>(arr);
-    /// @endcode
+    /// \endcode
     /// 
-    /// @tparam _Iterator 
-    /// @tparam _Container 
-    /// @param __i 
-    /// @return constexpr auto -> normal_iterator<_Iterator, _Container> 
+    /// \tparam _Iterator 
+    /// \tparam _Container 
+    /// \param __i 
+    /// \return constexpr auto -> normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
@@ -1015,22 +1015,22 @@ namespace cortex
 
 #   if __cplusplus >= 201703L /// C++17
     
-    /// @brief Makes a new %normal_iterator.
+    /// \brief Makes a new %normal_iterator.
     /// 
-    /// @details An adaptor for making STL container iterators
+    /// \details An adaptor for making STL container iterators
     /// into %normal_iterators using C++17 type deduction.
     /// 
-    /// @code {.cpp}
+    /// \code {.cpp}
     /// auto it = make_normal(c, c.begin());
-    /// @endcode
+    /// \endcode
     /// 
-    /// @note \param __c has the attribute [[maybe_unused]]
+    /// \note \param __c has the attribute [[maybe_unused]]
     /// 
-    /// @tparam _Container 
-    /// @tparam _Iterator 
-    /// @param __c 
-    /// @param __i 
-    /// @return constexpr auto -> normal_iterator<_Iterator, _Container> 
+    /// \tparam _Container 
+    /// \tparam _Iterator 
+    /// \param __c 
+    /// \param __i 
+    /// \return constexpr auto -> normal_iterator<_Iterator, _Container> 
     /// 
     /// [constexpr]
     /// [noexcept]
