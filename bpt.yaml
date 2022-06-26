@@ -1,0 +1,38 @@
+name: cortexlib
+version: 0.12.0
+
+test-dependencies:
+  - catch2@2.13.9 using main
+
+
+readme: README.md
+
+
+description: |
+  A collection of libraries for containers, algorithms, iterators, utilities and more C++20.
+
+
+libraries: 
+  - name: iterators
+    path: libs/iterators
+    test-dependencies: [catch2@2.13.9]
+  - name: concepts
+    path: libs/concepts
+    test-dependencies: [catch2@2.13.9]
+  - name: box
+    path: libs/box
+    using: [iterators, concepts]
+    test-dependencies: [catch2@2.13.9]
+
+
+repository: https://github.com/oraqlle/cortexlib
+
+
+documentation: https://github.com/oraqlle/cortexlib/tree/main/docs
+
+
+license: MIT
+
+
+authors:
+  - Tyler Swann <oraqlle@github.com>
