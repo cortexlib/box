@@ -6,6 +6,9 @@ _build/*
 deps/*
 _deps/*
 
+# Source Distributions
+*.tar.gz
+
 # Project configuration folders
 .vscode/*
 

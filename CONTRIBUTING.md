@@ -5,14 +5,13 @@ Any and all contributions are always very much appreciated. However, to make sur
 
 ## Prerequisites
 
-1. Ensure you have a working version of BPT/DDS. Most current version of the tool is alpha-6.
-   - [Installing DDS](https://dds.pizza/docs/tut/install.html).
+1. bpt, available [here](https://bpt.pizza/docs/latest/tut/install.html).
 2. You have a working C++ compiler. Check the package's [README.md](README.md) you are contributing to for build  details.
 
 ## Steps to Contribute
 
 1. Fork the repository.
-2. Create a new branch based on the `develop` branch (`git checkout -b your_branch develop`).
+2. Create a new branch based on the `dev` branch (`git checkout -b your_branch dev`).
    If your contribution is a bug fix, you should name your branch `bugfix/xxx`;
    for a feature, it should be `feature/xxx`. Otherwise, just use your good
    judgment. Consistent naming of branches is appreciated since it makes the
@@ -24,7 +23,7 @@ Any and all contributions are always very much appreciated. However, to make sur
    running the tests:
 
    ```sh
-   dds build -t :c++<std-version>:<compiler>
+   bpt build -t :c++<std-version>:<compiler>
    ```
 
    The code should compile successfully and an all tests should say they passed in the terminal.
@@ -71,6 +70,6 @@ points you should watch out for:
   `#include`s within each block should be sorted in alphabetical order.
 - Use your own judgment and stick to the style of the surrounding code.
 
-## Notice
+## Note
 
 These Contributing guidelines are derived and based on the [CONTRIBUTING.md](https://github.com/boostorg/hana/blob/master/CONTRIBUTING.md?plain=1) file from the [Boost Hana](https://github.com/boostorg/hana) repository.

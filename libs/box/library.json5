@@ -1,7 +1,0 @@
-{
-    name: 'box',
-    uses: [
-        'cortex/iterator',
-        'cortex/concepts'
-    ]
-}
