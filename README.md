@@ -2,7 +2,7 @@
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/github/license/cortexlib/box)](LICENSE)
-![Current Release](https://img.shields.io/github/v/release/oraqlle/cortexlib)
+![Current Release](https://img.shields.io/github/v/release/oraqlle/cortexlib?include_prereleases)
 ![bpt Version](https://img.shields.io/badge/bpt%20version%3A-1.0.0--beta--1-blue)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B%20Standard-C%2B%2B20-red)
 ![GCC](https://img.shields.io/badge/GCC-11.1.0-yellow)
