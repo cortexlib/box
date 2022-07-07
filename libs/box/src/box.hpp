@@ -16,7 +16,7 @@
 #ifndef CORTEX_BOX_H
 #define CORTEX_BOX_H 1
 
-#include </home/tyler/dev/cortexlib/libs/concepts/src/concepts.hpp>
+#include <concepts.hpp>
 #include <iterators/column.hpp>
 #include <iterators/normal.hpp>
 #include <iterators/row.hpp>
