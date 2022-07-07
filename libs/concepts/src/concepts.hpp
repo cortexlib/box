@@ -1,4 +1,4 @@
-/// -*- C++ -*- Header compatiability <concpets.hpp>
+/// -*- C++ -*- Header compatiability <concepts.hpp>
 
 /// \brief Some generalised concepts for use throughout
 /// the Cortex Library
@@ -28,7 +28,6 @@ namespace cortex
     /// \details A concept for which any type is valid.
     /// 
     /// \tparam _Tp 
-    
     template<typename _Tp>
     concept Any = true;
 
@@ -38,7 +37,6 @@ namespace cortex
     /// \details A concept for which no type is valid.
     /// 
     /// \tparam _Tp 
-    
     template<typename _Tp>
     concept None = false;
 
@@ -50,7 +48,6 @@ namespace cortex
     /// is a number.
     /// 
     /// \tparam _Tp 
-    
     template<typename _Tp>
     concept Number = std::integral<_Tp> || std::floating_point<_Tp>;
 
@@ -61,7 +58,6 @@ namespace cortex
     /// concept for a type that is an object.
     /// 
     /// \tparam _Tp 
-    
     template<typename _Tp>
     concept Object = std::is_object_v<_Tp>;
     

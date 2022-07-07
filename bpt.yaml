@@ -12,17 +12,16 @@ description: |
   A collection of libraries for containers, algorithms, iterators, utilities and more C++20.
 
 
-libraries: 
-  - name: iterators
-    path: libs/iterators
-    test-dependencies: [catch2@2.13.9]
+libraries:
   - name: concepts
     path: libs/concepts
-    test-dependencies: [catch2@2.13.9]
+
+  - name: iterators
+    path: libs/iterators
+
   - name: box
     path: libs/box
-    using: [iterators, concepts]
-    test-dependencies: [catch2@2.13.9]
+    using: [concepts, iterators]
 
 
 repository: https://github.com/oraqlle/cortexlib
