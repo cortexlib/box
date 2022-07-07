@@ -23,8 +23,8 @@
 
 #if __cplusplus >= 202002L
 
+#include <algorithm>
 #include <cassert>
-#include <execution>
 #include <functional>
 #include <initializer_list>
 #include <memory>
