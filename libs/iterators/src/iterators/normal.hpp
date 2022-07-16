@@ -76,8 +76,7 @@ namespace cortex
         /// the type _Iterator. 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr normal_iterator() noexcept
         : m_current(_Iterator()) { }
 
@@ -96,7 +95,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator(const normal_iterator& __other) noexcept
         : m_current(__other.base()) { }
 
@@ -114,7 +112,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator(const iterator_type& __other) noexcept
         : m_current(__other) { }
         
@@ -175,7 +172,6 @@ namespace cortex
         /// [constexpr]
         /// [noexcept]
         /// [operator.assigment]
-        
         constexpr normal_iterator& operator= (const normal_iterator& __other) noexcept
         { 
             m_current = __other.base(); 
@@ -197,7 +193,6 @@ namespace cortex
         /// [constexpr]
         /// [noexcept]
         /// [operator.assigment]
-        
         constexpr normal_iterator& operator= (const iterator_type& __other) noexcept
         {
             m_current = __other; 
@@ -214,7 +209,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr reference operator* () noexcept
         { return *m_current; }
 
@@ -230,7 +224,6 @@ namespace cortex
         /// [constexpr]
         /// [noexcept]
         /// [trailing.const]
-        
         constexpr reference operator* () const noexcept
         { return *m_current; }
 
@@ -247,7 +240,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr pointer operator-> () noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
@@ -268,7 +260,6 @@ namespace cortex
         /// [constexpr]
         /// [noexcept]
         /// [trailing.const]
-        
         constexpr pointer operator-> () const noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
@@ -287,7 +278,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator& operator++ () noexcept
         {
             ++m_current; 
@@ -308,7 +298,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept] 
-        
         constexpr normal_iterator operator++ (int) noexcept
         { return normal_iterator(m_current++); }
 
@@ -323,7 +312,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator& operator-- () noexcept
         {
             --m_current;
@@ -344,7 +332,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept] 
-        
         constexpr normal_iterator operator-- (int) noexcept
         { return normal_iterator(m_current--); }
 
@@ -362,7 +349,6 @@ namespace cortex
         /// [constexpr]
         /// [noexcept]
         /// ![range.validation]
-        
         constexpr reference operator[] (difference_type __n) noexcept
         { return m_current[__n]; }
 
@@ -379,7 +365,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator& operator+= (difference_type __step) noexcept
         {
             m_current += __step;
@@ -399,7 +384,6 @@ namespace cortex
         /// 
         /// [constexpr]
         /// [noexcept]
-        
         constexpr normal_iterator& operator-= (difference_type __step) noexcept
         {
             m_current -= __step;
@@ -417,8 +401,7 @@ namespace cortex
         /// \returns constexpr normal_iterator 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr normal_iterator operator+ (difference_type __step) const noexcept
         { return normal_iterator(m_current + __step); }
 
@@ -433,8 +416,7 @@ namespace cortex
         /// \returns constexpr normal_iterator 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr normal_iterator operator- (difference_type __step) const noexcept
         { return normal_iterator(m_current - __step); }
 

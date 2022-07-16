@@ -74,8 +74,7 @@ namespace cortex
         /// the type _Iterator. 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator() noexcept
         : m_current(iterator_type())
         {}
@@ -111,8 +110,7 @@ namespace cortex
         /// \param __other const reference to a %reverse_iterator object.
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator(const reverse_iterator& __other) noexcept
         : m_current(__other.base()) { }
         
@@ -244,8 +242,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator&
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator& operator++ () noexcept
         {
             --m_current;
@@ -284,8 +281,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator&
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator& operator-- () noexcept
         {
             ++m_current;
@@ -344,8 +340,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator&
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator& operator+= (difference_type __step) noexcept
         {
             m_current -= __step;
@@ -364,8 +359,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator&
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator& operator-= (difference_type __step) noexcept
         {
             m_current += __step;
@@ -383,8 +377,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator operator+ (difference_type __step) const noexcept
         { return reverse_iterator(m_current - __step); }
 
@@ -399,8 +392,7 @@ namespace cortex
         /// \returns constexpr reverse_iterator 
         /// 
         /// [constexpr]
-        /// [noexcept]
-        
+        /// [noexcept] 
         constexpr reverse_iterator operator- (difference_type __step) const noexcept
         { return reverse_iterator(m_current + __step); }
 
