@@ -8,7 +8,7 @@ TEST_CASE("Basic Enumeration")
     
     for (auto [i, e] : v | cortex::adaptors::enumerate(0))
     {
-        REQUIRE(e == v[i]);
+        REQUIRE(e == v[std::size_t(i)]);
     }
 }
 
@@ -57,6 +57,6 @@ TEST_CASE("Eliding the Adaptor Namespace")
     
     for (auto [i, e] : v | enumerate(0))
     {
-        REQUIRE(e == v[i]);
+        REQUIRE(e == v[std::size_t(i)]);
     }
 }
