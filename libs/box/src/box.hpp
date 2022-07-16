@@ -34,12 +34,11 @@
 
 #define lexicographical_compare_bug 1
 
-/// \group cortex The cortex namespace.
 namespace cortex
 {
     /// \brief Box - Two Dimensional Array
     ///
-    /// \group box The box class and associated operators.
+    /// \group box Box
     ///
     /// \details Box is a two dimensional generic container.
     /// It aims to support expressive methods and operations
@@ -2138,8 +2137,7 @@ namespace cortex
 
     /// \brief Compares two matrices for equality.
     ///
-    /// \group box
-    /// \group box.operators.compare Part of the operator set on boxes that perform comparisons. 
+    /// \group box Part of the operator set on boxes that perform comparisons. 
     ///
     /// \details Uses std::equal to compare the matrices.
     /// Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
@@ -2190,7 +2188,6 @@ namespace cortex
     /// \brief Spaceship Operator for matrices.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Uses std::lexicographical_compare_three_way to
     /// compare the matrices and generates the !=, <, >, <=, >=
@@ -2213,7 +2210,6 @@ namespace cortex
     /// \brief Compares two matrices for inequality.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Inverts the result of a equality comparison
     /// between two matrices.
@@ -2235,7 +2231,6 @@ namespace cortex
     /// less than another.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \tparam _ElemL
     /// \tparam _ElemR
@@ -2254,7 +2249,6 @@ namespace cortex
     /// greater than another.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Uses less than comparison and swaps the
     /// order of the arguments.
@@ -2276,7 +2270,6 @@ namespace cortex
     /// less than or equal to another.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Uses less than comparison and swaps the
     /// order of the arguments. If the rhs box is less
@@ -2300,7 +2293,6 @@ namespace cortex
     /// greater than or equal to another.
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Inverts the result of a less than comparison
     /// between the two matrices.
@@ -2323,7 +2315,6 @@ namespace cortex
     /// \brief Scalar Equality Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2362,7 +2353,6 @@ namespace cortex
     /// \brief Scalar Inequality Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2401,7 +2391,6 @@ namespace cortex
     /// \brief Scalar Less-Then Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2440,7 +2429,6 @@ namespace cortex
     /// \brief Scalar Greater-Then Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2479,7 +2467,6 @@ namespace cortex
     /// \brief Scalar Less-Then-Equal Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2519,7 +2506,6 @@ namespace cortex
     /// \brief Scalar Greater-Then-Equal Comparison
     ///
     /// \group box
-    /// \group box.operators.compare
     ///
     /// \details Compares each value within the box to a given
     /// scalar. Creates a bit mask (or boolean mask) of the values
@@ -2561,7 +2547,6 @@ namespace cortex
     /// \brief Addition Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `+` operator.
     /// Calls lx `add` method on rx and returns 
@@ -2582,7 +2567,6 @@ namespace cortex
     /// \brief Additon Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `+=` operator.
     /// Calls lx `add` method on rx and assigns the result 
@@ -2616,7 +2600,6 @@ namespace cortex
     /// \brief Subtraction Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `-` operator.
     /// Calls lx `sub` method on rx and returns 
@@ -2637,7 +2620,6 @@ namespace cortex
     /// \brief Subtraction Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `-=` operator.
     /// Calls lx `sub` method on rx and assigns the result 
@@ -2671,7 +2653,6 @@ namespace cortex
     /// \brief Multiplication Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `*` operator.
     /// Calls lx `mul` method on rx and returns
@@ -2692,7 +2673,6 @@ namespace cortex
     /// \brief Multiplication Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `*` operator.
     /// Calls bx `mul` method on scalar sx and returns
@@ -2713,7 +2693,6 @@ namespace cortex
     /// \brief Multiplication Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `*` operator.
     /// Calls bx `mul` method on scalar sx and returns
@@ -2734,7 +2713,6 @@ namespace cortex
     /// \brief Multiplication Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `*=` operator.
     /// Calls lx `mul` method on rx and assigns the result
@@ -2765,7 +2743,6 @@ namespace cortex
     /// \brief Multiplication Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `*=` operator.
     /// Calls bx `mul` method on scalar sx and assigns 
@@ -2795,7 +2772,6 @@ namespace cortex
     /// \brief Division Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `/` operator.
     /// Calls lx `div` method on rx and returns
@@ -2816,7 +2792,6 @@ namespace cortex
     /// \brief Division Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `/` operator.
     /// Calls bx `div` method on scalar sx and returns
@@ -2837,7 +2812,6 @@ namespace cortex
     /// \brief Division Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `/=` operator.
     /// Calls lx `div` method on rx and assigns the result
@@ -2868,7 +2842,6 @@ namespace cortex
     /// \brief Division Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `/=` operator.
     /// Calls bx `div` method on scalar sx and assigns 
@@ -2898,7 +2871,6 @@ namespace cortex
     /// \brief Modulo Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `%` operator.
     /// Calls lx `mod` method on rx and returns
@@ -2919,7 +2891,6 @@ namespace cortex
     /// \brief Modulo Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `%` operator.
     /// Calls bx `mod` method on scalar sx and returns
@@ -2940,7 +2911,6 @@ namespace cortex
     /// \brief Modulo Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `%=` operator.
     /// Calls lx `mod` method on rx and assigns the result
@@ -2971,7 +2941,6 @@ namespace cortex
     /// \brief Modulo Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `%=` operator.
     /// Calls bx `mod` method on scalar sx and assigns 
@@ -3001,7 +2970,6 @@ namespace cortex
     /// \brief Bit And Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `&` operator.
     /// Calls lx `bit_and` method on rx and returns
@@ -3022,7 +2990,6 @@ namespace cortex
     /// \brief Bit And Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `&` operator.
     /// Calls bx `bit_and` method on scalar sx and returns
@@ -3043,7 +3010,6 @@ namespace cortex
     /// \brief Bit And Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `&` operator.
     /// Calls bx `bit_and` method on scalar sx and returns
@@ -3064,7 +3030,6 @@ namespace cortex
     /// \brief Bit And Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `&=` operator.
     /// Calls lx `bit_and` method on rx and assigns the result
@@ -3095,7 +3060,6 @@ namespace cortex
     /// \brief Bit And Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `*=` operator.
     /// Calls bx `bit_and` method on scalar sx and assigns 
@@ -3125,7 +3089,6 @@ namespace cortex
     /// \brief Bit Or Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `*` operator.
     /// Calls lx `bit_or` method on rx and returns
@@ -3146,7 +3109,6 @@ namespace cortex
     /// \brief Bit Or Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `*` operator.
     /// Calls bx `bit_or` method on scalar sx and returns
@@ -3167,7 +3129,6 @@ namespace cortex
     /// \brief Bit Or Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `*` operator.
     /// Calls bx `bit_or` method on scalar sx and returns
@@ -3188,7 +3149,6 @@ namespace cortex
     /// \brief Bit Or Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `*=` operator.
     /// Calls lx `bit_or` method on rx and assigns the result
@@ -3219,7 +3179,6 @@ namespace cortex
     /// \brief Bit Or Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `*=` operator.
     /// Calls bx `bit_or` method on scalar sx and assigns 
@@ -3249,7 +3208,6 @@ namespace cortex
     /// \brief Bit Xor Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `^` operator.
     /// Calls lx `bit_xor` method on rx and returns
@@ -3270,7 +3228,6 @@ namespace cortex
     /// \brief Bit Xor Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `^` operator.
     /// Calls bx `bit_xor` method on scalar sx and returns
@@ -3291,7 +3248,6 @@ namespace cortex
     /// \brief Bit Xor Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `^` operator.
     /// Calls bx `bit_xor` method on scalar sx and returns
@@ -3312,7 +3268,6 @@ namespace cortex
     /// \brief Bit Xor Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `^=` operator.
     /// Calls lx `bit_xor` method on rx and assigns the result
@@ -3343,7 +3298,6 @@ namespace cortex
     /// \brief Bit Xor Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `^=` operator.
     /// Calls bx `bit_xor` method on scalar sx and assigns 
@@ -3373,7 +3327,6 @@ namespace cortex
     /// \brief Left Bit Shift Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `<<` operator.
     /// Calls lx `shift_left` method on rx and returns
@@ -3394,7 +3347,6 @@ namespace cortex
     /// \brief Left Bit Shift Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `<<` operator.
     /// Calls bx `shift_left` method on scalar sx and returns
@@ -3415,7 +3367,6 @@ namespace cortex
     /// \brief Left Bit Shift Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `<<=` operator.
     /// Calls lx `shift_left` method on rx and assigns the result
@@ -3446,7 +3397,6 @@ namespace cortex
     /// \brief Left Bit Shift Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `<<=` operator.
     /// Calls bx `shift_left` method on scalar sx and assigns 
@@ -3476,7 +3426,6 @@ namespace cortex
     /// \brief Right Bit Shift Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `>>` operator.
     /// Calls lx `shift_right` method on rx and returns
@@ -3497,7 +3446,6 @@ namespace cortex
     /// \brief Right Bit Shift Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `>>` operator.
     /// Calls bx `shift_right` method on scalar sx and returns
@@ -3518,7 +3466,6 @@ namespace cortex
     /// \brief Right Bit Shift Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \detail Operator overload for `>>=` operator.
     /// Calls lx `shift_right` method on rx and assigns the result
@@ -3549,7 +3496,6 @@ namespace cortex
     /// \brief Right Bit Shift Assignment Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     /// 
     /// \details Operator overload for `>>=` operator.
     /// Calls bx `shift_right` method on scalar sx and assigns 
@@ -3579,7 +3525,6 @@ namespace cortex
     /// \brief Bitwise Not Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `~` operator.
     /// Calls bx `bit_not` method and returns the 
@@ -3597,7 +3542,6 @@ namespace cortex
     /// \brief Transpose Operator
     ///
     /// \group box
-    /// \group box.operators Part of the set of operators that can be used on boxes.
     ///
     /// \details Operator overload for `!` operator.
     /// Calls bx `transpose` method and returns the

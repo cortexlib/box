@@ -1,5 +1,7 @@
 # Project files
 
+  - [`box.hpp`](doc_box.md#standardese-box-hpp) - Two Dimensional Access To Contiguous Data.
+
   - [`column.hpp`](doc_column.md#standardese-column-hpp) - Column Iterator
 
   - [`concepts.hpp`](doc_concepts.md#standardese-concepts-hpp) - Some generalised concepts for use throughout the Cortex Library

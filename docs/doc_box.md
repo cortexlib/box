@@ -1,13 +1,13 @@
 # Header file `box.hpp`
 
 ``` cpp
-#include "iterators/column.hpp"
+#include <concepts.hpp>
 
-#include "concepts.hpp"
+#include <iterators/column.hpp>
 
-#include "iterators/normal.hpp"
+#include <iterators/normal.hpp>
 
-#include "iterators/row.hpp"
+#include <iterators/row.hpp>
 
 #define CORTEX_BOX_H
 
@@ -15,42 +15,31 @@
 
 namespace cortex
 {
+    //=== Box ===//
     template <typename T, typename Alloc = std::allocator<T>>>
     class box;
-
     template <typename _ElemL, typename _ElemR>
     bool operator==(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemL, typename _ElemR>
     bool operator!=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemL, typename _ElemR>
     bool operator<(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemL, typename _ElemR>
     bool operator>(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemL, typename _ElemR>
     bool operator<=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemL, typename _ElemR>
     bool operator>=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-
     template <typename _ElemT>
     box<bool> operator==(box<_ElemT> const& bx, _ElemT const& scalar);
-
     template <typename _ElemT>
     box<bool> operator!=(box<_ElemT> const& bx, _ElemT const& scalar);
-
     template <typename _ElemT>
     box<bool> operator<(box<_ElemT> const& bx, _ElemT const& scalar);
-
     template <typename _ElemT>
     box<bool> operator>(box<_ElemT> const& bx, _ElemT const& scalar);
-
     template <typename _ElemT>
     box<bool> operator<=(box<_ElemT> const& bx, _ElemT const& scalar);
-
     template <typename _ElemT>
     box<bool> operator>=(box<_ElemT> const& bx, _ElemT const& scalar);
 }
@@ -66,7 +55,7 @@ Two Dimensional Access To Contiguous Data.
 
 Author: Tyler Swann (oraqlle@github.com)
 
-Header Version: v2.3.1
+Header Version: v2.3.3
 
 Date: 25-06-2022
 
@@ -76,10 +65,10 @@ Copyright: Copyright (c) 2022
 
 box.hpp
 
-### Class `cortex::box`
+### Box
 
 ``` cpp
-template <typename T, typename Alloc = std::allocator<T>>>
+(1) template <typename T, typename Alloc = std::allocator<T>>>
 class box
 {
 public:
@@ -249,6 +238,42 @@ public:
 
     constexpr auto lrotate() const;
 };
+
+(2) template <typename _ElemL, typename _ElemR>
+bool operator==(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(3) template <typename _ElemL, typename _ElemR>
+bool operator!=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(4) template <typename _ElemL, typename _ElemR>
+bool operator<(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(5) template <typename _ElemL, typename _ElemR>
+bool operator>(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(6) template <typename _ElemL, typename _ElemR>
+bool operator<=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(7) template <typename _ElemL, typename _ElemR>
+bool operator>=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
+
+(8) template <typename _ElemT>
+box<bool> operator==(box<_ElemT> const& bx, _ElemT const& scalar);
+
+(9) template <typename _ElemT>
+box<bool> operator!=(box<_ElemT> const& bx, _ElemT const& scalar);
+
+(10) template <typename _ElemT>
+box<bool> operator<(box<_ElemT> const& bx, _ElemT const& scalar);
+
+(11) template <typename _ElemT>
+box<bool> operator>(box<_ElemT> const& bx, _ElemT const& scalar);
+
+(12) template <typename _ElemT>
+box<bool> operator<=(box<_ElemT> const& bx, _ElemT const& scalar);
+
+(13) template <typename _ElemT>
+box<bool> operator>=(box<_ElemT> const& bx, _ElemT const& scalar);
 ```
 
 Box - Two Dimensional Array
@@ -1598,288 +1623,6 @@ Left Rotate
 Rotates the box 90 degrees counter-clockwise. Inverts the dimension sizes of the box. If `this` box is empty, an empty box is returned with no memory allocated to it.
 
 -----
-
------
-
-### Function `cortex::operator==`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator==(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares two matrices for equality.
-
-*Requires:* Matrix elements support equality comparison that converts to a bool
-
-*Return values:* true
-
-*Return values:* false
-
-Uses std::equal to compare the matrices. Takes at least O(n) where n = columns x rows = lhs.end() - lhs.begin()
-
-\\exception Operation is has no exception iff the comparison between box elements is noexcept and std::equal is noexcept across the range
-
-#### Template parameters
-
-  - `_ElemR` - \\rparam lhsE type: \[\_ElemL\] \\rparam rhsE type: \[\_ElemR\]
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator!=`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator!=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares two matrices for inequality.
-
-*Return values:* true
-
-*Return values:* false
-
-Inverts the result of a equality comparison between two matrices.
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator<`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator<(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares if a box is lexicographically less than another.
-
-*Return values:* true
-
-*Return values:* false
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator>`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator>(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares if a box is lexicographically greater than another.
-
-*Return values:* true
-
-*Return values:* false
-
-Uses less than comparison and swaps the order of the arguments.
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator<=`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator<=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares if a box is lexicographically less than or equal to another.
-
-*Return values:* true
-
-*Return values:* false
-
-Uses less than comparison and swaps the order of the arguments. If the rhs box is less than the lhs box, then the lhs box cannot be less then or equal to the rhs box.
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator>=`
-
-``` cpp
-template <typename _ElemL, typename _ElemR>
-bool operator>=(box<_ElemL> const& lhs, box<_ElemR> const& rhs);
-```
-
-Compares if a box is lexicographically greater than or equal to another.
-
-*Return values:* true
-
-*Return values:* false
-
-Inverts the result of a less than comparison between the two matrices.
-
-#### Parameters
-
-  - `lhs` - type: \[box\<\_ElemL\>\] | qualifiers: \[const, ref\]
-  - `rhs` - type: \[box\<\_ElemR\>\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator==`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator==(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Equality Comparison
-
-*Requires:* Comparison of scalar type and box type support equality comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are equal as true and the everything else as false.
-
-\\exception Operation is noexcept iff the inequlity comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator!=`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator!=(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Inequality Comparison
-
-*Requires:* Comparison of scalar type and box type support inequality comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are inequal as true and the everything else as false.
-
-\\exception Operation is noexcept iff the inequlity comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator<`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator<(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Less-Then Comparison
-
-*Requires:* Comparison of scalar type and box type support less-than comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are less-than as true and the everything else as false.
-
-\\exception Operation is noexcept iff the less-than comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator>`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator>(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Greater-Then Comparison
-
-*Requires:* Comparison of scalar type and box type support greater-than comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are greater-than as true and the everything else as false.
-
-\\exception Operation is noexcept iff the greater-than comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator<=`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator<=(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Less-Then-Equal Comparison
-
-*Requires:* Comparison of scalar type and box type support less-than comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are less-than-eqaul as true and the everything else as false.
-
-\\exception Operation is noexcept iff the less-than-equal comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
-
------
-
-### Function `cortex::operator>=`
-
-``` cpp
-template <typename _ElemT>
-box<bool> operator>=(box<_ElemT> const& bx, _ElemT const& scalar);
-```
-
-Scalar Greater-Then-Equal Comparison
-
-*Requires:* Comparison of scalar type and box type support greater-than-equal comparison that results in a bool.
-
-*Return values:* box\<bool\>
-
-Compares each value within the box to a given scalar. Creates a bit mask (or boolean mask) of the values that are greater-than-equal as true and the everything else as false.
-
-\\exception Operation is noexcept iff the greater-than-equal comparison between the scalar and the box element’s types is noexcept.
-
-#### Parameters
-
-  - `bx` - type: \[box\<\_ElemT\>\] | qualifiers: \[const, ref\]
-  - `scalar` - type: \[\_ElemT\] | qualifiers: \[const, ref\]
 
 -----
 
