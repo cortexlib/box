@@ -27,8 +27,8 @@ namespace cortex
     /// 
     /// \details A concept for which any type is valid.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
+    /// \tparam T 
+    template<typename T>
     concept Any = true;
 
 
@@ -36,8 +36,8 @@ namespace cortex
     /// 
     /// \details A concept for which no type is valid.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
+    /// \tparam T 
+    template<typename T>
     concept None = false;
 
 
@@ -47,9 +47,9 @@ namespace cortex
     /// and std::floating_point to define a concept for a type that
     /// is a number.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept Number = std::integral<_Tp> || std::floating_point<_Tp>;
+    /// \tparam T 
+    template<typename T>
+    concept Number = std::integral<T> || std::floating_point<T>;
 
     
     /// \brief Object Concept
@@ -57,9 +57,9 @@ namespace cortex
     /// \details Uses the type trait std::is_object_v to define a
     /// concept for a type that is an object.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept Object = std::is_object_v<_Tp>;
+    /// \tparam T 
+    template<typename T>
+    concept Object = std::is_object_v<T>;
     
     
     /// \brief AddableWith Concept
@@ -79,9 +79,9 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the addition operation.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept Addable = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept Addable = requires (T __lhs, T __rhs)
     { __lhs + __rhs; };
 
 
@@ -103,9 +103,9 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the subtraction operation.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept Subtractable = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept Subtractable = requires (T __lhs, T __rhs)
     { __lhs - __rhs; };
 
 
@@ -127,9 +127,9 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the multiplication operation.
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept Multiplicable = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept Multiplicable = requires (T __lhs, T __rhs)
     { __lhs * __rhs; };
 
 
@@ -151,9 +151,9 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the division operation.
     /// 
-    /// \tparam _Tp
-    template<typename _Tp>
-    concept Divisible = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T
+    template<typename T>
+    concept Divisible = requires (T __lhs, T __rhs)
     { __lhs / __rhs; };
 
 
@@ -175,9 +175,9 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the modulus operation.
     /// 
-    /// \tparam _Tp
-    template<typename _Tp>
-    concept Modulo = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T
+    template<typename T>
+    concept Modulo = requires (T __lhs, T __rhs)
     { __lhs % __rhs; };
 
 
@@ -200,9 +200,9 @@ namespace cortex
     /// of operation for the bitwise `exclusive-or` (`xor`) 
     /// operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept BitXor = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept BitXor = requires (T __lhs, T __rhs)
     { __lhs ^ __rhs; };
 
 
@@ -224,9 +224,9 @@ namespace cortex
     /// \details Determines if a type is withinthe domain
     /// of operation for the bitwise `and` operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept BitAnd = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept BitAnd = requires (T __lhs, T __rhs)
     { __lhs & __rhs; };
 
 
@@ -248,9 +248,9 @@ namespace cortex
     /// \details Determines if a type is withinthe domain
     /// of operation for the bitwise `or` operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept BitOr = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept BitOr = requires (T __lhs, T __rhs)
     { __lhs | __rhs; };
 
 
@@ -272,9 +272,9 @@ namespace cortex
     /// \details Determines if a type is withinthe domain
     /// of operation for the `left bitwise shift` operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept LeftBitShift = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept LeftBitShift = requires (T __lhs, T __rhs)
     { __lhs << __rhs; };
 
 
@@ -296,9 +296,9 @@ namespace cortex
     /// \details Determines if a type is withinthe domain
     /// of operation for the `right bitwise shift` operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept RightBitShift = requires (_Tp __lhs, _Tp __rhs)
+    /// \tparam T 
+    template<typename T>
+    concept RightBitShift = requires (T __lhs, T __rhs)
     { __lhs >> __rhs; };
 
 
@@ -307,9 +307,9 @@ namespace cortex
     /// \details Checks if a type is within the domain of
     /// operation for the bitwise `not` operation. 
     /// 
-    /// \tparam _Tp 
-    template<typename _Tp>
-    concept BitNot = requires (_Tp __val)
+    /// \tparam T 
+    template<typename T>
+    concept BitNot = requires (T __val)
     { ~__val; };
 
     
@@ -318,7 +318,7 @@ namespace cortex
     /// \details Determines if a type is within the domain
     /// of operation for the increment operation.
     /// 
-    /// \tparam _Tp
+    /// \tparam T
     template<typename _Container, typename _Index>
     concept Subscriptible = 
     requires 
