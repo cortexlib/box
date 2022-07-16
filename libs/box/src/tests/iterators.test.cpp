@@ -49,7 +49,9 @@ TEST_CASE("Iterators")
             cortex::box<int> bx = { { 1, 2 }
                                   , { 3, 4 } };
 
-            for (auto v { 4 }; auto& elem : bx | std::views::reverse)
+            std::reverse(bx.begin(), bx.end());
+
+            for (auto v { 4 }; auto& elem : bx)
             
                 REQUIRE(elem == v--);
         }
@@ -61,14 +63,19 @@ TEST_CASE("Iterators")
             std::iota(bx.begin(), bx.end(), 1);
 
             auto value { 20 };
-            for (auto& elem : bx | std::views::reverse)
+            std::reverse(bx.begin(), bx.end());
+
+            for (auto& elem : bx)
             {
                 REQUIRE(elem == value--);
                 elem *= 2;
             }
 
             value = 20;
-            for (auto& elem : bx | std::views::reverse)
+            std::reverse(bx.begin(), bx.end());
+            std::reverse(bx.begin(), bx.end());
+            
+            for (auto& elem : bx)
                 REQUIRE(elem == 2 * value--);
         }
     }

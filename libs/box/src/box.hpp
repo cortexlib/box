@@ -28,7 +28,6 @@
 #include <functional>
 #include <initializer_list>
 #include <memory>
-#include <ranges>
 #include <span>
 #include <utility>
 #include <vector>
@@ -2087,6 +2086,7 @@ namespace cortex
 
         constexpr size_type _M_size(size_type __rows, size_type __columns) const noexcept
         { return __rows * __columns != 0 ? __rows * __columns : std::max(__rows, __columns); }
+
 
         constexpr size_type _M_index(size_type __row, size_type __column) const noexcept
         { return __row * columns() + __column; }

@@ -6,7 +6,7 @@
 ![bpt Version](https://img.shields.io/badge/bpt%20version%3A-1.0.0--beta--1-blue)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B%20Standard-C%2B%2B20-red)
 ![GCC](https://img.shields.io/badge/GCC-11.1.0-yellow)
-![Clang](https://img.shields.io/badge/clang-❌-yellow)
+![Clang](https://img.shields.io/badge/clang-10.0.0-yellow)
 
 ## Welcome
 
