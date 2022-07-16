@@ -1,7 +1,5 @@
 # Project index
 
-  - [`CORTEX_BOX_H`](doc_box.md#standardese-box-hpp)
-
   - [`CORTEX_COLUMN_ITERATOR_HPP`](doc_column.md#standardese-column-hpp)
 
   - [`CORTEX_CONCEPTS_H`](doc_concepts.md#standardese-concepts-hpp)
@@ -22,7 +20,7 @@
     
       - [`AddableWith`](doc_concepts.md#standardese-cortex__AddableWith) - AddableWith Concept
     
-      - [`Any`](doc_concepts.md#standardese-cortex)
+      - [`Any`](doc_concepts.md#standardese-cortex__Any) - Any Concept
     
       - [`BitAnd`](doc_concepts.md#standardese-cortex__BitAnd) - BitAnd Concept
     
@@ -56,11 +54,11 @@
     
       - [`MultiplicableWith`](doc_concepts.md#standardese-cortex__MultiplicableWith) - MultiplicableWith Concept
     
-      - [`None`](doc_concepts.md#standardese-cortex)
+      - [`None`](doc_concepts.md#standardese-cortex__None) - None Concept
     
-      - [`Number`](doc_concepts.md#standardese-cortex)
+      - [`Number`](doc_concepts.md#standardese-cortex__Number) - Number Concept
     
-      - [`Object`](doc_concepts.md#standardese-cortex)
+      - [`Object`](doc_concepts.md#standardese-cortex__Object) - Object Concept
     
       - [`RightBitShift`](doc_concepts.md#standardese-cortex__RightBitShift) - RightBitShift Concept
     
@@ -80,15 +78,11 @@
         
           - [`operator|`](doc_enumerate.md#standardese-cortex__adaptors__operator--_Container-_Tp-_Up--_Containerconst--enumerate_proxy-_Tp-_Up-const--) - operator| overload for piping the index\_proxy object returnd by indexed to the enumerate function.
     
-      - [`box`](doc_box.md#standardese-cortex__box-T-Alloc-) - Box - Two Dimensional Array
-    
       - [`column_iterator`](doc_column.md#standardese-cortex__column_iterator-_Iterator-) - Column Iterator
     
       - [`enumerate`](doc_enumerate.md#standardese-cortex__enumerate-_Tp-_Iterator---_Tp--int-int-) - Moves a container to the iterable\_wrapper object.
     
       - [`normal_iterator`](doc_normal.md#standardese-cortex__normal_iterator-_Iterator-_Container-) - Normal Iterator
-    
-      - [`operator!=`](doc_box.md#standardese-cortex__operator---_ElemL-_ElemR--box-_ElemL-const--box-_ElemR-const--) - Compares two matrices for inequality.
     
       - [`operator<`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than Operator
     
@@ -107,9 +101,3 @@
       - [`row_iterator`](doc_row.md#standardese-cortex__row_iterator-_Iterator-) - Row Iterator
     
       - [`two_dim_iterator`](doc_two_dim.md#standardese-cortex__two_dim_iterator-_Iterator-) - Two Dimensional Iterator
-
-  - [`lexicographical_compare_bug`](doc_box.md#standardese-box-hpp)
-
-  - ## Namespace `std`
-    
-      - [`swap`](http://en.cppreference.com/mwiki/index.php?title=Special%3ASearch&search=std::swap\<T\>\(cortex::box\<T\>&,cortex::box\<T\>&\)) - Uses std::swap to swap the contents of two matrices.

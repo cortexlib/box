@@ -75,6 +75,54 @@ Copyright: Copyright (c) 2022
 
 concepts.hpp
 
+### Unexposed entity `cortex::Any`
+
+``` cpp
+template <typename _Tp>concept Any = true;
+```
+
+Any Concept
+
+A concept for which any type is valid.
+
+-----
+
+### Unexposed entity `cortex::None`
+
+``` cpp
+template <typename _Tp>concept None = false;
+```
+
+None Concept
+
+A concept for which no type is valid.
+
+-----
+
+### Unexposed entity `cortex::Number`
+
+``` cpp
+template <typename _Tp>concept Number = std::integral<_Tp> || std::floating_point<_Tp>;
+```
+
+Number Concept
+
+Uses the standard C++20 concepts for std::integral and std::floating\_point to define a concept for a type that is a number.
+
+-----
+
+### Unexposed entity `cortex::Object`
+
+``` cpp
+template <typename _Tp>concept Object = std::is_object_v<_Tp>;
+```
+
+Object Concept
+
+Uses the type trait std::is\_object\_v to define a concept for a type that is an object.
+
+-----
+
 ### Unexposed entity `cortex::AddableWith`
 
 ``` cpp
