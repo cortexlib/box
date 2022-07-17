@@ -1325,19 +1325,19 @@ namespace cortex
         /// \requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `AddableWith`.
         ///
-        /// \tparam _ElemT
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto : A box whose element's type
         /// is the sum of the two input matrices element types.
-        template <Addable _ElemT>
-            requires AddableWith<value_type, _ElemT>
+        template <Addable E>
+            requires AddableWith<value_type, E>
         constexpr auto 
-        add(const box<_ElemT>& other) const
+        add(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::add - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() + std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() + std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::plus{});
 
@@ -1355,19 +1355,19 @@ namespace cortex
         /// \requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `SubtractableWith`.
         ///
-        /// \tparam _ElemT
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto : A box whose element type
         /// is the difference of the two input matrices element types.
-        template <Subtractable _ElemT>
-            requires SubtractableWith<value_type, _ElemT>
+        template <Subtractable E>
+            requires SubtractableWith<value_type, E>
         constexpr auto 
-        sub(const box<_ElemT>& other) const
+        sub(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::sub - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() - std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() - std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::minus{});
 
@@ -1385,19 +1385,19 @@ namespace cortex
         /// \requires The type of this box's elements and the type
         /// of the passed box's element types satisfy `MultiplicableWith`.
         ///
-        /// \tparam _ElemT
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto : A box whose element type
         /// is the product of the two input matrices element types.
-        template <Any _ElemT>
-            requires MultiplicableWith<value_type, _ElemT>
+        template <Any E>
+            requires MultiplicableWith<value_type, E>
         constexpr auto 
-        mul(const box<_ElemT>& other) const
+        mul(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::mult - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() * std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() * std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::multiplies{});
 
@@ -1410,22 +1410,22 @@ namespace cortex
         /// of the box by a 'scalar' value.
         ///
         /// \requires The type of this box's elements are `MultiplicableWith`
-        /// the type denoted _ScalarT.
-        /// \requires The type denoted _ScalarT be `Multiplicable`.
+        /// the type denoted S.
+        /// \requires The type denoted S be `Multiplicable`.
         ///
         ///
-        /// \tparam _ScalarT
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires MultiplicableWith<value_type, _ScalarT>
+        template <Any S>
+            requires MultiplicableWith<value_type, S>
         constexpr auto 
-        mul(const _ScalarT& scalar) const
+        mul(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::mul - scalar multiplication on empty box");
 
-            box<decltype(std::declval<value_type>() * std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() * std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem * scalar; });
 
@@ -1447,19 +1447,19 @@ namespace cortex
         /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         ///
-        /// \tparam _ElemT
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto : A box whose element type
         /// is the quotient of the two input matrices element types.
-        template <Any _ElemT>
-            requires DivisibleWith<value_type, _ElemT>
+        template <Any E>
+            requires DivisibleWith<value_type, E>
         constexpr auto 
-        div(const box<_ElemT>& other) const
+        div(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::div - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() / std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() / std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::divides{});
 
@@ -1472,27 +1472,27 @@ namespace cortex
         /// by a 'scalar' value.
         ///
         /// \requires The type of this box's elements are `DivisibleWith`
-        /// the type denoted _ScalarT.
-        /// \requires The type denoted _ScalarT be `Divisible`.
+        /// the type denoted S.
+        /// \requires The type denoted S be `Divisible`.
         ///
         /// \notes When dividing two matrices, if both matrices elements
         /// are integrals, the division is performed as integer divisionbx.
         /// due to C++ rounding rules.
         ///
-        /// \tparam _ScalarT
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires DivisibleWith<value_type, _ScalarT>
+        template <Any S>
+            requires DivisibleWith<value_type, S>
         constexpr auto 
-        div(const _ScalarT& scalar) const
+        div(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::div - scalar division on empty box");
             if (scalar == 0)
                 throw std::invalid_argument("In box::div - scalar is zero");
 
-            box<decltype(std::declval<value_type>() / std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() / std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem / scalar; });
 
@@ -1507,18 +1507,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: Modulo | requires: ModuloWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: Modulo | requires: ModuloWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires ModuloWith<value_type, _ElemT>
+        template <Any E>
+            requires ModuloWith<value_type, E>
         constexpr auto 
-        mod(const box<_ElemT>& other) const
+        mod(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::mod - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() % std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() % std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::modulus{});
 
@@ -1534,18 +1534,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: Modulo | requires: ModuloWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: Modulo | requires: ModuloWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires ModuloWith<value_type, _ScalarT>
+        template <Any S>
+            requires ModuloWith<value_type, S>
         constexpr auto 
-        mod(const _ScalarT& scalar) const
+        mod(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::mod - scalar modulus on empty box");
 
-            box<decltype(std::declval<value_type>() % std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() % std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem % scalar; });
 
@@ -1560,18 +1560,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: BitXor | requires: BitXorWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: BitXor | requires: BitXorWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires BitXorWith<value_type, _ElemT>
+        template <Any E>
+            requires BitXorWith<value_type, E>
         constexpr auto 
-        bit_xor(const box<_ElemT>& other) const
+        bit_xor(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_xor - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() ^ std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() ^ std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::bit_xor{});
 
@@ -1587,18 +1587,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: BitXor | requires: BitXorWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: BitXor | requires: BitXorWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires BitXorWith<value_type, _ScalarT>
+        template <Any S>
+            requires BitXorWith<value_type, S>
         constexpr auto 
-        bit_xor(const _ScalarT& scalar) const
+        bit_xor(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_xor - scalar bit_xor on empty box");
 
-            box<decltype(std::declval<value_type>() ^ std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() ^ std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem ^ scalar; });
 
@@ -1614,18 +1614,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: BitAnd | requires: BitAndWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: BitAnd | requires: BitAndWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires BitAndWith<value_type, _ElemT>
+        template <Any E>
+            requires BitAndWith<value_type, E>
         constexpr auto 
-        bit_and(const box<_ElemT>& other) const
+        bit_and(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_and - dimensions do not match");
 
-            box<decltype(std::declval<value_type>()&  std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>()&  std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::bit_and{});
 
@@ -1641,18 +1641,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: BitAnd | requires: BitAndWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: BitAnd | requires: BitAndWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires BitAndWith<value_type, _ScalarT>
+        template <Any S>
+            requires BitAndWith<value_type, S>
         constexpr auto 
-        bit_and(const _ScalarT& scalar) const
+        bit_and(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_and - scalar bit_and on empty box");
 
-            box<decltype(std::declval<value_type>()&  std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>()&  std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem & scalar; });
 
@@ -1668,18 +1668,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: BitOr | requires: BitOrWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: BitOr | requires: BitOrWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires BitOrWith<value_type, _ElemT>
+        template <Any E>
+            requires BitOrWith<value_type, E>
         constexpr auto 
-        bit_or(const box<_ElemT>& other) const
+        bit_or(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::bit_or - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() | std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() | std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), std::bit_or{});
 
@@ -1695,18 +1695,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: BitOr | requires: BitOrWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: BitOr | requires: BitOrWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires BitOrWith<value_type, _ScalarT>
+        template <Any S>
+            requires BitOrWith<value_type, S>
         constexpr auto 
-        bit_or(const _ScalarT& scalar) const
+        bit_or(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::bit_or - scalar bit_or on empty box");
 
-            box<decltype(std::declval<value_type>() | std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() | std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem | scalar; });
 
@@ -1722,18 +1722,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: LeftBitShift | requires: LeftBitShiftWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires LeftBitShiftWith<value_type, _ElemT>
+        template <Any E>
+            requires LeftBitShiftWith<value_type, E>
         constexpr auto 
-        shift_left(const box<_ElemT>& other) const
+        shift_left(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::shift_left - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() << std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() << std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem << other_elem; });
 
@@ -1749,18 +1749,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: LeftBitShift | requires: LeftBitShiftWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: LeftBitShift | requires: LeftBitShiftWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires LeftBitShiftWith<value_type, _ScalarT>
+        template <Any S>
+            requires LeftBitShiftWith<value_type, S>
         constexpr auto 
-        shift_left(const _ScalarT& scalar) const
+        shift_left(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::shift_left - scalar shift_left on empty box");
 
-            box<decltype(std::declval<value_type>() << std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() << std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem << scalar; });
 
@@ -1776,18 +1776,18 @@ namespace cortex
         /// \exception std::invalid_argument If the dimensions of the boxes
         /// do not match, std::invalid_argument is thrown.
         ///
-        /// \tparam _ElemT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ElemT>
-        /// \param other type: box<_ElemT> | qualifiers: {const, ref}
+        /// \tparam E concept: RightBitShift | requires: RightBitShiftWith<value_type, E>
+        /// \param other type: box<E> | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ElemT>
-            requires RightBitShiftWith<value_type, _ElemT>
+        template <Any E>
+            requires RightBitShiftWith<value_type, E>
         constexpr auto 
-        shift_right(const box<_ElemT>& other) const
+        shift_right(const box<E>& other) const
         {
             if (this->dimensions() != other.dimensions())
                 throw std::invalid_argument("In box::shift_right - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() >> std::declval<_ElemT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() >> std::declval<E>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem >> other_elem; });
 
@@ -1803,18 +1803,18 @@ namespace cortex
         /// \exception std::invalid_argument If the box is empty,
         /// std::invalid_argument is thrown.
         ///
-        /// \tparam _ScalarT concept: RightBitShift | requires: RightBitShiftWith<value_type, _ScalarT>
-        /// \param scalar type: _ScalarT | qualifiers: {const, ref}
+        /// \tparam S concept: RightBitShift | requires: RightBitShiftWith<value_type, S>
+        /// \param scalar type: S | qualifiers: {const, ref}
         /// \returns constexpr auto
-        template <Any _ScalarT>
-            requires RightBitShiftWith<value_type, _ScalarT>
+        template <Any S>
+            requires RightBitShiftWith<value_type, S>
         constexpr auto 
-        shift_right(const _ScalarT& scalar) const
+        shift_right(const S& scalar) const
         {
             if (empty())
                 throw std::invalid_argument("In box::shift_right - scalar shift_right on empty box");
 
-            box<decltype(std::declval<value_type>() >> std::declval<_ScalarT>())> result(this->rows(), this->columns());
+            box<decltype(std::declval<value_type>() >> std::declval<S>())> result(this->rows(), this->columns());
 
             std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem >> scalar; });
 
@@ -2326,26 +2326,26 @@ namespace cortex
     /// \exception Operation is noexcept iff the inequlity comparison
     /// between the scalar and the box element's types is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE == rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator== (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() == std::declval<_ElemT>()))
+    operator== (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() == std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator== (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator== (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE == scalar; });
         return result;
     }
@@ -2364,26 +2364,26 @@ namespace cortex
     /// \exception Operation is noexcept iff the inequlity comparison
     /// between the scalar and the box element's types is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE != rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator!= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() != std::declval<_ElemT>()))
+    operator!= (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() != std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator!= (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator!= (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE != scalar; });
         return result;
     }
@@ -2402,26 +2402,26 @@ namespace cortex
     /// \exception Operation is noexcept iff the less-than comparison
     /// between the scalar and the box element's types is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE < rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator< (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() < std::declval<_ElemT>()))
+    operator< (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() < std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator< (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator< (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE < scalar; });
         return result;
     }
@@ -2440,26 +2440,26 @@ namespace cortex
     /// \exception Operation is noexcept iff the greater-than comparison
     /// between the scalar and the box element's types is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE > rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator> (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator> (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() > std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator> (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator> (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE > scalar; });
         return result;
     }
@@ -2479,26 +2479,26 @@ namespace cortex
     /// \exception Operation is noexcept iff the less-than-equal comparison
     /// between the scalar and the box element's types is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE <= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator<= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator<= (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() > std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator<= (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator<= (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE <= scalar; });
         return result;
     }
@@ -2519,26 +2519,26 @@ namespace cortex
     /// comparison between the scalar and the box element's types
     /// is noexcept.
     ///
-    /// \tparam _ElemT
+    /// \tparam E
     ///
-    /// \param bx type: [box<_ElemT>] | qualifiers: {const, ref}
-    /// \param scalar type: [_ElemT] | qualifiers: {const, ref}
+    /// \param bx type: [box<E>] | qualifiers: {const, ref}
+    /// \param scalar type: [E] | qualifiers: {const, ref}
     /// \returns box<bool>
-    template <typename _ElemT>
+    template <typename E>
 #if __cpluscplus >= 202002L
-        requires requires(_ElemT lhsE, _ElemT rhsE)
+        requires requires(E lhsE, E rhsE)
                 { { lhsE >= rhsE } -> std::convertible_to<bool>; }
     constexpr inline auto
-    operator>= (const box<_ElemT>& bx, const _ElemT& scalar) noexcept(noexcept(std::declval<_ElemT>() > std::declval<_ElemT>()))
+    operator>= (const box<E>& bx, const E& scalar) noexcept(noexcept(std::declval<E>() > std::declval<E>()))
         -> box<bool>
 #else
     inline auto
-    operator>= (const box<_ElemT>& bx, const _ElemT& scalar)
+    operator>= (const box<E>& bx, const E& scalar)
         -> box<bool>
 #endif
     {
         box<bool> result(bx.rows(), bx.columns(), false);
-        std::ranges::transform(bx, result.begin(), [&](const _ElemT& bxE)
+        std::ranges::transform(bx, result.begin(), [&](const E& bxE)
                                { return bxE >= scalar; });
         return result;
     }
@@ -2567,19 +2567,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `+` operator.
-    /// Calls lx `add` method on rx and returns 
-    /// the result. 
+    /// Calls lx `map` function with the `+` operator
+    /// and rx as the other input range.
     /// 
-    /// \tparam _LxT 
-    /// \tparam _RxT 
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Addable
+    /// \tparam R concept: concept: Addable
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Addable _LxT, Addable _RxT>
-        requires AddableWith<_LxT, _RxT>
+    template<Addable L, Addable R>
+        requires AddableWith<L, R>
     constexpr auto
-    operator+ (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.add(rx); }
+    operator+ (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::plus{}); }
 
 
     /// \brief Additon Assignment Operator
@@ -2598,17 +2598,17 @@ namespace cortex
     /// \exception std::invalid_argument Thrown if the left-hand-side
     /// box cannot store the resulting type of the call to `add`.
     /// 
-    /// \tparam _LxT concept: Addable
-    /// \tparam _RxT concept: Addable
-    /// \param lx type: box<_LxT> | qualifiers: [ref]
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Addable
+    /// \tparam R concept: concept: Addable
+    /// \param lx type: box<L> | qualifiers: {ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr void
-    template<Addable _LxT, Addable _RxT>
-        requires AddableWith<_LxT, _RxT>
+    template<Addable L, Addable R>
+        requires AddableWith<L, R>
     constexpr void
-    operator+= (box<_LxT>& lx, const box<_RxT>& rx) 
+    operator+= (box<L>& lx, const box<R>& rx) 
     { 
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().add(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().add(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator+=: left-hand-side box type cannot store the resulting type of the call to `add`.");
         else
             lx = lx.add(rx);
@@ -2620,19 +2620,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `-` operator.
-    /// Calls lx `sub` method on rx and returns 
-    /// the result. 
+    /// Calls lx `map` function with the `-` operator
+    /// and rx as the other input range.
     /// 
-    /// \tparam _LxT 
-    /// \tparam _RxT 
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: Subtractable
+    /// \tparam R concept: Subtractable
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Subtractable _LxT, Subtractable _RxT>
-        requires SubtractableWith<_LxT, _RxT>
+    template<Subtractable L, Subtractable R>
+        requires SubtractableWith<L, R>
     constexpr auto
-    operator- (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.sub(rx); }
+    operator- (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::minus{}); }
 
 
     /// \brief Subtraction Assignment Operator
@@ -2651,17 +2651,17 @@ namespace cortex
     /// \exception std::invalid_argument Thrown if the left-hand-side
     /// box cannot store the resulting type of the call to `sub`.
     /// 
-    /// \tparam _LxT concept: Subtractable
-    /// \tparam _RxT concept: Subtractable
-    /// \param lx type: box<_LxT> | qualifiers: [ref]
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Subtractable
+    /// \tparam R concept: concept: Subtractable
+    /// \param lx type: box<L> | qualifiers: [ref]
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr void
-    template<Subtractable _LxT, Subtractable _RxT>
-        requires SubtractableWith<_LxT, _RxT>
+    template<Subtractable L, Subtractable R>
+        requires SubtractableWith<L, R>
     constexpr void
-    operator-= (box<_LxT>& lx, const box<_RxT>& rx) 
+    operator-= (box<L>& lx, const box<R>& rx) 
     { 
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().sub(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().sub(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator-=: left-hand-side box type cannot store the resulting type of the call to `sub`.");
         else
             lx = lx.sub(rx);
@@ -2673,19 +2673,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `*` operator.
-    /// Calls lx `mul` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `*` operator
+    /// and rx as the other input range.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: Multiplicable
+    /// \tparam R concept: Multiplicable
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires MultiplicableWith<_LxT, _RxT>
+    template<Multiplicable L, Multiplicable R>
+        requires MultiplicableWith<L, R>
     constexpr auto
-    operator* (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.mul(rx); }
+    operator* (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::multiplies{}); }
 
 
     /// \brief Multiplication Operator
@@ -2693,19 +2693,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `*` operator.
-    /// Calls bx `mul` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `*` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires MultiplicableWith<_ElemT, _ScalarT>
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any E, Any S>
+        requires MultiplicableWith<E, S>
     constexpr auto
-    operator* (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.mul(sx); }
+    operator* (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem * sx; }); }
 
 
     /// \brief Multiplication Operator
@@ -2713,19 +2713,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `*` operator.
-    /// Calls bx `mul` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `*` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ScalarT concept: Any
-    /// \tparam _ElemT concept: Any
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ScalarT, Any _ElemT>
-        requires MultiplicableWith<_ScalarT, _ElemT>
+    /// \tparam S concept: Any
+    /// \tparam E concept: Any
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any S, Any E>
+        requires MultiplicableWith<S, E>
     constexpr auto
-    operator* (const _ScalarT& sx, const box<_ElemT>& bx)
-    { return bx.mul(sx); }
+    operator* (const S& sx, const box<E>& bx)
+    { return bx.map([&](const auto& elem){ return sx * elem; }); }
 
 
     /// \brief Multiplication Assignment Operator
@@ -2741,17 +2741,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `mul`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires MultiplicableWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires MultiplicableWith<L, R>
     constexpr void
-    operator*= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator*= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().mul(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().mul(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
         else
             lx = lx.mul(rx);
@@ -2770,17 +2770,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires MultiplicableWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires MultiplicableWith<E, S>
     constexpr void
-    operator*= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator*= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().mul(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().mul(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
         else
             bx = bx.mul(sx);
@@ -2792,19 +2792,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `/` operator.
-    /// Calls lx `div` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `/` operator
+    /// and rx as the other input range.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Divisible
+    /// \tparam R concept: concept: Divisible
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires DivisibleWith<_LxT, _RxT>
+    template<Divisible L, Divisible R>
+        requires DivisibleWith<L, R>
     constexpr auto
-    operator/ (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.div(rx); }
+    operator/ (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::divides{}); }
 
 
     /// \brief Division Operator
@@ -2812,19 +2812,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `/` operator.
-    /// Calls bx `div` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `*` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires DivisibleWith<_ElemT, _ScalarT>
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any E, Any S>
+        requires DivisibleWith<E, S>
     constexpr auto
-    operator/ (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.div(sx); }
+    operator/ (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem / sx; }); }
 
 
     /// \brief Division Assignment Operator
@@ -2840,17 +2840,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `div`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires DivisibleWith<_LxT, _RxT>
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any L, Any R>
+        requires DivisibleWith<L, R>
     constexpr void
-    operator/= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator/= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().div(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().div(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
         else
             lx = lx.div(rx);
@@ -2869,17 +2869,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires DivisibleWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires DivisibleWith<E, S>
     constexpr void
-    operator/= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator/= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().div(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().div(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
         else
             bx = bx.div(sx);
@@ -2891,19 +2891,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `%` operator.
-    /// Calls lx `mod` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `%` operator
+    /// and rx as the other input range.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Modulo
+    /// \tparam R concept: concept: Modulo
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires ModuloWith<_LxT, _RxT>
+    template<Modulo L, Modulo R>
+        requires ModuloWith<L, R>
     constexpr auto
-    operator% (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.mod(rx); }
+    operator% (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::modulus{}); }
 
 
     /// \brief Modulo Operator
@@ -2911,19 +2911,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `%` operator.
-    /// Calls bx `mod` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `%` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires ModuloWith<_ElemT, _ScalarT>
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \returns constexpr auto
+    template<Any E, Any S>
+        requires ModuloWith<E, S>
     constexpr auto
-    operator% (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.mod(sx); }
+    operator% (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem % sx; }); }
 
 
     /// \brief Modulo Assignment Operator
@@ -2939,17 +2939,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `mod`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires ModuloWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires ModuloWith<L, R>
     constexpr void
-    operator%= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator%= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().mod(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().mod(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
         else
             lx = lx.mod(rx);
@@ -2968,17 +2968,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires ModuloWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires ModuloWith<E, S>
     constexpr void
-    operator%= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator%= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().mod(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().mod(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
         else
             bx = bx.mod(sx);
@@ -2990,19 +2990,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `&` operator.
-    /// Calls lx `bit_and` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `&` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: BitAnd
+    /// \tparam R concept: concept: BitAnd
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires BitAndWith<_LxT, _RxT>
+    template<BitAnd L, BitAnd R>
+        requires BitAndWith<L, R>
     constexpr auto
-    operator& (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.bit_and(rx); }
+    operator& (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::bit_and{}); }
 
 
     /// \brief Bit And Operator
@@ -3013,16 +3013,16 @@ namespace cortex
     /// Calls bx `bit_and` method on scalar sx and returns
     /// the resulting box.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitAndWith<_ElemT, _ScalarT>
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any E, Any S>
+        requires BitAndWith<E, S>
     constexpr auto
-    operator& (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.bit_and(sx); }
+    operator& (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem & sx; }); }
 
 
     /// \brief Bit And Operator
@@ -3030,19 +3030,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `&` operator.
-    /// Calls bx `bit_and` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `&` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ScalarT concept: Any
-    /// \tparam _ElemT concept: Any
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ScalarT, Any _ElemT>
-        requires BitAndWith<_ScalarT, _ElemT>
+    /// \tparam S concept: Any
+    /// \tparam E concept: Any
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any S, Any E>
+        requires BitAndWith<S, E>
     constexpr auto
-    operator& (const _ScalarT& sx, const box<_ElemT>& bx)
-    { return bx.bit_and(sx); }
+    operator& (const S& sx, const box<E>& bx)
+    { return bx.map([&](const auto& elem){ return sx & elem; }); }
 
 
     /// \brief Bit And Assignment Operator
@@ -3058,17 +3058,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `bit_and`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires BitAndWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires BitAndWith<L, R>
     constexpr void
-    operator&= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator&= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_and(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_and(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator&=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
         else
             lx = lx.bit_and(rx);
@@ -3087,17 +3087,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitAndWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires BitAndWith<E, S>
     constexpr void
-    operator&= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator&= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_and(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_and(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
         else
             bx = bx.bit_and(sx);
@@ -3108,60 +3108,60 @@ namespace cortex
     ///
     /// \group box
     ///
-    /// \detail Operator overload for `*` operator.
-    /// Calls lx `bit_or` method on rx and returns
-    /// the resulting box.
+    /// \detail Operator overload for `|` operator.
+    /// Calls lx `map` method on rx and returns 
+    /// the result. 
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: BitOr
+    /// \tparam R concept: concept: BitOr
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires BitOrWith<_LxT, _RxT>
+    template<BitOr L, BitOr R>
+        requires BitOrWith<L, R>
     constexpr auto
-    operator| (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.bit_or(rx); }
+    operator| (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::bit_or{}); }
 
 
     /// \brief Bit Or Operator
     ///
     /// \group box
     ///
-    /// \details Operator overload for `*` operator.
-    /// Calls bx `bit_or` method on scalar sx and returns
-    /// the resulting box.
+    /// \details Operator overload for `|` operator.
+    /// Calls lx `map` function with the `|` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitOrWith<_ElemT, _ScalarT>
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \returns constexpr auto 
+    template<Any E, Any S>
+        requires BitOrWith<E, S>
     constexpr auto
-    operator| (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.bit_or(sx); }
+    operator| (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem | sx; }); }
 
 
     /// \brief Bit Or Operator
     ///
     /// \group box
     ///
-    /// \details Operator overload for `*` operator.
-    /// Calls bx `bit_or` method on scalar sx and returns
-    /// the resulting box.
+    /// \details Operator overload for `|` operator.
+    /// Calls lx `map` function with the `|` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ScalarT concept: Any
-    /// \tparam _ElemT concept: Any
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
+    /// \tparam S concept: Any
+    /// \tparam E concept: Any
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \param bx type: box<E> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ScalarT, Any _ElemT>
-        requires BitOrWith<_ScalarT, _ElemT>
+    template<Any S, Any E>
+        requires BitOrWith<S, E>
     constexpr auto
-    operator| (const _ScalarT& sx, const box<_ElemT>& bx)
-    { return bx.bit_or(sx); }
+    operator| (const S& sx, const box<E>& bx)
+    { return bx.map([&](const auto& elem){ return sx | elem; }); }
 
 
     /// \brief Bit Or Assignment Operator
@@ -3177,17 +3177,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `bit_or`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires BitOrWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires BitOrWith<L, R>
     constexpr void
-    operator|= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator|= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_or(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_or(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
         else
             lx = lx.bit_or(rx);
@@ -3206,17 +3206,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitOrWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires BitOrWith<E, S>
     constexpr void
-    operator|= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator|= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_or(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_or(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
         else
             bx = bx.bit_or(sx);
@@ -3228,19 +3228,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `^` operator.
-    /// Calls lx `bit_xor` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` method on rx and returns 
+    /// the result. 
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: BitXor
+    /// \tparam R concept: concept: BitXor
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires BitXorWith<_LxT, _RxT>
+    template<BitXor L, BitXor R>
+        requires BitXorWith<L, R>
     constexpr auto
-    operator^ (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.bit_xor(rx); }
+    operator^ (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, std::bit_xor{}); }
 
 
     /// \brief Bit Xor Operator
@@ -3248,19 +3248,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `^` operator.
-    /// Calls bx `bit_xor` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `^` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitXorWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires BitXorWith<E, S>
     constexpr auto
-    operator^ (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.bit_xor(sx); }
+    operator^ (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem ^ sx; }); }
 
 
     /// \brief Bit Xor Operator
@@ -3268,19 +3268,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `^` operator.
-    /// Calls bx `bit_xor` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `^` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ScalarT concept: Any
-    /// \tparam _ElemT concept: Any
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
+    /// \tparam S concept: Any
+    /// \tparam E concept: Any
+    /// \param sx type: S | qualifiers: {const, ref}
+    /// \param bx type: box<E> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ScalarT, Any _ElemT>
-        requires BitXorWith<_ScalarT, _ElemT>
+    template<Any S, Any E>
+        requires BitXorWith<S, E>
     constexpr auto
-    operator^ (const _ScalarT& sx, const box<_ElemT>& bx)
-    { return bx.bit_xor(sx); }
+    operator^ (const S& sx, const box<E>& bx)
+    { return bx.map([&](const auto elem){ return sx ^ elem; }); }
 
 
     /// \brief Bit Xor Assignment Operator
@@ -3296,17 +3296,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `bit_xor`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires BitXorWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires BitXorWith<L, R>
     constexpr void
-    operator^= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator^= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().bit_xor(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_xor(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
         else
             lx = lx.bit_xor(rx);
@@ -3325,17 +3325,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires BitXorWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires BitXorWith<E, S>
     constexpr void
-    operator^= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator^= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().bit_xor(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_xor(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
         else
             bx = bx.bit_xor(sx);
@@ -3347,19 +3347,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `<<` operator.
-    /// Calls lx `shift_left` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` method on rx and returns 
+    /// the result. 
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: LeftBitShift
+    /// \tparam R concept: concept: LeftBitShift
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires LeftBitShiftWith<_LxT, _RxT>
+    template<LeftBitShift L, LeftBitShift R>
+        requires LeftBitShiftWith<L, R>
     constexpr auto
-    operator<< (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.shift_left(rx); }
+    operator<< (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, [](const auto& le, const auto& re){ return le << re; }); }
 
 
     /// \brief Left Bit Shift Operator
@@ -3367,19 +3367,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `<<` operator.
-    /// Calls bx `shift_left` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `<<` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires LeftBitShiftWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires LeftBitShiftWith<E, S>
     constexpr auto
-    operator<< (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.shift_left(sx); }
+    operator<< (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem << sx; }); }
 
 
     /// \brief Left Bit Shift Assignment Operator
@@ -3395,17 +3395,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `shift_left`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires LeftBitShiftWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires LeftBitShiftWith<L, R>
     constexpr void
-    operator<<= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator<<= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().shift_left(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().shift_left(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
         else
             lx = lx.shift_left(rx);
@@ -3424,17 +3424,17 @@ namespace cortex
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires LeftBitShiftWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires LeftBitShiftWith<E, S>
     constexpr void
-    operator<<= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator<<= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().shift_left(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().shift_left(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
         else
             bx = bx.shift_left(sx);
@@ -3446,19 +3446,19 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `>>` operator.
-    /// Calls lx `shift_right` method on rx and returns
-    /// the resulting box.
+    /// Calls lx `map` method on rx and returns 
+    /// the result. 
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: RightBitShift
+    /// \tparam R concept: concept: RightBitShift
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _LxT, Any _RxT>
-        requires RightBitShiftWith<_LxT, _RxT>
+    template<RightBitShift L, RightBitShift R>
+        requires RightBitShiftWith<L, R>
     constexpr auto
-    operator>> (const box<_LxT>& lx, const box<_RxT>& rx)
-    { return lx.shift_right(rx); }
+    operator>> (const box<L>& lx, const box<R>& rx)
+    { return lx.map(rx, [](const auto& le, const auto& re){ return le >> re; }); }
 
 
     /// \brief Right Bit Shift Operator
@@ -3466,19 +3466,19 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `>>` operator.
-    /// Calls bx `shift_right` method on scalar sx and returns
-    /// the resulting box.
+    /// Calls lx `map` function with the `>>` operator
+    /// and captures sx by reference in the lambda.
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires RightBitShiftWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires RightBitShiftWith<E, S>
     constexpr auto
-    operator>> (const box<_ElemT>& bx, const _ScalarT& sx)
-    { return bx.shift_right(sx); }
+    operator>> (const box<E>& bx, const S& sx)
+    { return bx.map([&](const auto& elem){ return elem >> sx; }); }
 
 
     /// \brief Right Bit Shift Assignment Operator
@@ -3494,17 +3494,17 @@ namespace cortex
     /// able to to store the resulting type of the
     /// call to `shift_right`.
     /// 
-    /// \tparam _LxT concept: Any
-    /// \tparam _RxT concept: Any
-    /// \param lx type: box<_LxT> | qualifiers: {const, ref}
-    /// \param rx type: box<_RxT> | qualifiers: {const, ref}
+    /// \tparam L concept: concept: Any
+    /// \tparam R concept: concept: Any
+    /// \param lx type: box<L> | qualifiers: {const, ref}
+    /// \param rx type: box<R> | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _LxT, Any _RxT>
-        requires RightBitShiftWith<_LxT, _RxT>
+    template<Any L, Any R>
+        requires RightBitShiftWith<L, R>
     constexpr void
-    operator>>= (box<_LxT>& lx, const box<_RxT>& rx)
+    operator>>= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_LxT>>().shift_right(std::declval<box<_RxT>>())), box<_LxT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<L>>().shift_right(std::declval<box<R>>())), box<L>>)
             throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
         else
             lx = lx.shift_right(rx);
@@ -3523,17 +3523,17 @@ namespace cortex
     /// \notes The right-hand-side boxes type must be
     /// able to to store the resulting type of the
     ///
-    /// \tparam _ElemT concept: Any
-    /// \tparam _ScalarT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
-    /// \param sx type: _ScalarT | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \tparam S concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
+    /// \param sx type: S | qualifiers: {const, ref}
     /// \returns requires constexpr 
-    template<Any _ElemT, Any _ScalarT>
-        requires RightBitShiftWith<_ElemT, _ScalarT>
+    template<Any E, Any S>
+        requires RightBitShiftWith<E, S>
     constexpr void
-    operator>>= (box<_ElemT>& bx, const _ScalarT& sx)
+    operator>>= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<_ElemT>>().shift_right(std::declval<_ScalarT>())), box<_ElemT>>)
+        if constexpr (!std::same_as<decltype(std::declval<box<E>>().shift_right(std::declval<S>())), box<E>>)
             throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
         else
             bx = bx.shift_right(sx);
@@ -3548,13 +3548,13 @@ namespace cortex
     /// Calls bx `bit_not` method and returns the 
     /// resulting box. 
     /// 
-    /// \tparam _ElemT : concept: BitNot
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
+    /// \tparam E concept: BitNot
+    /// \param bx type: box<E> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<BitNot _ElemT>
+    template<BitNot E>
     constexpr auto
-    operator~ (box<_ElemT> bx)
-    { return bx.bit_not(); }
+    operator~ (const box<E>& bx)
+    { return bx.map(std::bit_not{}); }
 
 
     /// \brief Transpose Operator
@@ -3565,12 +3565,12 @@ namespace cortex
     /// Calls bx `transpose` method and returns the
     /// resulting box. 
     /// 
-    /// \tparam _ElemT concept: Any
-    /// \param bx type: box<_ElemT> | qualifiers: {const, ref}
+    /// \tparam E concept: Any
+    /// \param bx type: box<E> | qualifiers: {const, ref}
     /// \returns constexpr auto 
-    template<Any _ElemT>
+    template<Any E>
     constexpr auto
-    operator! (box<_ElemT> bx)
+    operator! (box<E> bx)
     { return bx.transpose(); }
 
 } // namespace cortex
