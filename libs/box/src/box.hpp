@@ -741,6 +741,30 @@ namespace cortex
         /// \param ridx type: size_type
         /// \returns std::span<value_type> 
         constexpr auto
+        slice(size_type ridx)
+            -> std::span<value_type>
+        {
+            if (ridx >= m_rows)
+                throw std::out_of_range("box::slice - row index out of range");
+            
+            return std::span<value_type>{
+                _M_data_ptr(m_start) + ridx * m_columns,
+                m_columns
+            };
+        }
+
+        /// \brief Slice
+        ///
+        /// \details Returns a slice of the box. The slice is
+        /// std::span over the indicated row of the box. The 
+        /// span is a view over the underlying data.
+        ///
+        /// \exception std::out_of_range - if the row index is 
+        /// out of range of the box, the exception is thrown.
+        /// 
+        /// \param ridx type: size_type
+        /// \returns std::span<value_type> 
+        constexpr auto
         slice(size_type ridx) const
             -> std::span<value_type>
         {
@@ -765,6 +789,20 @@ namespace cortex
         /// \returns std::span<value_type> 
         constexpr auto 
         operator[](size_type ridx)
+            -> std::span<value_type>
+        { return slice(ridx); }
+
+        /// \brief Slice Operator
+        ///
+        /// \details Returns a slice of the box. The slice is
+        /// std::span over the indicated row of the box. The
+        /// span is a view over the underlying data. Calls
+        /// `box::slice`.
+        /// 
+        /// \param ridx 
+        /// \returns std::span<value_type> 
+        constexpr auto 
+        operator[](size_type ridx) const
             -> std::span<value_type>
         { return slice(ridx); }
 
