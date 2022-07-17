@@ -1314,540 +1314,8 @@ namespace cortex
             return const_reverse_column_iterator(column_cbegin(column));
         }
 
-        /// \brief Box Element-wise Addition
-        ///
-        /// \details Performs an element-wise addition
-        /// operation between matrices. The boxes must
-        /// have the same dimensions. Returns a new box
-        /// with the computed values.
-        ///
-        /// \requires The type of this box's elements are `Addable`
-        /// \requires The type of this box's elements and the type
-        /// of the passed box's element types satisfy `AddableWith`.
-        ///
-        /// \tparam E
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto : A box whose element's type
-        /// is the sum of the two input matrices element types.
-        template <Addable E>
-            requires AddableWith<value_type, E>
-        constexpr auto 
-        add(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::add - dimensions do not match");
 
-            box<decltype(std::declval<value_type>() + std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::plus{});
-
-            return result;
-        }
-
-        /// \brief Box Element-wise Subtraction
-        ///
-        /// \details Performs an element-wise subtraction
-        /// operation between matrices. The boxes must
-        /// have the same dimensions. Returns a new box
-        /// with the computed values.
-        ///
-        /// \requires The type of this box's elements are `Subtractable`
-        /// \requires The type of this box's elements and the type
-        /// of the passed box's element types satisfy `SubtractableWith`.
-        ///
-        /// \tparam E
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto : A box whose element type
-        /// is the difference of the two input matrices element types.
-        template <Subtractable E>
-            requires SubtractableWith<value_type, E>
-        constexpr auto 
-        sub(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::sub - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() - std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::minus{});
-
-            return result;
-        }
-
-        /// \brief Box Element-wise Multiplication
-        ///
-        /// \details Performs an element-wise multiplication
-        /// operation between matrices. The boxes must
-        /// have the same dimensions. Returns a new box
-        /// with the computed values.
-        ///
-        /// \requires The type of this box's elements are `Multiplicable`
-        /// \requires The type of this box's elements and the type
-        /// of the passed box's element types satisfy `MultiplicableWith`.
-        ///
-        /// \tparam E
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto : A box whose element type
-        /// is the product of the two input matrices element types.
-        template <Any E>
-            requires MultiplicableWith<value_type, E>
-        constexpr auto 
-        mul(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::mult - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() * std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::multiplies{});
-
-            return result;
-        }
-
-        /// \brief Scalar Multiplication.
-        ///
-        /// \details Performs an element-wise multiplication 
-        /// of the box by a 'scalar' value.
-        ///
-        /// \requires The type of this box's elements are `MultiplicableWith`
-        /// the type denoted S.
-        /// \requires The type denoted S be `Multiplicable`.
-        ///
-        ///
-        /// \tparam S
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires MultiplicableWith<value_type, S>
-        constexpr auto 
-        mul(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::mul - scalar multiplication on empty box");
-
-            box<decltype(std::declval<value_type>() * std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem * scalar; });
-
-            return result;
-        }
-
-        /// \brief Box Element-wise Division
-        ///
-        /// \details Performs an element-wise division
-        /// operation between matrices. The boxes must
-        /// have the same dimensions. Returns a new box
-        /// with the computed values.
-        ///
-        /// \requires The type of this box's elements are `Divisible`
-        /// \requires The type of this box's elements and the type
-        /// of the passed box's element types satisfy `DivisibleWith`.
-        ///
-        /// \notes When dividing two matrices, if both matrices elements
-        /// are integrals, the division is performed as integer divisionbx.
-        /// due to C++ rounding rules.
-        ///
-        /// \tparam E
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto : A box whose element type
-        /// is the quotient of the two input matrices element types.
-        template <Any E>
-            requires DivisibleWith<value_type, E>
-        constexpr auto 
-        div(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::div - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() / std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::divides{});
-
-            return result;
-        }
-
-        /// \brief Scalar Division
-        ///
-        /// \details Performs an element-wise division of the box
-        /// by a 'scalar' value.
-        ///
-        /// \requires The type of this box's elements are `DivisibleWith`
-        /// the type denoted S.
-        /// \requires The type denoted S be `Divisible`.
-        ///
-        /// \notes When dividing two matrices, if both matrices elements
-        /// are integrals, the division is performed as integer divisionbx.
-        /// due to C++ rounding rules.
-        ///
-        /// \tparam S
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires DivisibleWith<value_type, S>
-        constexpr auto 
-        div(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::div - scalar division on empty box");
-            if (scalar == 0)
-                throw std::invalid_argument("In box::div - scalar is zero");
-
-            box<decltype(std::declval<value_type>() / std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem / scalar; });
-
-            return result;
-        }
-
-        /// \brief Box Element-wise Modulus
-        ///
-        /// \details Performs an element-wise modulus operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: Modulo | requires: ModuloWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires ModuloWith<value_type, E>
-        constexpr auto 
-        mod(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::mod - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() % std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::modulus{});
-
-            return result;
-        }
-
-        /// \brief Scalar Modulus
-        ///
-        /// \details Performs an element-wise modulus operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: Modulo | requires: ModuloWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires ModuloWith<value_type, S>
-        constexpr auto 
-        mod(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::mod - scalar modulus on empty box");
-
-            box<decltype(std::declval<value_type>() % std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem){ return elem % scalar; });
-
-            return result;
-        }
-
-        /// \brief Box Element-wise Bitwise Xor
-        ///
-        /// \details Performs an element-wise bitwise Xor operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: BitXor | requires: BitXorWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires BitXorWith<value_type, E>
-        constexpr auto 
-        bit_xor(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::bit_xor - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() ^ std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::bit_xor{});
-
-            return result;
-        }
-
-        /// \brief Scalar Bitwise Xor
-        ///
-        /// \details Performs an element-wise bitwise Xor operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: BitXor | requires: BitXorWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires BitXorWith<value_type, S>
-        constexpr auto 
-        bit_xor(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::bit_xor - scalar bit_xor on empty box");
-
-            box<decltype(std::declval<value_type>() ^ std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem ^ scalar; });
-
-            return result;
-        }
-
-
-        /// \brief Box Element-wise Bitwise And
-        ///
-        /// \details Performs an element-wise bitwise And operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: BitAnd | requires: BitAndWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires BitAndWith<value_type, E>
-        constexpr auto 
-        bit_and(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::bit_and - dimensions do not match");
-
-            box<decltype(std::declval<value_type>()&  std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::bit_and{});
-
-            return result;
-        }
-
-        /// \brief Scalar Bitwise And
-        ///
-        /// \details Performs an element-wise bitwise And operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: BitAnd | requires: BitAndWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires BitAndWith<value_type, S>
-        constexpr auto 
-        bit_and(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::bit_and - scalar bit_and on empty box");
-
-            box<decltype(std::declval<value_type>()&  std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem & scalar; });
-
-            return result;
-        }
-
-
-        /// \brief Box Element-wise Bitwise Or
-        ///
-        /// \details Performs an element-wise bitwise Or operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: BitOr | requires: BitOrWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires BitOrWith<value_type, E>
-        constexpr auto 
-        bit_or(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::bit_or - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() | std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), std::bit_or{});
-
-            return result;
-        }
-
-        /// \brief Scalar Bitwise Or
-        ///
-        /// \details Performs an element-wise bitwise Or operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: BitOr | requires: BitOrWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires BitOrWith<value_type, S>
-        constexpr auto 
-        bit_or(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::bit_or - scalar bit_or on empty box");
-
-            box<decltype(std::declval<value_type>() | std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem | scalar; });
-
-            return result;
-        }
-
-
-        /// \brief Box Element-wise Left Bit-shift
-        ///
-        /// \details Performs an element-wise left bit-shift operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: LeftBitShift | requires: LeftBitShiftWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires LeftBitShiftWith<value_type, E>
-        constexpr auto 
-        shift_left(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::shift_left - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() << std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem << other_elem; });
-
-            return result;
-        }
-
-        /// \brief Scalar Left bit-shift
-        ///
-        /// \details Performs an element-wise left bit-shift operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: LeftBitShift | requires: LeftBitShiftWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires LeftBitShiftWith<value_type, S>
-        constexpr auto 
-        shift_left(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::shift_left - scalar shift_left on empty box");
-
-            box<decltype(std::declval<value_type>() << std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem << scalar; });
-
-            return result;
-        }
-
-
-        /// \brief Box Element-wise Right Bit-shift
-        ///
-        /// \details Performs an element-wise right bit-shift operation
-        /// between two boxes. The boxes must have the same dimensions.
-        ///
-        /// \exception std::invalid_argument If the dimensions of the boxes
-        /// do not match, std::invalid_argument is thrown.
-        ///
-        /// \tparam E concept: RightBitShift | requires: RightBitShiftWith<value_type, E>
-        /// \param other type: box<E> | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any E>
-            requires RightBitShiftWith<value_type, E>
-        constexpr auto 
-        shift_right(const box<E>& other) const
-        {
-            if (this->dimensions() != other.dimensions())
-                throw std::invalid_argument("In box::shift_right - dimensions do not match");
-
-            box<decltype(std::declval<value_type>() >> std::declval<E>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, other, result.begin(), [](auto& this_elem, auto& other_elem) { return this_elem >> other_elem; });
-
-            return result;
-        }
-
-        /// \brief Scalar Right bit-shift
-        ///
-        /// \details Performs an element-wise right bit-shift operation
-        /// between all elements of the box and the scalar. The
-        /// box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \tparam S concept: RightBitShift | requires: RightBitShiftWith<value_type, S>
-        /// \param scalar type: S | qualifiers: {const, ref}
-        /// \returns constexpr auto
-        template <Any S>
-            requires RightBitShiftWith<value_type, S>
-        constexpr auto 
-        shift_right(const S& scalar) const
-        {
-            if (empty())
-                throw std::invalid_argument("In box::shift_right - scalar shift_right on empty box");
-
-            box<decltype(std::declval<value_type>() >> std::declval<S>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), [&](auto& elem) { return elem >> scalar; });
-
-            return result;
-        }
-
-
-        /// \brief Element-wise Bitwise Not
-        ///
-        /// \details Performs an element-wise bitwise not operation.
-        /// The box must not be empty.
-        ///
-        /// \exception std::invalid_argument If the box is empty,
-        /// std::invalid_argument is thrown.
-        ///
-        /// \requires BitNot<value_type>
-        ///
-        /// \returns constexpr auto
-        constexpr auto bit_not() const
-            requires BitNot<value_type>
-        {
-            if (empty())
-                throw std::invalid_argument("In box::bit_not - bit_not on empty box");
-
-            box<decltype(~std::declval<value_type>())> result(this->rows(), this->columns());
-
-            std::ranges::transform(*this, result.begin(), std::bit_not{});
-
-            return result;
-        }
-
-
-        /// \brief Matrix Transpose
+        /// \brief Box Transpose
         ///
         /// \details Performs a box transpose.
         /// Uses std::copy over std::ranges::copy as the output
@@ -1869,7 +1337,7 @@ namespace cortex
         }
 
 
-        /// \brief Map
+        /// \brief Box Map
         ///
         /// \details Maps a function over the box, returning 
         /// the mapped box.
@@ -2587,16 +2055,16 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `+=` operator.
-    /// Calls lx `add` method on rx and assigns the result 
-    /// to lx.
+    /// Uses `+` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type but be
     /// able to to store the resulting type of the
     /// call to `add`.
     ///
-    /// \exception std::invalid_argument Thrown if the left-hand-side
-    /// box cannot store the resulting type of the call to `add`.
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Addable
     /// \tparam R concept: concept: Addable
@@ -2608,10 +2076,10 @@ namespace cortex
     constexpr void
     operator+= (box<L>& lx, const box<R>& rx) 
     { 
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().add(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator+=: left-hand-side box type cannot store the resulting type of the call to `add`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::plus<void>, L, R>, L>)
+            throw std::invalid_argument("operator+=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.add(rx);
+            lx = lx + rx;
     }
 
 
@@ -2640,16 +2108,16 @@ namespace cortex
     /// \group box
     ///
     /// \details Operator overload for `-=` operator.
-    /// Calls lx `sub` method on rx and assigns the result 
-    /// to lx.
+    /// Uses `-` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type but be
     /// able to to store the resulting type of the
     /// call to `sub`.
     ///
-    /// \exception std::invalid_argument Thrown if the left-hand-side
-    /// box cannot store the resulting type of the call to `sub`.
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Subtractable
     /// \tparam R concept: concept: Subtractable
@@ -2661,10 +2129,10 @@ namespace cortex
     constexpr void
     operator-= (box<L>& lx, const box<R>& rx) 
     { 
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().sub(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator-=: left-hand-side box type cannot store the resulting type of the call to `sub`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::minus<void>, L, R>, L>)
+            throw std::invalid_argument("operator-=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.sub(rx);
+            lx = lx - rx;
     }
 
 
@@ -2733,13 +2201,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `*=` operator.
-    /// Calls lx `mul` method on rx and assigns the result
-    /// to lx.
+    /// Uses `*` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `mul`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -2751,10 +2222,10 @@ namespace cortex
     constexpr void
     operator*= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().mul(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::multiplies<void>, L, R>, L>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.mul(rx);
+            lx = lx * rx;
     }
 
 
@@ -2763,12 +2234,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `*=` operator.
-    /// Calls bx `mul` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `*` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -2780,10 +2254,10 @@ namespace cortex
     constexpr void
     operator*= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().mul(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mul`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::multiplies<void>, E, S>, E>)
+            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.mul(sx);
+            bx = bx * sx;
     }
 
 
@@ -2832,13 +2306,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `/=` operator.
-    /// Calls lx `div` method on rx and assigns the result
-    /// to lx.
+    /// Uses `/` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `div`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -2850,10 +2327,10 @@ namespace cortex
     constexpr void
     operator/= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().div(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::divides<void>, L, R>, L>)
+            throw std::invalid_argument("operator/=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.div(rx);
+            lx = lx / rx;
     }
 
 
@@ -2862,12 +2339,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `/=` operator.
-    /// Calls bx `div` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `/` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -2879,10 +2359,10 @@ namespace cortex
     constexpr void
     operator/= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().div(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `div`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::divides<void>, E, S>, E>)
+            throw std::invalid_argument("operator/=: left-hand-side box type cannot store the resulting.");
         else
-            bx = bx.div(sx);
+            bx = bx / sx;
     }
 
 
@@ -2931,13 +2411,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `%=` operator.
-    /// Calls lx `mod` method on rx and assigns the result
-    /// to lx.
+    /// Uses `%` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `mod`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -2949,10 +2432,10 @@ namespace cortex
     constexpr void
     operator%= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().mod(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::modulus<void>, L, R>, L>)
+            throw std::invalid_argument("operator%=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.mod(rx);
+            lx = lx % rx;
     }
 
 
@@ -2961,12 +2444,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `%=` operator.
-    /// Calls bx `mod` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `%` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -2978,10 +2464,10 @@ namespace cortex
     constexpr void
     operator%= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().mod(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `mod`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::modulus<void>, E, S>, E>)
+            throw std::invalid_argument("operator%=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.mod(sx);
+            bx = bx % sx;
     }
 
 
@@ -3050,13 +2536,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `&=` operator.
-    /// Calls lx `bit_and` method on rx and assigns the result
-    /// to lx.
+    /// Uses `&` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_and`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -3068,10 +2557,10 @@ namespace cortex
     constexpr void
     operator&= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_and(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator&=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_and<void>, L, R>, L>)
+            throw std::invalid_argument("operator&=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.bit_and(rx);
+            lx = lx & rx;
     }
 
 
@@ -3080,12 +2569,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `*=` operator.
-    /// Calls bx `bit_and` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `&` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -3097,10 +2589,10 @@ namespace cortex
     constexpr void
     operator&= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_and(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_and`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_and<void>, E, S>, E>)
+            throw std::invalid_argument("operator&=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.bit_and(sx);
+            bx = bx & sx;
     }
 
 
@@ -3169,13 +2661,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `*=` operator.
-    /// Calls lx `bit_or` method on rx and assigns the result
-    /// to lx.
+    /// Uses `|` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_or`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -3187,10 +2682,10 @@ namespace cortex
     constexpr void
     operator|= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_or(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_or<void>, L, R>, L>)
+            throw std::invalid_argument("operator|=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.bit_or(rx);
+            lx = lx | rx;
     }
 
 
@@ -3199,12 +2694,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `*=` operator.
-    /// Calls bx `bit_or` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `|` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -3216,10 +2714,10 @@ namespace cortex
     constexpr void
     operator|= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_or(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_or`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_or<void>, E, S>, E>)
+            throw std::invalid_argument("operator|=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.bit_or(sx);
+            bx = bx | sx;
     }
 
 
@@ -3288,13 +2786,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `^=` operator.
-    /// Calls lx `bit_xor` method on rx and assigns the result
-    /// to lx.
+    /// Uses `^` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `bit_xor`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -3306,10 +2807,10 @@ namespace cortex
     constexpr void
     operator^= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().bit_xor(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_xor<void>, L, R>, L>)
+            throw std::invalid_argument("operator^=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.bit_xor(rx);
+            lx = lx ^ rx;
     }
 
 
@@ -3318,12 +2819,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `^=` operator.
-    /// Calls bx `bit_xor` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `^` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -3335,10 +2839,10 @@ namespace cortex
     constexpr void
     operator^= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().bit_xor(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `bit_xor`.");
+        if constexpr (!std::same_as<std::invoke_result_t<std::bit_xor<void>, E, S>, E>)
+            throw std::invalid_argument("operator^=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.bit_xor(sx);
+            bx = bx ^ sx;
     }
 
 
@@ -3387,13 +2891,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `<<=` operator.
-    /// Calls lx `shift_left` method on rx and assigns the result
-    /// to lx.
+    /// Uses `<<` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `shift_left`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -3405,10 +2912,10 @@ namespace cortex
     constexpr void
     operator<<= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().shift_left(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
+        if constexpr (!std::same_as<decltype(std::declval<L>() << std::declval<R>()), L>)
+            throw std::invalid_argument("operator<<=: left-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.shift_left(rx);
+            lx = lx << rx;
     }
 
 
@@ -3417,12 +2924,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `<<=` operator.
-    /// Calls bx `shift_left` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `<<` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The left-hand-side box is mutable.
     /// \notes The left-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -3434,10 +2944,10 @@ namespace cortex
     constexpr void
     operator<<= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().shift_left(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: left-hand-side box type cannot store the resulting type of the call to `shift_left`.");
+        if constexpr (!std::same_as<decltype(std::declval<E>() << std::declval<S>()), E>)
+            throw std::invalid_argument("operator<<=: left-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.shift_left(sx);
+            bx = bx << sx;
     }
 
 
@@ -3448,6 +2958,9 @@ namespace cortex
     /// \detail Operator overload for `>>` operator.
     /// Calls lx `map` method on rx and returns 
     /// the result. 
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: RightBitShift
     /// \tparam R concept: concept: RightBitShift
@@ -3486,13 +2999,16 @@ namespace cortex
     /// \group box
     ///
     /// \detail Operator overload for `>>=` operator.
-    /// Calls lx `shift_right` method on rx and assigns the result
-    /// to lx.
+    /// Uses `>>` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The right-hand-side box is mutable.
     /// \notes The right-hand-side boxes type must be
     /// able to to store the resulting type of the
     /// call to `shift_right`.
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     /// 
     /// \tparam L concept: concept: Any
     /// \tparam R concept: concept: Any
@@ -3504,10 +3020,10 @@ namespace cortex
     constexpr void
     operator>>= (box<L>& lx, const box<R>& rx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<L>>().shift_right(std::declval<box<R>>())), box<L>>)
-            throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
+        if constexpr (!std::same_as<decltype(std::declval<L>() >> std::declval<R>()), L>)
+            throw std::invalid_argument("operator>>=: right-hand-side box type cannot store the resulting type.");
         else
-            lx = lx.shift_right(rx);
+            lx = lx >> rx;
     }
 
 
@@ -3516,12 +3032,15 @@ namespace cortex
     /// \group box
     /// 
     /// \details Operator overload for `>>=` operator.
-    /// Calls bx `shift_right` method on scalar sx and assigns 
-    /// the result to bx.
+    /// Uses `>>` operator on lx and rx and assigns the 
+    /// result to lx.
     ///
     /// \notes The right-hand-side box is mutable.
     /// \notes The right-hand-side boxes type must be
     /// able to to store the resulting type of the
+    ///
+    /// \exception std::invalid_argument Throw if the left-hand-side
+    /// box cannot store the operations resulting type.
     ///
     /// \tparam E concept: Any
     /// \tparam S concept: Any
@@ -3533,10 +3052,10 @@ namespace cortex
     constexpr void
     operator>>= (box<E>& bx, const S& sx)
     {
-        if constexpr (!std::same_as<decltype(std::declval<box<E>>().shift_right(std::declval<S>())), box<E>>)
-            throw std::invalid_argument("operator*=: right-hand-side box type cannot store the resulting type of the call to `shift_right`.");
+        if constexpr (!std::same_as<decltype(std::declval<E>() >> std::declval<S>()), E>)
+            throw std::invalid_argument("operator>>=: right-hand-side box type cannot store the resulting type.");
         else
-            bx = bx.shift_right(sx);
+            bx = bx >> sx;
     }
 
 
