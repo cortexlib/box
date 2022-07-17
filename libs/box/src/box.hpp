@@ -2568,7 +2568,7 @@ namespace cortex
     ///
     /// \group box
     /// 
-    /// \details Operator overload for `*=` operator.
+    /// \details Operator overload for `&=` operator.
     /// Uses `&` operator on lx and rx and assigns the 
     /// result to lx.
     ///
@@ -2660,7 +2660,7 @@ namespace cortex
     ///
     /// \group box
     ///
-    /// \detail Operator overload for `*=` operator.
+    /// \detail Operator overload for `|=` operator.
     /// Uses `|` operator on lx and rx and assigns the 
     /// result to lx.
     ///
@@ -2693,7 +2693,7 @@ namespace cortex
     ///
     /// \group box
     /// 
-    /// \details Operator overload for `*=` operator.
+    /// \details Operator overload for `|=` operator.
     /// Uses `|` operator on lx and rx and assigns the 
     /// result to lx.
     ///
