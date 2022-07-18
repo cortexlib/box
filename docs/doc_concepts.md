@@ -5,55 +5,55 @@
 
 namespace cortex
 {
-    template <typename _Tp>concept Any = true;
+    template <typename T>concept Any = true;
 
-    template <typename _Tp>concept None = false;
+    template <typename T>concept None = false;
 
-    template <typename _Tp>concept Number = std::integral<_Tp> || std::floating_point<_Tp>;
+    template <typename T>concept Number = std::integral<T> || std::floating_point<T>;
 
-    template <typename _Tp>concept Object = std::is_object_v<_Tp>;
+    template <typename T>concept Object = std::is_object_v<T>;
 
     template <typename _Lt, typename _Rt>concept AddableWith = requires(_Lt __lhs, _Rt __rhs){__lhs+__rhs;};
 
-    template <typename _Tp>concept Addable = requires(_Tp __lhs, _Tp __rhs){__lhs+__rhs;};
+    template <typename T>concept Addable = requires(T __lhs, T __rhs){__lhs+__rhs;};
 
     template <typename _Lt, typename _Rt>concept SubtractableWith = requires(_Lt __lhs, _Rt __rhs){__lhs-__rhs;};
 
-    template <typename _Tp>concept Subtractable = requires(_Tp __lhs, _Tp __rhs){__lhs-__rhs;};
+    template <typename T>concept Subtractable = requires(T __lhs, T __rhs){__lhs-__rhs;};
 
     template <typename _Lt, typename _Rt>concept MultiplicableWith = requires(_Lt __lhs, _Rt __rhs){__lhs*__rhs;};
 
-    template <typename _Tp>concept Multiplicable = requires(_Tp __lhs, _Tp __rhs){__lhs*__rhs;};
+    template <typename T>concept Multiplicable = requires(T __lhs, T __rhs){__lhs*__rhs;};
 
     template <typename _Lt, typename _Rt>concept DivisibleWith = requires(_Lt __lhs, _Rt __rhs){__lhs / __rhs;};
 
-    template <typename _Tp>concept Divisible = requires(_Tp __lhs, _Tp __rhs){__lhs / __rhs;};
+    template <typename T>concept Divisible = requires(T __lhs, T __rhs){__lhs / __rhs;};
 
     template <typename _Lt, typename _Rt>concept ModuloWith = requires(_Lt __lhs, _Rt __rhs){__lhs % __rhs;};
 
-    template <typename _Tp>concept Modulo = requires(_Tp __lhs, _Tp __rhs){__lhs % __rhs;};
+    template <typename T>concept Modulo = requires(T __lhs, T __rhs){__lhs % __rhs;};
 
     template <typename _Lt, typename _Rt>concept BitXorWith = requires(_Lt __lhs, _Rt __rhs){__lhs ^ __rhs;};
 
-    template <typename _Tp>concept BitXor = requires(_Tp __lhs, _Tp __rhs){__lhs ^ __rhs;};
+    template <typename T>concept BitXor = requires(T __lhs, T __rhs){__lhs ^ __rhs;};
 
     template <typename _Lt, typename _Rt>concept BitAndWith = requires(_Lt __lhs, _Rt __rhs){__lhs&__rhs;};
 
-    template <typename _Tp>concept BitAnd = requires(_Tp __lhs, _Tp __rhs){__lhs&__rhs;};
+    template <typename T>concept BitAnd = requires(T __lhs, T __rhs){__lhs&__rhs;};
 
     template <typename _Lt, typename _Rt>concept BitOrWith = requires(_Lt __lhs, _Rt __rhs){__lhs | __rhs;};
 
-    template <typename _Tp>concept BitOr = requires(_Tp __lhs, _Tp __rhs){__lhs | __rhs;};
+    template <typename T>concept BitOr = requires(T __lhs, T __rhs){__lhs | __rhs;};
 
     template <typename _Lt, typename _Rt>concept LeftBitShiftWith = requires(_Lt __lhs, _Rt __rhs){__lhs<<__rhs;};
 
-    template <typename _Tp>concept LeftBitShift = requires(_Tp __lhs, _Tp __rhs){__lhs<<__rhs;};
+    template <typename T>concept LeftBitShift = requires(T __lhs, T __rhs){__lhs<<__rhs;};
 
     template <typename _Lt, typename _Rt>concept RightBitShiftWith = requires(_Lt __lhs, _Rt __rhs){__lhs>>__rhs;};
 
-    template <typename _Tp>concept RightBitShift = requires(_Tp __lhs, _Tp __rhs){__lhs>>__rhs;};
+    template <typename T>concept RightBitShift = requires(T __lhs, T __rhs){__lhs>>__rhs;};
 
-    template <typename _Tp>concept BitNot = requires(_Tp __val){~__val;};
+    template <typename T>concept BitNot = requires(T __val){~__val;};
 
     template <typename _Container, typename _Index>concept Subscriptible = requires{requires Object<_Container> || std::is_array_v<_Container> || std::is_pointer_v<_Container>;} && requires(_Container __container, _Index __index){__container[__index];};
 
@@ -75,6 +75,54 @@ Copyright: Copyright (c) 2022
 
 concepts.hpp
 
+### Unexposed entity `cortex::Any`
+
+``` cpp
+template <typename T>concept Any = true;
+```
+
+Any Concept
+
+A concept for which any type is valid.
+
+-----
+
+### Unexposed entity `cortex::None`
+
+``` cpp
+template <typename T>concept None = false;
+```
+
+None Concept
+
+A concept for which no type is valid.
+
+-----
+
+### Unexposed entity `cortex::Number`
+
+``` cpp
+template <typename T>concept Number = std::integral<T> || std::floating_point<T>;
+```
+
+Number Concept
+
+Uses the standard C++20 concepts for std::integral and std::floating\_point to define a concept for a type that is a number.
+
+-----
+
+### Unexposed entity `cortex::Object`
+
+``` cpp
+template <typename T>concept Object = std::is_object_v<T>;
+```
+
+Object Concept
+
+Uses the type trait std::is\_object\_v to define a concept for a type that is an object.
+
+-----
+
 ### Unexposed entity `cortex::AddableWith`
 
 ``` cpp
@@ -90,7 +138,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::Addable`
 
 ``` cpp
-template <typename _Tp>concept Addable = requires(_Tp __lhs, _Tp __rhs){__lhs+__rhs;};
+template <typename T>concept Addable = requires(T __lhs, T __rhs){__lhs+__rhs;};
 ```
 
 Addable Concept
@@ -114,7 +162,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::Subtractable`
 
 ``` cpp
-template <typename _Tp>concept Subtractable = requires(_Tp __lhs, _Tp __rhs){__lhs-__rhs;};
+template <typename T>concept Subtractable = requires(T __lhs, T __rhs){__lhs-__rhs;};
 ```
 
 Subtractable Concept
@@ -138,7 +186,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::Multiplicable`
 
 ``` cpp
-template <typename _Tp>concept Multiplicable = requires(_Tp __lhs, _Tp __rhs){__lhs*__rhs;};
+template <typename T>concept Multiplicable = requires(T __lhs, T __rhs){__lhs*__rhs;};
 ```
 
 Multiplicable Concept
@@ -162,7 +210,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::Divisible`
 
 ``` cpp
-template <typename _Tp>concept Divisible = requires(_Tp __lhs, _Tp __rhs){__lhs / __rhs;};
+template <typename T>concept Divisible = requires(T __lhs, T __rhs){__lhs / __rhs;};
 ```
 
 Divisible Concept
@@ -186,7 +234,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::Modulo`
 
 ``` cpp
-template <typename _Tp>concept Modulo = requires(_Tp __lhs, _Tp __rhs){__lhs % __rhs;};
+template <typename T>concept Modulo = requires(T __lhs, T __rhs){__lhs % __rhs;};
 ```
 
 Modulo Concept
@@ -210,7 +258,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::BitXor`
 
 ``` cpp
-template <typename _Tp>concept BitXor = requires(_Tp __lhs, _Tp __rhs){__lhs ^ __rhs;};
+template <typename T>concept BitXor = requires(T __lhs, T __rhs){__lhs ^ __rhs;};
 ```
 
 BitXor Concept
@@ -234,7 +282,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::BitAnd`
 
 ``` cpp
-template <typename _Tp>concept BitAnd = requires(_Tp __lhs, _Tp __rhs){__lhs&__rhs;};
+template <typename T>concept BitAnd = requires(T __lhs, T __rhs){__lhs&__rhs;};
 ```
 
 BitAnd Concept
@@ -258,7 +306,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::BitOr`
 
 ``` cpp
-template <typename _Tp>concept BitOr = requires(_Tp __lhs, _Tp __rhs){__lhs | __rhs;};
+template <typename T>concept BitOr = requires(T __lhs, T __rhs){__lhs | __rhs;};
 ```
 
 BitOr Concept
@@ -282,7 +330,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::LeftBitShift`
 
 ``` cpp
-template <typename _Tp>concept LeftBitShift = requires(_Tp __lhs, _Tp __rhs){__lhs<<__rhs;};
+template <typename T>concept LeftBitShift = requires(T __lhs, T __rhs){__lhs<<__rhs;};
 ```
 
 LeftBitShift Concept
@@ -306,7 +354,7 @@ Determines if two (potentially different) types are within the domain of operati
 ### Unexposed entity `cortex::RightBitShift`
 
 ``` cpp
-template <typename _Tp>concept RightBitShift = requires(_Tp __lhs, _Tp __rhs){__lhs>>__rhs;};
+template <typename T>concept RightBitShift = requires(T __lhs, T __rhs){__lhs>>__rhs;};
 ```
 
 RightBitShift Concept
@@ -318,7 +366,7 @@ Determines if a type is withinthe domain of operation for the `right bitwise shi
 ### Unexposed entity `cortex::BitNot`
 
 ``` cpp
-template <typename _Tp>concept BitNot = requires(_Tp __val){~__val;};
+template <typename T>concept BitNot = requires(T __val){~__val;};
 ```
 
 BitNot Concept

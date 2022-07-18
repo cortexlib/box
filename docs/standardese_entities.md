@@ -22,7 +22,7 @@
     
       - [`AddableWith`](doc_concepts.md#standardese-cortex__AddableWith) - AddableWith Concept
     
-      - [`Any`](doc_concepts.md#standardese-cortex)
+      - [`Any`](doc_concepts.md#standardese-cortex__Any) - Any Concept
     
       - [`BitAnd`](doc_concepts.md#standardese-cortex__BitAnd) - BitAnd Concept
     
@@ -56,11 +56,11 @@
     
       - [`MultiplicableWith`](doc_concepts.md#standardese-cortex__MultiplicableWith) - MultiplicableWith Concept
     
-      - [`None`](doc_concepts.md#standardese-cortex)
+      - [`None`](doc_concepts.md#standardese-cortex__None) - None Concept
     
-      - [`Number`](doc_concepts.md#standardese-cortex)
+      - [`Number`](doc_concepts.md#standardese-cortex__Number) - Number Concept
     
-      - [`Object`](doc_concepts.md#standardese-cortex)
+      - [`Object`](doc_concepts.md#standardese-cortex__Object) - Object Concept
     
       - [`RightBitShift`](doc_concepts.md#standardese-cortex__RightBitShift) - RightBitShift Concept
     
@@ -88,7 +88,7 @@
     
       - [`normal_iterator`](doc_normal.md#standardese-cortex__normal_iterator-_Iterator-_Container-) - Normal Iterator
     
-      - [`operator!=`](doc_box.md#standardese-cortex__operator---_ElemL-_ElemR--box-_ElemL-const--box-_ElemR-const--) - Compares two matrices for inequality.
+      - [`operator!=`](doc_box.md#standardese-cortex__box-T-Alloc-) - Compares two matrices for inequality.
     
       - [`operator<`](doc_row.md#standardese-cortex__operator--_Iterator--row_iterator-_Iterator-const--row_iterator-_Iterator-const--) - Less Than Operator
     
