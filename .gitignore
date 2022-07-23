@@ -47,3 +47,6 @@ _deps/*
 
 # Text Files
 *.txt
+
+# caches
+.cache/*
