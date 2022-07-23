@@ -91,6 +91,31 @@ TEST_CASE("Constructors and Assignment")
             REQUIRE(bx == cortex::box<int> { { 1, 2, 3, 4, 5 }
                                            , { 6, 7, 8, 9, 10 } });
         }
+
+        SECTION("Dimension Constructor") 
+        {
+            cortex::box<int> bx(2, 5);
+            bx = { { 1, 2, 3, 4, 5 }
+                 , { 6, 7, 8, 9, 10 } };
+            
+            REQUIRE(bx.rows() == 2);
+            REQUIRE(bx.columns() == 5);
+            REQUIRE(bx.size() == 10);
+            REQUIRE(bx.dimensions() == std::tuple{ 2, 5 });
+            
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3, 4, 5 }
+                                           , { 6, 7, 8, 9, 10 } });
+
+            cortex::box<std::string> nbx(bx.dimensions());
+
+            REQUIRE(nbx.rows() == 2);
+            REQUIRE(nbx.columns() == 5);
+            REQUIRE(nbx.size() == 10);
+            REQUIRE(nbx.dimensions() == std::tuple{ 2, 5 });
+
+            REQUIRE(nbx == cortex::box<std::string> { { "", "", "", "", "" }
+                                                    , { "", "", "", "", "" } });
+        }
     }
 
     SECTION("Custom Allocted")
@@ -160,6 +185,32 @@ TEST_CASE("Constructors and Assignment")
 
             for (auto& v : nbx)
                 REQUIRE(v == 1);
+        }
+
+        SECTION("Dimension Constructor") 
+        {
+            cortex::box<int> bx(2, 5);
+            bx = { { 1, 2, 3, 4, 5 }
+                 , { 6, 7, 8, 9, 10 } };
+            
+            REQUIRE(bx.rows() == 2);
+            REQUIRE(bx.columns() == 5);
+            REQUIRE(bx.size() == 10);
+            REQUIRE(bx.dimensions() == std::tuple{ 2, 5 });
+            
+            REQUIRE(bx == cortex::box<int> { { 1, 2, 3, 4, 5 }
+                                           , { 6, 7, 8, 9, 10 } });
+
+            std::allocator<std::string> alloc;
+            cortex::box<std::string> nbx(bx.dimensions(), alloc);
+
+            REQUIRE(nbx.rows() == 2);
+            REQUIRE(nbx.columns() == 5);
+            REQUIRE(nbx.size() == 10);
+            REQUIRE(nbx.dimensions() == std::tuple{ 2, 5 });
+
+            REQUIRE(nbx == cortex::box<std::string> { { "", "", "", "", "" }
+                                                    , { "", "", "", "", "" } });
         }
     }
 
