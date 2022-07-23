@@ -1,5 +1,5 @@
 name: cortexlib
-version: 0.13.1
+version: 0.13.1-dev
 
 test-dependencies:
   - catch2@2.13.9 using main
