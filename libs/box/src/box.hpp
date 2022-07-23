@@ -107,7 +107,7 @@ namespace cortex
         /// \details Default Constructs a box with a
         /// given allocator.
         ///
-        /// \param alloc type: allocator_type | qualifiers: {const, ref}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
         constexpr explicit box(const allocator_type& alloc) noexcept
         : m_rows(size_type())
         , m_columns(size_type())
@@ -124,9 +124,9 @@ namespace cortex
         /// or fill constructed depending on the default 
         /// constructiblity qualification.
         ///
-        /// \param cols type: size_type
-        /// \param rows type: size_type
-        /// \param alloc type: allocator_type | qualifiers: {const, ref}
+        /// \param cols type: {size_type}
+        /// \param rows type: {size_type}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
         constexpr explicit box(size_type rows, size_type cols, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
@@ -147,10 +147,10 @@ namespace cortex
         /// rows x columns. Values are constructed from 
         /// the a constant reference to a provided value.
         ///
-        /// \param cols type: size_type
-        /// \param rows type: size_type
+        /// \param cols type: {size_type}
+        /// \param rows type: {size_type}
         /// \param value type: value_type | qualifiers: {const, ref}
-        /// \param alloc type: allocator_type | qualifiers: {const, ref}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
         constexpr box(size_type rows, size_type cols, const_reference value, const allocator_type& alloc = allocator_type())
         : m_rows(rows)
         , m_columns(cols)
@@ -165,7 +165,7 @@ namespace cortex
         /// \details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// \param other type: [box] | qualifiers: {const, ref}
+        /// \param other type: {box} | qualifiers: {const, ref}
         constexpr box(const box& other)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -180,8 +180,8 @@ namespace cortex
         /// \details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// \param other type: [box] | qualifiers: {const, ref}
-        /// \param alloc type: allocator_type | qualifiers: {const, ref}
+        /// \param other type: {box} | qualifiers: {const, ref}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
         constexpr box(const box& other, const allocator_type& alloc)
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -197,7 +197,7 @@ namespace cortex
         /// resources to this box and leaves the other box
         /// in a default constructed state.
         ///
-        /// \param other type: [box] | qualifiers: [move]
+        /// \param other type: {box} | qualifiers: {move}
         constexpr box(box&& other) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -220,8 +220,8 @@ namespace cortex
         /// in a default constructed state. Uses an alternative
         /// allocator for construction of `this` box.
         ///
-        /// \param other type: [box] | qualifiers: [move]
-        /// \param alloc type: allocator_type | qualifiers: {const, ref}
+        /// \param other type: {box} | qualifiers: {move}
+        /// \param alloc type: {{allocator_type}} | qualifiers: {const, ref}
         constexpr box(box&& other, const allocator_type& alloc) noexcept
         : m_rows(other.m_rows)
         , m_columns(other.m_columns)
@@ -244,12 +244,12 @@ namespace cortex
         /// elements to this box. Copy is done through the boxes
         /// begin() iterator, thus copy is done row-wise.
         ///
-        /// \tparam It concept: [std::input_iterator]
-        /// \param first type: [It]
-        /// \param last type: [It]
-        /// \param rows type: size_type
-        /// \param cols type: size_type
-        /// \param alloc type: allocator_type | qualifiers: {const, ref} | attribute: [[maybe_unused]]
+        /// \tparam It concept: {std::input_iterator}
+        /// \param first type: {It}
+        /// \param last type: {It}
+        /// \param rows type: {size_type}
+        /// \param cols type: {size_type}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
         template <std::input_iterator It>
         constexpr box(It first, It last
                     , size_type rows, size_type cols
@@ -269,7 +269,7 @@ namespace cortex
         /// ownership is moved to the box's memory.
         ///
         /// \param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: {const, ref}
-        /// \param alloc type: allocator_type | qualifiers: {const, ref} | attribute: [[maybe_unused]]
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
         constexpr box(std::initializer_list<std::initializer_list<value_type>> list
                     , [[maybe_unused]] const allocator_type& alloc = allocator_type())
         : m_rows(list.size())
@@ -290,13 +290,36 @@ namespace cortex
         }
 
 
+        /// \brief Dimension Constructor
+        ///
+        /// \details Constructs a box from the dimensions 
+        /// of another. The box is default constructed. Takes
+        /// the result of a call to `box::dimension()`.
+        ///
+        /// \param dimensions type: {std::tuple<size_type, size_type>} | qualifiers: {const, ref}
+        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
+        constexpr box(const std::tuple<size_type, size_type>& dimensions
+                     , [[maybe_unused]] const allocator_type& alloc = allocator_type())
+        : m_rows(std::get<0>(dimensions))
+        , m_columns(std::get<1>(dimensions))
+        , m_allocator(alloc)
+        , m_start(_M_allocate(_M_size(m_rows, m_columns)))
+        , m_finish(m_start + _M_size(m_rows, m_columns))
+        { 
+            if constexpr (std::is_default_constructible_v<value_type>)
+                std::ranges::uninitialized_default_construct(*this);
+            else
+                std::ranges::uninitialized_fill(*this, value_type());
+        }
+
+
         /// \brief Copy Assignment
         ///
         /// \details Copies the contents of another box into
         /// this box and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         ///
-        /// \param other type: [box] | qualifiers: {const, ref}
+        /// \param other type: {box} | qualifiers: {const, ref}
         /// \returns constexpr box&
         constexpr box& operator= (const box& other)
         {
@@ -319,7 +342,7 @@ namespace cortex
         /// constructed state. Returns///this. If self assignment
         /// occurs then///this is returned immediately.
         ///
-        /// \param other type: [box] | qualifiers: [move]
+        /// \param other type: {box} | qualifiers: {move}
         /// \returns constexpr box&
         constexpr box& operator= (box&& other) noexcept
         {
@@ -444,8 +467,8 @@ namespace cortex
         /// of the box remain unchanged, however, this is unchecked. For a checked
         /// change that can only changes the dimension sizes, use box::reshape.
         ///
-        /// \param new_rows type: size_type
-        /// \param new_columns type: size_type
+        /// \param new_rows type: {size_type}
+        /// \param new_columns type: {size_type}
         constexpr void resize(size_type new_rows, size_type new_columns)
         {
             auto old_size{_M_size(m_rows, m_columns)};
@@ -500,8 +523,8 @@ namespace cortex
         /// unchecked. For a checked change that can only changes the dimension sizes, use
         /// box::reshape.
         ///
-        /// \param new_rows type: size_type
-        /// \param new_columns type: size_type
+        /// \param new_rows type: {size_type}
+        /// \param new_columns type: {size_type}
         /// \param value type: value_type | qualifiers: {const, ref}
         constexpr void resize(size_type new_rows, size_type new_columns, const_reference value)
         {
@@ -607,8 +630,8 @@ namespace cortex
         /// guranteeing that now reallocation occurs. Elements are
         /// preserved.
         ///
-        /// \param new_rows type: size_type
-        /// \param new_columns type: size_type
+        /// \param new_rows type: {size_type}
+        /// \param new_columns type: {size_type}
         constexpr void reshape(size_type new_rows, size_type new_columns)
         {
             auto new_size{ _M_size(new_rows, new_columns) };
@@ -626,7 +649,7 @@ namespace cortex
         /// which they are the same type. The swap is performed
         /// by moving ownership of the matrices resources.
         ///
-        /// \param other type: [box] | qualifiers: [ref]
+        /// \param other type: {box} | qualifiers: [ref]
         void swap(box& other) noexcept
         {
             box tmp = std::move(other);
@@ -738,7 +761,7 @@ namespace cortex
         /// \exception std::out_of_range - if the row index is 
         /// out of range of the box, the exception is thrown.
         /// 
-        /// \param ridx type: size_type
+        /// \param ridx type: {size_type}
         /// \returns std::span<value_type> 
         constexpr auto
         slice(size_type ridx)
@@ -762,7 +785,7 @@ namespace cortex
         /// \exception std::out_of_range - if the row index is 
         /// out of range of the box, the exception is thrown.
         /// 
-        /// \param ridx type: size_type
+        /// \param ridx type: {size_type}
         /// \returns std::span<value_type> 
         constexpr auto
         slice(size_type ridx) const
@@ -814,8 +837,8 @@ namespace cortex
         ///
         /// \exception std::out_of_range
         ///
-        /// \param column type: size_type
-        /// \param row type: size_type
+        /// \param column type: {size_type}
+        /// \param row type: {size_type}
         /// \returns constexpr reference
         constexpr reference at(size_type row, size_type column)
         {
@@ -831,8 +854,8 @@ namespace cortex
         ///
         /// \exception std::out_of_range
         ///
-        /// \param column type: size_type
-        /// \param row type: size_type
+        /// \param column type: {size_type}
+        /// \param row type: {size_type}
         /// \returns constexpr const_reference
         constexpr const_reference at(size_type row, size_type column) const
         {
@@ -847,8 +870,8 @@ namespace cortex
         ///
         /// \exception std::out_of_range
         ///
-        /// \param column type: size_type
-        /// \param row type: size_type
+        /// \param column type: {size_type}
+        /// \param row type: {size_type}
         /// \returns constexpr reference
         constexpr reference operator()(size_type row, size_type column)
         { return at(row, column); }
@@ -860,8 +883,8 @@ namespace cortex
         ///
         /// \exception std::out_of_range
         ///
-        /// \param column type: size_type
-        /// \param row type: size_type
+        /// \param column type: {size_type}
+        /// \param row type: {size_type}
         /// \returns constexpr const_reference
         constexpr const_reference operator()(size_type row, size_type column) const
         { return at(row, column); }
@@ -1028,7 +1051,7 @@ namespace cortex
         /// \details Returns an iterator to the beginning 
         /// of the indicated row.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr row_iterator
         constexpr row_iterator row_begin(size_type row = 0uL)
         {
@@ -1041,7 +1064,7 @@ namespace cortex
         /// \details Returns an iterator to the beginning 
         /// of the indicated row.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_begin(size_type row = 0uL) const
         {
@@ -1054,7 +1077,7 @@ namespace cortex
         /// \details Returns a constant iterator to the 
         /// beginning of the indicated row.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_cbegin(size_type row = 0uL) const
         {
@@ -1067,7 +1090,7 @@ namespace cortex
         /// \details Returns a reverse iterator to the 
         /// beginning of the indicated reversed row.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr reverse_row_iterator
         constexpr reverse_row_iterator row_rbegin(size_type row = 0uL)
         {
@@ -1080,7 +1103,7 @@ namespace cortex
         /// \details Returns a constant reverse iterator 
         /// to the beginning of the indicated reversed row.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr const_reverse_row_iterator
         constexpr const_reverse_row_iterator row_rbegin(size_type row = 0uL) const
         {
@@ -1108,7 +1131,7 @@ namespace cortex
         /// This is why the iterator column index is set to 0 and the
         /// row index is one plus the indicated positon.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr row_iterator
         constexpr row_iterator row_end(size_type row = 0uL)
         {
@@ -1124,7 +1147,7 @@ namespace cortex
         /// is set to 0 and the row index is one plus the indicated
         /// positon.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_end(size_type row = 0uL) const
         {
@@ -1140,7 +1163,7 @@ namespace cortex
         /// is set to 0 and the row index is one plus the indicated
         /// positon.
         ///
-        /// \param row type: size_type | default: 0uL
+        /// \param row type: {size_type} | default: 0uL
         /// \returns constexpr const_row_iterator
         constexpr const_row_iterator row_cend(size_type row = 0uL) const
         {
@@ -1192,7 +1215,7 @@ namespace cortex
         /// \details Returns an iterator to the 
         /// beginning of the indicated column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr column_iterator
         constexpr column_iterator column_begin(size_type column = 0uL)
         {
@@ -1205,7 +1228,7 @@ namespace cortex
         /// \details Returns a constant iterator to the 
         /// beginning of the indicated column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_begin(size_type column = 0uL) const
         {
@@ -1218,7 +1241,7 @@ namespace cortex
         /// \details Returns a constant iterator to the 
         /// beginning of the indicated column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_cbegin(size_type column = 0uL) const
         {
@@ -1231,7 +1254,7 @@ namespace cortex
         /// \details Returns a reverse iterator to the 
         /// beginning of the reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr reverse_column_iterator
         constexpr reverse_column_iterator column_rbegin(size_type column = 0uL)
         {
@@ -1244,7 +1267,7 @@ namespace cortex
         /// \details Returns a constant reverse iterator to 
         /// the beginning of the indicated reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_rbegin(size_type column = 0uL) const
         {
@@ -1257,7 +1280,7 @@ namespace cortex
         /// \details Returns a constant reverse iterator to 
         /// the beginning of the indicated reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_crbegin(size_type column = 0uL) const
         {
@@ -1273,7 +1296,7 @@ namespace cortex
         /// to 0 and the column index is one plus the indicated
         /// position.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr column_iterator
         constexpr column_iterator column_end(size_type column = 0uL)
         {
@@ -1289,7 +1312,7 @@ namespace cortex
         /// to 0 and the column index is one plus the indicated
         /// position.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_end(size_type column = 0uL) const
         {
@@ -1305,7 +1328,7 @@ namespace cortex
         /// to 0 and the column index is one plus the indicated
         /// position.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_column_iterator
         constexpr const_column_iterator column_cend(size_type column = 0uL) const
         {
@@ -1318,7 +1341,7 @@ namespace cortex
         /// \details Returns a reverse iterator the end of the
         /// reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr reverse_column_iterator
         constexpr reverse_column_iterator column_rend(size_type column = 0uL)
         {
@@ -1331,7 +1354,7 @@ namespace cortex
         /// \details Returns a constant reverse iterator the end of
         /// the reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_rend(size_type column = 0uL) const
         {
@@ -1344,7 +1367,7 @@ namespace cortex
         /// \details Returns a constant reverse iterator the end of
         /// the reversed column.
         ///
-        /// \param column type: size_type | default: 0uL
+        /// \param column type: {size_type} | default: 0uL
         /// \returns constexpr const_reverse_column_iterator
         constexpr const_reverse_column_iterator column_crend(size_type column = 0uL) const
         {
@@ -1557,7 +1580,7 @@ namespace cortex
         ///
         /// \notes Default allocator is std::allocator<value_type>.
         ///
-        /// \param __n type: size_type
+        /// \param __n type: {size_type}
         /// \returns constexpr pointer
         constexpr pointer _M_allocate(size_type __n)
         { return __n != 0 ? alloc_traits::allocate(m_allocator, __n) : pointer(); }
@@ -1570,7 +1593,7 @@ namespace cortex
         /// relevant methods.
         ///
         /// \param __p type: pointer
-        /// \param __n type: size_type | attribute: [[maybe_unused]]
+        /// \param __n type: {size_type} | attribute: [[maybe_unused]]
         constexpr void _M_deallocate(pointer __p, [[maybe_unused]] size_type __n)
         {
             if (__p)
@@ -1584,8 +1607,8 @@ namespace cortex
         ///
         /// \exception std::out_of_range
         ///
-        /// \param __column type: size_type
-        /// \param __row type: size_type
+        /// \param __column type: {size_type}
+        /// \param __row type: {size_type}
         constexpr void _M_range_check(size_type __row, size_type __column) const
         {
             if (__row >= this->rows() || __column >= this->columns())
