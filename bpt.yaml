@@ -9,19 +9,7 @@ readme: README.md
 
 
 description: |
-  A collection of libraries for containers, algorithms, iterators, utilities and more C++20.
-
-
-libraries:
-  - name: concepts
-    path: libs/concepts
-
-  - name: iterators
-    path: libs/iterators
-
-  - name: box
-    path: libs/box
-    using: [concepts, iterators]
+  A collection of libraries for containers, algorithms, iterators, utilities and more for C++20.
 
 
 repository: https://github.com/oraqlle/cortexlib

@@ -1,2 +1,0 @@
-Standardese Documentation Command:
-standardese -c ../.standardese-config ../libs/box/src/box.hpp ../libs/concepts/src/concepts.hpp ../libs/iterators/src/iterators/normal.hpp ../libs/iterators/src/iterators/reverse.hpp ../libs/iterators/src/iterators/two_dim.hpp ../libs/iterators/src/iterators/column.hpp ../libs/iterators/src/iterators/row.hpp ../libs/iterators/src/adaptors/enumerate.hpp

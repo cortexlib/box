@@ -1,9 +1,0 @@
-# Work in progress build toolchain for 
-# C++ circle compiler with bpt.
-
-compiler_id: circle
-
-cxx_version: c++20
-
-flags:
-  - 
