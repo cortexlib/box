@@ -10,10 +10,9 @@
 
 ## Welcome
 
-The Cortex Library is small collection of libraries and classes for C++20.
+The Cortex Library is small, personal collection of libraries and classes for C++20. 
 
-
-Cortex Library is available from the [Trove](https://tropepi.dev) CRS repoository. Head to the [quick add](#quick-add) section for details to add `cortexlib`.
+Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository. Head to the [Install](#install) section to get up and running.
 
 ---
 
@@ -22,33 +21,26 @@ Cortex Library is available from the [Trove](https://tropepi.dev) CRS repoositor
 - [Cortex Library](#cortex-library)
   - [Welcome](#welcome)
   - [Contents](#contents)
-  - [Quick Start](#quick-start)
+  - [Features](#features)
   - [Install](#install)
-  - [Documentation](#documentation)
   - [Contributing and License](#contributing-and-license)
+  - [Supported Compilers](#supported-compilers)
   - [Links and Resources](#links-and-resources)
-    - [bpt](#bpt)
-    - [Trove Package Index](#trove-package-index)
-    - [Source Code](#source-code)
-  - [Acknowledgement](#acknowledgement)
-  - [Disclaimers](#disclaimers)
 
 ---
 
-## Quick Start
+## Features
 
+- Box - Generic, owning 2D array
+- Allocator Library - A small set of allocators to offer different allocation techniques
+- Primitive Literal Operators - Allows for more explicit type declaration of primitive types.
+- Tensor - Generic, owning multidimensional array
 
 ---
 
 ## Install
 
-
-
----
-
-## Documentation
-
-
+To add Cortex to your bpt project simply add `cortexlib@0.1.0` to your `bpt.yaml` file under dependencies. When building with bpt, use the `--use-repo` or `-r` command to specify lookup through Trove with the link: <https://trovepi.dev>.
 
 ---
 
@@ -60,32 +52,17 @@ Cortex Library is available from the [Trove](https://tropepi.dev) CRS repoositor
 
 ---
 
+## Supported Compilers
+
+---
+
 ## Links and Resources
 
-Links to related tools and documentation of bpt, TrovePI and `cortexlib`'s source.
+Links to related tools and documentation of bpt, Trove and `cortexlib`'s source.
 
-### bpt
-
+- [Docs](/docs/README.md)
 - [bpt](https://bpt.pizza)
 - [bpt Install Guide](https://bpt.pizza/docs/latest/tut/install.html)
 - ['Hello World!' from bpt](https://bpt.pizza/docs/latest/tut/hello-world.html)
 - [bpt.yaml](https://bpt.pizza/docs/latest/guide/projects.html#the-project-bpt-yaml-file)
-
-### Trove Package Index
-
-- [Trove Package Index Homepage](https://trovepi.dev)
-- [Creating Your Own Project Package](https://trovepi.dev)
-- [Submitting a package for Trove](https://trovepi.dev)
-
-### Source Code
-
-- [Cortex Library](https://github.com/cortexlib/cortexlib)
-- [Documentation](https://github.com/cortexlib/cortexlib)
-
----
-
-## Acknowledgement
-
-## Disclaimers
-
-bpt is currently an beta tool an thus is subject to change. As such, so is this package (as with any others). It is recommended you check the badge at the top of the this [README](#cortex-library) to see which version of bpt this package was built and tested against along with the relevent C++ standard and compiler imformation.
+- [Trove Homepage](https://trovepi.dev)
