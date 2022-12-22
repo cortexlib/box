@@ -85,45 +85,50 @@
     - [ ] `<=>` - spaceship
   - [ ] Misc.
     - [ ] `.get_allocator()`
+  - [ ] Testing
 - [ ] Tensor
 
 ## Iterators
 
 - [ ] Normal (adaptor)
-  - [ ] Constructors & Destructors
-    - [ ] Default
-    - [ ] Explicit Iterator Type
-    - [ ] Copy
-  - [ ] Assignment
-    - [ ] Copy
-    - [ ] Explicit Iterator Type
-  - [ ] Operators
-    - [ ] `*` - Dereference
-    - [ ] `->` - Pointer Indirection
-    - [ ] `++` - Increment
-    - [ ] `++(int)` - Increment (post)
-    - [ ] `--` - Decrement
-    - [ ] `--(int)` - Decrement (post)
-    - [ ] `+` - Add
-    - [ ] `-` - Minus
-    - [ ] `+=` - Add Assignment
-    - [ ] `-=` - Minus Assignment
-    - [ ] `[]` - Relative access
-  - [ ] Operators (non-member)
-    - [ ] `+` - Add
-    - [ ] `-` - Minus
-    - [ ] `==` - equal
-    - [ ] `!=` - unequal
-    - [ ] `<` - less
-    - [ ] `<=` - less-equal
-    - [ ] `>` - greater
-    - [ ] `=>` - greater-equal
-    - [ ] `<=>` - spaceship
-  - [ ] Misc.
-    - [ ] `.base()`
-    - [ ] `make_normal_iterator()`
-    - [ ] `std::iter_move()` injection
-    - [ ] `std::iter_swap()` injection
+  - [x] Constructors & Destructors
+    - [x] Default
+    - [x] Explicit Iterator Type Copy
+    - [ ] Explicit Converting
+    - [x] Copy
+    - [x] Delete Move
+    - [x] Delete Iterator Type Move
+  - [x] Assignment
+    - [x] Copy
+    - [x] Explicit Iterator Type
+  - [x] Operators
+    - [x] `*` - Dereference
+    - [x] `->` - Pointer Indirection
+    - [x] `++` - Increment
+    - [x] `++(int)` - Increment (post)
+    - [x] `--` - Decrement
+    - [x] `--(int)` - Decrement (post)
+    - [x] `+` - Add
+    - [x] `-` - Minus
+    - [x] `+=` - Add Assignment
+    - [x] `-=` - Minus Assignment
+    - [x] `[]` - Relative access
+  - [x] Operators (non-member)
+    - [x] `+` - Add
+    - [x] `-` - Minus
+    - [x] `==` - equal
+    - [x] `!=` - unequal
+    - [x] `<` - less
+    - [x] `<=` - less-equal
+    - [x] `>` - greater
+    - [x] `>=` - greater-equal
+    - [x] `<=>` - spaceship
+  - [x] Misc.
+    - [x] `.base()`
+    - [x] `make_normal_iterator()`
+    - [x] `std::iter_move()` injection
+    - [x] `std::iter_swap()` injection
+  - [ ] Testing
 
 ## Literals
 
@@ -142,3 +147,5 @@
 
 - [ ] Match Expression
 - [ ] Indices generator
+- [ ] Pretty Printing
+  - [ ] Support `std::formatter` for custom data structures

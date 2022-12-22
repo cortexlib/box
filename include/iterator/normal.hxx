@@ -3,24 +3,24 @@
 /// \brief Adapts a non-object iterator to an object iterator 
 /// without changing its semantics.
 ///
-/// Author: Tyler Swann (oraqlle@github.com)
+/// Author: Tyler Swann (tyler.swann05@gmail.com)
 /// 
-/// Header Version: v0.0.1
+/// Header Version: v0.1.0
 ///
-/// Date: 21-12-2022
+/// Date: 23-12-2022
 ///
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022
 /// \file normal.hxx
 
-#ifndef CORTEX_NORMAL_ITERATOR_HPP
-#   define CORTEX_NORMAL_ITERATOR_HPP 
+#ifndef CORTEX_NORMAL_ITERATOR
+#   define CORTEX_NORMAL_ITERATOR
 
-
-#include <utility>
-#include <type_traits>
 #include <iterator>
+#include <ranges>
+#include <type_traits>
+#include <utility>
 
 #if __cpp_lib_three_way_comparison
 #   include <compare>
@@ -41,411 +41,373 @@ namespace cxl
     /// \details This iterator is used to adapt non-iterator 
     /// objects into objects (ie. pointers). %normal_iterator 
     /// does not change the semantics of the operators of the
-    /// underlying iterator of type _Iterator.
+    /// underlying iterator of type Iterator.
     /// 
     /// 
-    /// \tparam _Iterator The underlying type of the iterator.
-    /// \tparam _Container Allows classes to create different types of iterators even if the _Iterator type is the same.
-    template<typename _Iterator, typename _Container>
+    /// \tparam Iterator The underlying type of the iterator.
+    /// \tparam Container Allows iterators to be of different 
+    /// type even if the Iterator type is the same.
+    template<typename Iterator, typename Container>
     class normal_iterator
     {
     protected:
-        _Iterator m_current;
+        Iterator current;
 
-        using __traits_type                     = std::iterator_traits<_Iterator>;
+        using iter_traits_type                  = std::iterator_traits<Iterator>;
 
     public:
-        using iterator_type                     = _Iterator;
-        using iterator_category                 = typename __traits_type::iterator_category;
+        using iterator_type                     = Iterator;
+        using iterator_category                 = typename iter_traits_type::iterator_category;
 
 #if __cpp_concepts >= 201907L
-        using iterator_concept                  = std::random_access_iterator_tag;
+        using iterator_concept                  = typename iter_traits_type::iterator_concept;
 #endif /// __cpp_concepts >= 201907L
 
-        using value_type                        = typename __traits_type::value_type;
-        using difference_type                   = typename __traits_type::difference_type;
-        using pointer                           = typename __traits_type::pointer;
-        using reference                         = typename __traits_type::reference;
-
-
+        using value_type                        = typename iter_traits_type::value_type;
+        using difference_type                   = typename iter_traits_type::difference_type;
+        using pointer                           = typename iter_traits_type::pointer;
+        using reference                         = typename iter_traits_type::reference;
 
         
         /// \brief Default Constructor
         /// 
-        /// \details Initialises m_current to the default value of 
-        /// the type _Iterator. 
-        /// 
-        /// [constexpr]
-        /// [noexcept] 
-        constexpr normal_iterator() noexcept
-        : m_current(_Iterator()) { }
-
-
+        /// \details Initialises current to the default value of 
+        /// the type Iterator. 
+        constexpr explicit 
+        normal_iterator() noexcept
+        : current(Iterator()) { }
 
         
         /// \brief Copy Constructor.
         /// 
-        /// \details Uses copy semantics to initialise m_current from
+        /// \details Uses copy semantics to initialise current from
         /// another %normal_iterator object. Uses the \code {.cpp}
         /// %normal_iterator::base()
         /// \endcode
-        /// method to access __other's underlying iterator. 
+        /// method to access other's underlying iterator. 
         /// 
-        /// \param __other const reference to a %normal_iterator object.
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        constexpr normal_iterator(const normal_iterator& __other) noexcept
-        : m_current(__other.base()) { }
-
-
+        /// \param other type: const normal_iterator&
+        constexpr explicit 
+        normal_iterator(const normal_iterator& other) noexcept
+        : current(other.base()) { }
 
         
-        /// \brief Copy Constructor. 
+        /// \brief Iterator Copy Constructor. 
         /// 
-        /// \details Uses copy semantics to initialise m_current from
+        /// \details Uses copy semantics to initialise current from
         /// an object as the same type as iterator_type. Because the 
-        /// the underlying types must be the same, m_current can be 
-        /// directly initialised from __other.
+        /// the underlying types must be the same, current can be 
+        /// directly initialised from other.
         /// 
-        /// \param __other const reference to an object of type iterator_type.
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        constexpr normal_iterator(const iterator_type& __other) noexcept
-        : m_current(__other) { }
+        /// \param other type: const iterator_type&
+        constexpr explicit
+        normal_iterator(const iterator_type& other) noexcept
+        : current(other) { }
         
-
-
         
         /// \brief Move Constructor.
         /// 
-        /// \details Deletes the default move constructor that the 
-        /// compiler might generate that would move the \code {.cpp}
-        /// %normal_iterator::m_current
-        /// \endcode from another %normal_iterator.
-        /// 
-        /// \param __other rvalue reference to a %normal_iterator object.
-        /// 
-        /// [constexpr]
-        /// [deleted.constructor] 
-        
-        /// constexpr normal_iterator(normal_iterator&& __other) noexcept = delete;
-
+        /// \param other type: normal_iterator&&
+        constexpr explicit
+        normal_iterator(normal_iterator&& other) noexcept = delete;
 
 
         
-        /// \brief Move Constructor.
-        /// 
-        /// \details Deletes the default move constructor that the 
-        /// compiler might generate that would move __other from its 
-        /// source.
-        /// 
-        /// \param __other rvalue reference to an object of type iterator_type.
-        /// 
-        /// [constexpr]
-        /// [deleted.constructor] 
-        
-        /// constexpr normal_iterator(iterator_type&& __other) noexcept = delete;
-        
-
-
-        
-        /// \notes No explicit destructor is required.
-        
-
-
+        /// \brief Iterator Move Constructor.
+        ///
+        /// \param other type: iterator_type&&
+        constexpr explicit
+        normal_iterator(iterator_type&& other) noexcept = delete;
 
         
         /// \brief Copy Assignment.
         /// 
-        /// \details Uses copy semantics to assign m_current to the
-        /// underlying iterator of __other. Uses the \code {.cpp}
+        /// \details Uses copy semantics to assign current to the
+        /// underlying iterator of other. Uses the \code {.cpp}
         /// %normal_iterator::base()
         /// \endcode
-        /// method to access __other's underlying iterator.
+        /// method to access other's underlying iterator.
         /// Returns a reference to this.
         /// 
-        /// \param __other
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// [operator.assigment]
-        constexpr normal_iterator& operator= (const normal_iterator& __other) noexcept
+        /// \param other type: const normal_iterator&
+        ///
+        /// \returns normal_iterator&
+        constexpr explicit 
+        normal_iterator& operator= (const normal_iterator& other) noexcept
         { 
-            m_current = __other.base(); 
+            current = other.base();
             return *this;
         }
-
-
 
         
         /// \brief Copy Assignment.
         /// 
-        /// \details Uses copy semantics to assign m_current to 
-        /// __other. __other must be of type iterator_type.
+        /// \details Uses copy semantics to assign current to 
+        /// other. other must be of type iterator_type.
         /// Returns a reference to this.
         /// 
-        /// \param __other
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// [operator.assigment]
-        constexpr normal_iterator& operator= (const iterator_type& __other) noexcept
+        /// \param other type: const iterator_type&
+        /// \returns normal_iterator&
+        constexpr explicit
+        normal_iterator& operator= (const iterator_type& other) noexcept
         {
-            m_current = __other; 
+            current = other; 
             return *this;
         }
 
         
         /// \brief Dereference Operator Overload. 
         /// 
-        /// \details Dereferences m_current and returns a 
+        /// \details Dereferences current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// \returns constexpr reference (T&)
-        /// 
-        /// [constexpr]
-        /// [noexcept]
+        /// \returns reference
         constexpr reference operator* () noexcept
-        { return *m_current; }
+        { return *current; }
 
 
         
         /// \brief Dereference Operator Overload. 
         /// 
-        /// \details Dereferences m_current and returns a 
+        /// \details Dereferences current and returns a 
         /// reference of the value to the caller.
         /// 
-        /// \returns constexpr reference (T&)
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// [trailing.const]
+        /// \returns reference
         constexpr reference operator* () const noexcept
-        { return *m_current; }
-
+        { return *current; }
 
         
         /// \brief Arrow Deference Operator Overload. 
         /// 
-        /// \details Returns a pointer of m_current, this
+        /// \details Returns a pointer of current, this
         /// allows for access to the internal members if
-        /// m_current is a class or object type throught
+        /// current is a class or object type through
         /// "indirection chaining".
         /// 
-        /// \returns constexpr pointer (T*)
-        /// 
-        /// [constexpr]
-        /// [noexcept]
+        /// \returns pointer
         constexpr pointer operator-> () noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
-	     || requires(const iterator_type __i) { __i.operator->(); }
+	     || requires(const iterator_type i) { i.operator->(); }
 #   endif
-        { return _S_to_pointer(m_current); }
+        { return _S_to_pointer(current); }
 
         
         /// \brief Arrow Deference Operator Overload. 
         /// 
-        /// \details Returns a pointer of m_current, this
+        /// \details Returns a pointer of current, this
         /// allows for access to the internal members if
-        /// m_current is a class or object type throught
+        /// current is a class or object type through
         /// "indirection chaining".
         /// 
-        /// \returns constexpr pointer (T*)
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// [trailing.const]
+        /// \returns pointer
         constexpr pointer operator-> () const noexcept
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
-	     || requires(const iterator_type __i) { __i.operator->(); }
+	     || requires(const iterator_type i) { i.operator->(); }
 #   endif
-        { return _S_to_pointer(m_current); }
-
+        { return _S_to_pointer(current); }
 
         
         /// \brief Prefix Increment Operator Overload.
         /// 
         /// \details Applies the prefix increment operator to
-        /// m_current and returns a reference to this.
+        /// current and returns a reference to this.
         /// 
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
+        /// \returns normal_iterator&
         constexpr normal_iterator& operator++ () noexcept
         {
-            ++m_current; 
+            ++current; 
             return *this;
         }
-
 
         
         /// \brief Postfix Increment Operator Overload.
         /// 
-        /// \details Constructs a new iterator from m_current
-        /// while applying the postifix increment operator on
-        /// Construction. This effectively increments m_current 
+        /// \details Constructs a new iterator from current
+        /// while applying the postfix increment operator on
+        /// Construction. This effectively increments current 
         /// for this while creating a new iterator with its 
-        /// m_current equal to the last value of this m_current. 
+        /// current equal to the last value of this current. 
         /// 
-        /// \returns constexpr normal_iterator
-        /// 
-        /// [constexpr]
-        /// [noexcept] 
+        /// \returns normal_iterator
         constexpr normal_iterator operator++ (int) noexcept
-        { return normal_iterator(m_current++); }
-
+        { return normal_iterator(current++); }
 
         
         /// \brief Prefix Decrement Operator Overload.
         /// 
         /// \details Applies the prefix decrement operator to
-        /// m_current and returns a reference to this.
+        /// current and returns a reference to this.
         /// 
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
+        /// \returns normal_iterator&
         constexpr normal_iterator& operator-- () noexcept
         {
-            --m_current;
+            --current;
             return *this;
         }
-
 
         
         /// \brief Postfix Decrement Operator Overload.
         /// 
-        /// \details Constructs a new iterator from m_current
-        /// while applying the postifix decrement operator on
-        /// construction. This effectively decrements m_current 
+        /// \details Constructs a new iterator from current
+        /// while applying the postfix decrement operator on
+        /// construction. This effectively decrements current 
         /// for this while creating a new iterator with its 
-        /// m_current equal to the last value of this m_current. 
+        /// current equal to the last value of this current. 
         /// 
-        /// \returns constexpr normal_iterator
-        /// 
-        /// [constexpr]
-        /// [noexcept] 
+        /// \returns normal_iterator
         constexpr normal_iterator operator-- (int) noexcept
-        { return normal_iterator(m_current--); }
-
+        { return normal_iterator(current--); }
 
         
         /// \brief Subscript Operator Overload.
         /// 
-        /// \details Accesses the element at an offset to m_current's
+        /// \details Accesses the element at an offset to current's
         /// location in memory and returns a reference to the value
         /// stored at that location.
         /// 
-        /// \param __n 
-        /// \returns constexpr reference (T&)
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// ![range.validation]
-        constexpr reference operator[] (difference_type __n) noexcept
-        { return m_current[__n]; }
-
+        /// \param n type: difference_type
+        /// \returns reference
+        constexpr reference operator[] (difference_type n) noexcept
+        { return current[n]; }
 
         
         /// \brief Additive Assignment Operator Overload. 
         ///
-        /// \details Increases the m_current's pointer value by 
-        /// __step and assigns m_current the new pointer value 
+        /// \details Increases the current's pointer value by 
+        /// step and assigns current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// \param __step 
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        constexpr normal_iterator& operator+= (difference_type __step) noexcept
+        /// \param step 
+        /// \returns normal_iterator&
+        constexpr normal_iterator& operator+= (difference_type step) noexcept
         {
-            m_current += __step;
+            current += step;
             return *this;
         }
-
 
         
         /// \brief Subtraction Assignment Operator Overload. 
         ///
-        /// \details Decreases the m_current's pointer value by 
-        /// __step and assigns m_current the new pointer value 
+        /// \details Decreases the current's pointer value by 
+        /// step and assigns current the new pointer value 
         /// and returns a reference to this. 
         /// 
-        /// \param __step 
-        /// \returns constexpr normal_iterator&
-        /// 
-        /// [constexpr]
-        /// [noexcept]
-        constexpr normal_iterator& operator-= (difference_type __step) noexcept
+        /// \param step 
+        /// \returns normal_iterator&
+        constexpr normal_iterator& operator-= (difference_type step) noexcept
         {
-            m_current -= __step;
+            current -= step;
             return *this;
         }
-
 
         
         /// \brief Addition Operator Overload.
         /// 
         /// \details Constructs a new iterator from the addition 
-        /// of m_current and __step. 
+        /// of current and step. 
         /// 
-        /// \param __step 
-        /// \returns constexpr normal_iterator 
-        /// 
-        /// [constexpr]
-        /// [noexcept] 
-        constexpr normal_iterator operator+ (difference_type __step) const noexcept
-        { return normal_iterator(m_current + __step); }
+        /// \param step 
+        /// \returns normal_iterator
+        constexpr normal_iterator operator+ (difference_type step) const noexcept
+        { return normal_iterator(current + step); }
 
 
         
         /// \brief Subtraction Operator Overload.
         /// 
         /// \details Constructs a new iterator from the subtraction 
-        /// of m_current and __step. 
+        /// of current and step. 
         /// 
-        /// \param __step 
-        /// \returns constexpr normal_iterator 
-        /// 
-        /// [constexpr]
-        /// [noexcept] 
-        constexpr normal_iterator operator- (difference_type __step) const noexcept
-        { return normal_iterator(m_current - __step); }
-
+        /// \param step 
+        /// \returns normal_iterator 
+        constexpr normal_iterator operator- (difference_type step) const noexcept
+        { return normal_iterator(current - step); }
 
         
         /// \brief Base Member Access. 
         /// 
-        /// \details Returns a raw copy of m_current.
+        /// \details Returns a raw copy of current.
         /// 
-        /// \returns constexpr iterator_type (_Iterator)
+        /// \returns iterator_type
+        constexpr const iterator_type base() const noexcept
+        { return current; }
+
+
+        /// \brief rvalue cast
+        /// \tparam Iter 
+        ///
+        /// \details Casts the underlying iterator to
+        /// its rvalue reference type.
         /// 
-        /// [constexpr]
-        /// [noexcept]
-        /// [trailing.const]
-        
-        constexpr const iterator_type& base() const noexcept
-        { return m_current; }
+        /// \param i type: const normal_iterator&
+        /// \return std::iter_rvalue_reference_t<Iter>
+        friend constexpr auto
+        std::iter_move(const normal_iterator& i)
+            noexcept (
+                std::is_nothrow_copy_constructible_v<Iter> 
+                && noexcept(std::ranges::iter_move(std::declval<Iterator&>()))
+            ) -> std::iter_rvalue_reference_t<Iterator>
+        { return std::ranges::iter_move(i.base()); }
+
+
+        /// \brief Swaps iterator objects
+        ///
+        /// \details Swaps objects pointed to by the underlying iterator
+        ///
+        /// \tparam Iter2 concept: std::indirectly_swappable<Iterator>
+        ///
+        /// \param x type: const normal_iterator&
+        /// \param y type: const normal_iterator<Iter2>&
+        template<std::indirectly_swappable<Iterator> Iter2>
+        friend constexpr auto
+        std::iter_swap(const normal_iterator& x, const normal_iterator<Iter2>& y)
+            noexcept (
+                std::is_nothrow_copy_constructible_v<Iterator> 
+                && std::is_nothrow_copy_constructible_v<Iter2> 
+                && noexcept(ranges::iter_swap(std::declval<Iterator&>(), std::declval<Iter2&>()))
+            ) -> void
+        { std::ranges::iter_swap(x, y); }
+
 
     private:
 
-        template<typename _Tp>
-	    static constexpr _Tp*
-	    _S_to_pointer(_Tp* __p)
-        { return __p; }
+        /// \brief Smart pointer indirection adaptor
+        ///
+        /// \details Adds support for smart pointers 
+        /// to be adapted into normal_iterator by manually
+        /// calling operator-> for smart pointers.
+        /// This is the regular pointer overload making
+        /// it a no-op. 
+        ///
+        /// \tparam P Possible pointer to object
+        ///
+        /// \param ptr type: P
+        ///
+        /// \returns  P*
+        template<typename P>
+	    static constexpr P*
+	    _S_to_pointer(P* ptr)
+        { return ptr; }
 
-        template<typename _Tp>
+
+        /// \brief Smart pointer indirection adaptor
+        ///
+        /// \details Adds support for smart pointers 
+        /// to be adapted into normal_iterator by manually
+        /// calling operator-> for smart pointers.
+        /// This is the smart pointer overload.
+        ///
+        /// \tparam P
+        ///
+        /// \param obj type: P
+        ///
+        /// \returns pointer      
+        template<typename P>
         static constexpr pointer
-	    _S_to_pointer(_Tp __t)
-        { return __t.operator->(); }
+	    _S_to_pointer(P obj)
+        { return obj.operator->(); }
 
     }; /// class normal_iterator
 
@@ -456,546 +418,436 @@ namespace cxl
     /// \brief Equality Operator Overload.
     /// 
     /// \details Performs an equality comparison of two 
-    /// %normal_iterator's whose _Iterator types can be 
-    /// different but of they share the same _Container 
+    /// normal_iterators whose iterator_types can be 
+    /// different but of they share the same Container 
     /// type. 
     /// 
-    /// \requires 
-    /// That the underlying _Iterator types are equality comparable.
-    /// \code {.cpp}
-    /// { __lhsI == __rhsI } -> bool
-    /// \endcode
+    /// \notes IterL can equal IterR.
     /// 
-    /// \exception 
-    /// Ensures that __lhs.base() == __rhs.base() is noexcept.
-    /// 
-    /// \notes _IteratorL can equal _IteratorR.
-    /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr true
-    /// \returns constexpr false
-    /// 
-    /// [constexpr]
-    /// [noexcept.noexcept-clause]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-        requires requires (_IteratorL __lhsI, _IteratorR __rhsI)
-        { { __lhsI == __rhsI } -> std::convertible_to<bool>; }
-    constexpr bool 
-    operator== (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                    const normal_iterator<_IteratorR, _Container>& __rhs) 
-        noexcept (noexcept(__lhs.base() == __rhs.base()))
-    { return __lhs.base() == __rhs.base(); }
-
-
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container 
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool    
+    template<typename IterL, typename IterR, typename Container>
+        requires requires (IterL lhsI, IterR rhsI)
+        { { lhsI == rhsI } -> std::convertible_to<bool>; }
+    constexpr auto 
+    operator== (const normal_iterator<IterL, Container>& lhs, 
+                    const normal_iterator<IterR, Container>& rhs) 
+        noexcept (noexcept(lhs.base() == rhs.base())) 
+        -> bool
+    { return lhs.base() == rhs.base(); }
 
     
     /// \brief Spaceship Operator Overload.
     /// 
     /// \details Performs a 3-way comparison of two 
-    /// %normal_iterator's whose _Iterator types can be 
-    /// different but of they share the same _Container 
+    /// normal_iterators whose iterator_types can be 
+    /// different but of they share the same Container 
     /// type. 
     /// 
-    /// \exception \code {.cpp}
-    /// code noexcept (noexcept(__lhs.base() <=> __rhs.base()))
-    /// \endcode
-    /// Ensures that the 3-way comparison of __lhs.base() and 
-    /// __rhs.base() is noexcept.
+    /// \notes IterL can equal IterR.
     /// 
-    /// \notes _IteratorL can equal _IteratorR.
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr auto of [std::strong_ordering]
-    ///                         : [std::weak_ordering]
-    ///                         : [std::partial_ordering]
-    /// 
-    /// [constexpr]
-    /// [noexcept.noexcept-clause]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns std::weak_ordering
+    template<typename IterL, typename IterR, typename Container>
+        requires std::three_way_comparable_with<IterL, IterR, std::weak_ordering>
     constexpr auto
-    operator<=> (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                 const normal_iterator<_IteratorR, _Container>& __rhs)
-        noexcept (noexcept(__lhs.base() <=> __rhs.base()))
-    { return std::compare_three_way{}(__lhs.base(), __rhs.base()); }
+    operator<=> (const normal_iterator<IterL, Container>& lhs, 
+                 const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() <=> rhs.base()))
+        -> std::weak_ordering
+    { return lhs.base() <=> rhs.base(); }
 
-
-#else /// ! C++20
-
+#else /// __cpp_lib_three_way_comparison -> C++20
 
     
     /// \brief Equality Operator Overload.
     /// 
     /// \details Performs an equality comparison of two 
-    /// %normal_iterator's whose _Iterator types can be
-    /// different but of they share the same _Container
+    /// normal_iterator whose iterator_type can be
+    /// different but of they share the same Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator== (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-        noexcept
-    { return __lhs.base() == __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator== (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() == rhs.base()))
+        -> bool
+    { return lhs.base() == rhs.base(); }
 
    
     /// \brief Equality Operator Overload.
     /// 
     /// \details Performs an equality comparison of two 
-    /// %normal_iterator's whose _Iterator types and 
-    /// _Container type are the same. 
+    /// normal_iterator whose iterator_type and 
+    /// Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline bool
-    operator== (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-        noexcept
-    { return __lhs.base() == __rhs.base(); } 
-
-
+    /// \tparam Iterator
+    /// \tparam Container 
+    ///
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool    
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator== (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() == rhs.base()))
+        -> bool
+    { return lhs.base() == rhs.base(); } 
 
     
     /// \brief Inequality Operator Overload.
     /// 
     /// \details Performs an equality comparison of two 
-    /// %normal_iterator's whose _Iterator types can be
-    /// different but of they share the same _Container
+    /// normal_iterator whose iterator_type can be
+    /// different but of they share the same Container
     /// type.  
     /// 
-    /// \tparam _IteratorL
-    /// \tparam _IteratorR
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam IterL
+    /// \tparam IterR
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator!= (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() != __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator!= (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() != rhs.base()))
+        -> bool
+    { return lhs.base() != rhs.base(); }
 
     
     /// \brief Inequality Operator Overload.
     /// 
     /// \details Performs an inequality comparison of two 
-    /// %normal_iterator's whose _Iterator types and 
-    /// _Container type are the same. 
+    /// normal_iterator whose iterator_type and 
+    /// Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline bool
-    operator!= (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() != __rhs.base(); }
-
-
+    /// \tparam Iterator
+    /// \tparam Container 
+    ///
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator!= (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() != rhs.base()))
+        -> bool
+    { return lhs.base() != rhs.base(); }
 
     
     /// \brief Less-than Operator Overload.
     /// 
     /// \details Performs an less-than comparison of two 
-    /// %normal_iterator's whose _Iterator types can be
-    /// different but of they share the same _Container
+    /// normal_iterator whose iterator_type can be
+    /// different but of they share the same Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam IterL 
+    /// \tparam IterR 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator< (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() < __rhs.base(); }
-
-
+    /// \tparam Container 
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator< (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() < rhs.base()))
+        -> bool
+    { return lhs.base() < rhs.base(); }
 
     
     /// \brief Less-than Operator Overload.
     /// 
     /// \details Performs an less-than comparison of two 
-    /// %normal_iterator's whose _Iterator types and 
-    /// _Container type are the same. 
+    /// normal_iterator whose iterator_type and 
+    /// Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam Iterator
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline bool
-    operator< (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() < __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator< (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() < rhs.base()))
+        -> bool
+    { return lhs.base() < rhs.base(); }
 
     
     /// \brief Greater-than Operator Overload.
     /// 
     /// \details Performs an greater-than comparison of two 
-    /// %normal_iterator's whose _Iterator types can be
-    /// different but of they share the same _Container
+    /// normal_iterator whose iterator_type can be
+    /// different but of they share the same Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator> (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() > __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator> (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() > rhs.base()))
+        -> bool
+    { return lhs.base() > rhs.base(); }
 
     
     /// \brief Greater-than Operator Overload.
     /// 
     /// \details Performs an greater-than comparison 
-    /// of two %normal_iterator's whose _Iterator types 
-    /// and _Container type are the same. 
+    /// of two normal_iterator whose iterator_type 
+    /// and Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam Iterator
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline bool
-    operator> (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() > __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator> (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() > rhs.base()))
+        -> bool
+    { return lhs.base() > rhs.base(); }
 
     
     /// \brief Less-than-or-Equal Operator Overload.
     /// 
     /// \details Performs an less-than-or-equal comparison 
-    /// of two %normal_iterator's whose _Iterator types can 
-    /// be different but of they share the same _Container
+    /// of two normal_iterator whose iterator_type can 
+    /// be different but of they share the same Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator<= (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() <= __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator<= (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() <= rhs.base()))
+        -> bool
+    { return lhs.base() <= rhs.base(); }
 
     
     /// \brief Less-than-or-Equal Operator Overload.
     /// 
     /// \details Performs an less-than-or-equal comparison 
-    /// of two %normal_iterator's whose _Iterator types and 
-    /// _Container type are the same. 
+    /// of two normal_iterator whose iterator_type and 
+    /// Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam Iterator
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline bool
-    operator<= (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() <= __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator<= (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() <= rhs.base()))
+        -> bool
+    { return lhs.base() <= rhs.base(); }
 
     
     /// \brief Greater-than-or-Equal Operator Overload.
     /// 
     /// \details Performs an greater-than-or-equal comparison 
-    /// of two %normal_iterator's whose _Iterator types can 
-    /// be different but of they share the same _Container
+    /// of two normal_iterator whose iterator_type can 
+    /// be different but of they share the same Container
     /// type. 
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
-    constexpr inline bool
-    operator>= (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() >= __rhs.base(); }
-
-
+    /// \tparam IterL 
+    /// \tparam IterR 
+    /// \tparam Container 
+    ///
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
+    /// \returns bool 
+    template<typename IterL, typename IterR, typename Container>
+    constexpr inline auto
+    operator>= (const normal_iterator<IterL, Container>& lhs, 
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept (noexcept(lhs.base() >= rhs.base()))
+        -> bool
+    { return lhs.base() >= rhs.base(); }
 
     
     /// \brief Greater-than-or-Equal Operator Overload.
     /// 
     /// \details Performs an greater-than-or-equal comparison 
-    /// of two %normal_iterator's whose _Iterator types and 
-    /// _Container type are the same. 
+    /// of two normal_iterator whose iterator_type and 
+    /// Container type are the same. 
     /// 
-    /// \tparam _Iterator
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline true
-    /// \returns constexpr inline false
+    /// \tparam Iterator
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns bool
+    template<typename Iterator, typename Container>
     constexpr inline bool
-    operator>= (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() >= __rhs.base(); }
-
+    operator>= (const normal_iterator<Iterator, Container>& lhs, 
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept (noexcept(lhs.base() >= rhs.base()))
+        -> bool
+    { return lhs.base() >= rhs.base(); }
 
 #endif /// __cpp_lib_three_way_comparison
-
-
 
     
     /// \brief Difference Operator Overload.
     /// 
     /// \details Performs a difference operation between 
-    /// two %normal_iterator's whose _Iterator types can 
-    /// be different but share the same _Container type.
+    /// two normal_iterator whose iterator_type can 
+    /// be different but share the same Container type.
     /// 
-    /// \tparam _IteratorL 
-    /// \tparam _IteratorR
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
+    /// \tparam IterL 
+    /// \tparam IterR
+    /// \tparam Container 
+    /// 
+    /// \param lhs type: const normal_iterator<IterL, Container>&
+    /// \param rhs type: const normal_iterator<IterR, Container>&
     /// \if __cplusplus >= 201103L
-    /// \returns constexpr inline auto -> decltype(__lhs.base() - __rhs.base())
+    /// \returns decltype(lhs.base() - rhs.base())
     /// \ifnot __cplusplus >= 201103L
-    /// \returns inline typename normal_iterator<_IteratorL, _Container>::difference_type
+    /// \returns typename normal_iterator<IterL, Container>::difference_type
     /// \endif
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _IteratorL, typename _IteratorR, typename _Container>
+    template<typename IterL, typename IterR, typename Container>
 #if __cplusplus >= 201103L /// C++11  
     constexpr inline auto
-    operator- (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs) 
-        noexcept
-        -> decltype(__lhs.base() - __rhs.base())
+    operator- (const normal_iterator<IterL, Container>& lhs, 
+               const normal_iterator<IterR, Container>& rhs) 
+        noexcept (noexcept(lhs.base() - rhs.base()))
+        -> decltype(lhs.base() - rhs.base())
 #else /// ! C++11
-    inline typename normal_iterator<_IteratorL, _Container>::difference_type
-    operator- (const normal_iterator<_IteratorL, _Container>& __lhs, 
-                const normal_iterator<_IteratorR, _Container>& __rhs) 
+    inline typename normal_iterator<IterL, Container>::difference_type
+    operator- (const normal_iterator<IterL, Container>& lhs, 
+               const normal_iterator<IterR, Container>& rhs) 
 #endif /// __cplusplus >= 201103L
-    { return __lhs.base() - __rhs.base(); }
-
-
+    { return lhs.base() - rhs.base(); }
 
     
     /// \brief Difference Operator Overload.
     /// 
     /// \details Performs a difference operation between
-    /// two %normal_iterator's whose _Iterator types and
-    /// _Container type are the same.
+    /// two normal_iterator whose iterator_type and
+    /// Container type are the same.
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __lhs 
-    /// \param __rhs 
-    /// \returns constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type 
+    /// \tparam Iterator 
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline typename normal_iterator<_Iterator, _Container>::difference_type
-    operator- (const normal_iterator<_Iterator, _Container>& __lhs, 
-                const normal_iterator<_Iterator, _Container>& __rhs)
-    noexcept
-    { return __lhs.base() - __rhs.base(); }
-
-
+    /// \param lhs type: const normal_iterator<Iterator, Container>&
+    /// \param rhs type: const normal_iterator<Iterator, Container>&
+    /// \returns constexpr inline typename normal_iterator<Iterator, Container>::difference_type 
+    template<typename Iterator, typename Container>
+    #if __cplusplus >= 201103L /// C++11  
+    constexpr inline auto
+    operator- (const normal_iterator<Iterator, Container>& lhs, 
+               const normal_iterator<Iterator, Container>& rhs) 
+        noexcept (noexcept(lhs.base() - rhs.base()))
+        -> decltype(lhs.base() - rhs.base())
+#else /// ! C++11
+    inline typename normal_iterator<Iterator, Container>::difference_type
+    operator- (const normal_iterator<Iterator, Container>& lhs, 
+               const normal_iterator<Iterator, Container>& rhs) 
+#endif /// __cplusplus >= 201103L
+    { return lhs.base() - rhs.base(); }
 
     
     /// \brief Addition Operator Overload.
     /// 
-    /// \details Takes an offset \param __n and a %normal_iterator 
-    /// \param __i. Constructs a new %normal_iterator by adding
-    /// \param __n to \param __i.base().
+    /// \details Takes an offset \param n and a %normal_iterator 
+    /// \param i. Constructs a new %normal_iterator by adding
+    /// \param n to \param i.base().
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __n 
-    /// \param __i 
-    /// \returns constexpr inline normal_iterator<_Iterator, _Container> 
+    /// \tparam Iterator 
+    /// \tparam Container 
     /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
-    constexpr inline normal_iterator<_Iterator, _Container>
-    operator+ (typename normal_iterator<_Iterator, _Container>::difference_type __n, 
-                const normal_iterator<_Iterator, _Container>& __i)
-    noexcept
-    { return normal_iterator<_Iterator, _Container>(__i.base() + __n); }
-
-
+    /// \param n type: normal_iterator<Iterator, Container>::difference_type
+    /// \param i type: const normal_iterator<Iterator, Container>& i
+    /// \returns constexpr inline normal_iterator<Iterator, Container> 
+    template<typename Iterator, typename Container>
+    constexpr inline auto
+    operator+ (typename normal_iterator<Iterator, Container>::difference_type n, 
+               const normal_iterator<Iterator, Container>& i)
+        noexcept 
+        -> normal_iterator<Iterator, Container>
+    { return normal_iterator<Iterator, Container>(i.base() + n); }
 
     
-    /// \brief Makes a new %normal_iterator.
+    /// \brief Makes a new normal_iterator.
     /// 
     /// \details An adaptor for turning STL container iterators 
-    /// into %normal_iterators.
+    /// into normal_iterators.
     /// 
-    /// \code {.cpp}
-    /// auto it = make_normal_iterator<std::container>(c.begin()); 
-    /// \endcode 
+    /// \tparam Container 
     /// 
-    /// \tparam _Container 
-    /// \param __i 
-    /// \returns constexpr auto -> normal_iterator<typename _Container::iterator, _Container>
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Container>
+    /// \param i type: Container::iterator
+    /// \returns constexpr auto normal_iterator<typename Container::iterator, Container>
+    template<typename Container>
     constexpr auto
-    make_normal(typename _Container::iterator __i)
-    noexcept
-        -> normal_iterator<typename _Container::iterator, _Container>
-    { return normal_iterator<typename _Container::iterator, _Container>(__i); }
-
-
+    make_normal_iterator(typename Container::iterator i)
+        noexcept
+        -> normal_iterator<typename Container::iterator, Container>
+    { return normal_iterator<typename Container::iterator, Container>(i); }
 
     
     /// \brief Makes a new %normal_iterator.
     /// 
-    /// \details An adaptor for making C-style array pointers 
-    /// into %normal_iterators.
+    /// \details An adaptor for making slice pointers 
+    /// into normal_iterators.
     /// 
-    /// \code {.cpp}
-    /// auto it =  make_normal<int*, int[]>(arr);
-    /// \endcode
+    /// \tparam Iterator 
+    /// \tparam Container 
     /// 
-    /// \tparam _Iterator 
-    /// \tparam _Container 
-    /// \param __i 
-    /// \returns constexpr auto -> normal_iterator<_Iterator, _Container> 
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Iterator, typename _Container>
+    /// \param i type: Iterator
+    /// \returns normal_iterator<Iterator, Container> 
+    template<typename Iterator, typename Container>
     constexpr auto
-    make_normal(_Iterator __i)
+    make_normal_iterator(Iterator i)
     noexcept
-        -> normal_iterator<_Iterator, _Container>
-    { return normal_iterator<_Iterator, _Container>(__i); }
+        -> normal_iterator<Iterator, Container>
+    { return normal_iterator<Iterator, Container>(i); }
 
 
 #   if __cplusplus >= 201703L /// C++17
@@ -1003,35 +855,25 @@ namespace cxl
     /// \brief Makes a new %normal_iterator.
     /// 
     /// \details An adaptor for making STL container iterators
-    /// into %normal_iterators using C++17 type deduction.
+    /// into normal_iterators using C++17 type deduction.
     /// 
-    /// \code {.cpp}
-    /// auto it = make_normal(c, c.begin());
-    /// \endcode
+    /// \tparam Container 
+    /// \tparam Iterator 
     /// 
-    /// \notes \param __c has the attribute [[maybe_unused]]
-    /// 
-    /// \tparam _Container 
-    /// \tparam _Iterator 
-    /// \param __c 
-    /// \param __i 
-    /// \returns constexpr auto -> normal_iterator<_Iterator, _Container> 
-    /// 
-    /// [constexpr]
-    /// [noexcept]
-    
-    template<typename _Container, typename _Iterator>
+    /// \param c type: [[maybe_unused]] const Container&
+    /// \param i type: Iterator
+    /// \returns normal_iterator<Iterator, Container> 
+    template<typename Container, typename Iterator>
     constexpr auto
-    make_normal([[maybe_unused]] const _Container& __c, _Iterator __i)
+    make_normal_iterator([[maybe_unused]] const Container& c, Iterator i)
     noexcept
-        -> normal_iterator<_Iterator, _Container>
-    { return normal_iterator<_Iterator, _Container>(__i); }
+        -> normal_iterator<Iterator, Container>
+    { return normal_iterator<Iterator, Container>(i); }
 
-#   endif /// __cplusplus >= 201703L
+#   endif  /// __cplusplus >= 201703L
 
-} /// namespace cxl
+}  /// namespace cxl
 
+#   endif  /// __cplusplus >= 201402L
 
-#   endif /// __cplusplus >= 201402L
-
-#endif /// CORTEX_NORMAL_ITERATOR_HPP
+#endif /// CORTEX_NORMAL_ITERATOR
