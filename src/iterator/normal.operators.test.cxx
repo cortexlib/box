@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <iterators/normal.hpp>
+#include <iterator/normal.hxx>
 #include <vector>
 
 struct Point
@@ -11,14 +11,14 @@ struct Point
 TEST_CASE("normal_iterator operators")
 {
     std::vector<int> v{1, 2, 3, 4, 5};
-    auto it { cxl::make_normal(v, v.begin()) };
+    auto it { cxl::make_normal_iterator<std::vector<int>>(v.begin()) };
 
     SECTION("operator*(dereference)")
     { REQUIRE(*it == 1); }
 
     std::vector<Point> points { { 1, 5 } };
 
-    auto indirect_it { cxl::make_normal(points, points.begin()) };
+    auto indirect_it { cxl::make_normal_iterator<std::vector<Point>>(points.begin()) };
 
     SECTION("operator-> [indirection]")
     { REQUIRE(indirect_it->x == 1); }
@@ -74,50 +74,29 @@ TEST_CASE("normal_iterator operators")
     }
 
 
-    // std::vector<std::vector<int>> vv{
-    //     {1, 2, 3},
-    //     {4, 5, 6},
-    //     {7, 8, 9}
-    // };
-
-    // std::vector<std::vector<int>> vvcheck{
-    //     {1, 2, 3},
-    //     {4, 5, 6},
-    //     {7, 8, 9, 10}
-    // };
-
-    // auto itc = cxl::make_normal(vv, vv.begin());
-
-    // SECTION("operator->")
-    // {
-    //     itc->push_back(10);
-    //     REQUIRE(vv == vvcheck);
-    // }
-
-
-    it = cxl::make_normal(v, v.begin());
+    it = cxl::make_normal_iterator<std::vector<int>>(v.begin());
     SECTION("operator==")
-    { REQUIRE(it == cxl::make_normal(v, v.begin())); }
+    { REQUIRE(it == cxl::make_normal_iterator<std::vector<int>>(v.begin())); }
 
     SECTION("operator<=>")
     { 
-        REQUIRE((it <=> cxl::make_normal(v, v.begin())) == std::strong_ordering::equal); 
-        REQUIRE(((it + 1) <=> cxl::make_normal(v, v.begin())) == std::strong_ordering::greater); 
-        REQUIRE((it <=> cxl::make_normal(v, v.begin()) + 1) == std::strong_ordering::less); 
+        REQUIRE((it <=> cxl::make_normal_iterator<std::vector<int>>(v.begin())) == std::strong_ordering::equal); 
+        REQUIRE(((it + 1) <=> cxl::make_normal_iterator<std::vector<int>>(v.begin())) == std::strong_ordering::greater); 
+        REQUIRE((it <=> cxl::make_normal_iterator<std::vector<int>>(v.begin()) + 1) == std::strong_ordering::less); 
     }
 
     SECTION("operator!=")
-    { REQUIRE(it != cxl::make_normal(v, v.begin()) + 1); }
+    { REQUIRE(it != cxl::make_normal_iterator<std::vector<int>>(v.begin()) + 1); }
 
     SECTION("operator<")
-    { REQUIRE(it < cxl::make_normal(v, v.begin()) + 3); }
+    { REQUIRE(it < cxl::make_normal_iterator<std::vector<int>>(v.begin()) + 3); }
 
     SECTION("operator<=")
-    { REQUIRE(it <= cxl::make_normal(v, v.begin())); }
+    { REQUIRE(it <= cxl::make_normal_iterator<std::vector<int>>(v.begin())); }
 
     SECTION("operator>")
-    { REQUIRE(it + 4 > cxl::make_normal(v, v.begin())); }
+    { REQUIRE(it + 4 > cxl::make_normal_iterator<std::vector<int>>(v.begin())); }
 
     SECTION("operator>=")
-    { REQUIRE(it + 4 >= cxl::make_normal(v, v.begin())); }
+    { REQUIRE(it + 4 >= cxl::make_normal_iterator<std::vector<int>>(v.begin())); }
 }

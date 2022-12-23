@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include <iterators/normal.hpp>
+#include <iterator/normal.hxx>
 #include <vector>
 
 TEST_CASE("Creating normal_iterators") 
@@ -22,7 +22,7 @@ TEST_CASE("Creating normal_iterators")
     SECTION("Test 2 : make_normal : std::vector::begin() -> normal_iterator")
     {
         std::vector<int> v = {1, 2, 3, 4, 5};
-        auto it = cxl::make_normal<std::vector<int>>(v.begin());
+        auto it = cxl::make_normal_iterator<std::vector<int>>(v.begin());
         REQUIRE(*it == 1);
         ++it;
         REQUIRE(*it == 2);
@@ -37,7 +37,7 @@ TEST_CASE("Creating normal_iterators")
     SECTION("Test 3 : make_normal w/ decltype : std::vector::begin() -> normal_iterator")
     {
         std::vector<int> v = {1, 2, 3, 4, 5};
-        auto it = cxl::make_normal<decltype(v)>(v.begin());
+        auto it = cxl::make_normal_iterator<decltype(v)>(v.begin());
         REQUIRE(*it == 1);
         ++it;
         REQUIRE(*it == 2);
@@ -52,22 +52,7 @@ TEST_CASE("Creating normal_iterators")
     SECTION("Test 4 : make_normal C-style array : int[] -> normal_iterator")
     {
         int arr[] = {1, 2, 3, 4, 5};
-        auto it = cxl::make_normal<int*, int[]>(arr);
-        REQUIRE(*it == 1);
-        ++it;
-        REQUIRE(*it == 2);
-        ++it;
-        REQUIRE(*it == 3);
-        ++it;
-        REQUIRE(*it == 4);
-        ++it;
-        REQUIRE(*it == 5);
-    }
-
-    SECTION("Test 5 : make_normal w/ template type deduction : std::vector::begin() -> normal_iterator")
-    {
-        std::vector<int> v = {1, 2, 3, 4, 5};
-        auto it = cxl::make_normal(v, v.begin());
+        auto it = cxl::make_normal_iterator<int*, int[]>(arr);
         REQUIRE(*it == 1);
         ++it;
         REQUIRE(*it == 2);

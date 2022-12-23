@@ -33,13 +33,13 @@
 
 #   if __cplusplus >= 201402L
 
+
 namespace cxl
 {    
-    
     /// \brief Normal Iterator
     /// 
     /// \details This iterator is used to adapt non-iterator 
-    /// objects into objects (ie. pointers). %normal_iterator 
+    /// objects into objects (ie. pointers). normal_iterators 
     /// does not change the semantics of the operators of the
     /// underlying iterator of type Iterator.
     /// 
@@ -60,7 +60,23 @@ namespace cxl
         using iterator_category                 = typename iter_traits_type::iterator_category;
 
 #if __cpp_concepts >= 201907L
-        using iterator_concept                  = typename iter_traits_type::iterator_concept;
+        using iterator_concept                  = std::conditional_t<
+                                                    std::random_access_iterator<Iterator>, 
+                                                    std::random_access_iterator_tag,
+                                                    std::conditional_t<
+                                                        std::bidirectional_iterator<Iterator>,
+                                                        std::bidirectional_iterator_tag,
+                                                        std::conditional_t<
+                                                            std::forward_iterator<Iterator>,
+                                                            std::forward_iterator_tag,
+                                                            std::conditional_t<
+                                                                std::input_iterator<Iterator>,
+                                                                std::input_iterator_tag,
+                                                                std::output_iterator_tag
+                                                            >
+                                                        >
+                                                    >
+                                                  >;
 #endif /// __cpp_concepts >= 201907L
 
         using value_type                        = typename iter_traits_type::value_type;
@@ -77,18 +93,37 @@ namespace cxl
         normal_iterator() noexcept
         : current(Iterator()) { }
 
-        
+
         /// \brief Copy Constructor.
         /// 
         /// \details Uses copy semantics to initialise current from
-        /// another %normal_iterator object. Uses the \code {.cpp}
-        /// %normal_iterator::base()
-        /// \endcode
-        /// method to access other's underlying iterator. 
+        /// another normal_iterator of the same underlying iterator
+        /// type.
         /// 
         /// \param other type: const normal_iterator&
         constexpr explicit 
         normal_iterator(const normal_iterator& other) noexcept
+        : current(other.base()) { }
+
+        
+        /// \brief Converting Copy Constructor.
+        /// 
+        /// \details Uses copy semantics to initialise current from
+        /// another normal_iterator from a different underlying iterator
+        /// type.
+        /// 
+        /// \tparam U
+        /// 
+        /// \param other type: const normal_iterator<U, Container>&
+        template<typename U>
+#if __cpp_lib_concepts
+	        requires requires {
+                !std::is_same_v<U, Iterator>
+                && std::convertible_to<const U&, Iterator>;
+            }
+#endif
+        constexpr explicit 
+        normal_iterator(const normal_iterator<U, Container>& other) noexcept
         : current(other.base()) { }
 
         
@@ -103,37 +138,45 @@ namespace cxl
         constexpr explicit
         normal_iterator(const iterator_type& other) noexcept
         : current(other) { }
-        
-        
-        /// \brief Move Constructor.
-        /// 
-        /// \param other type: normal_iterator&&
-        constexpr explicit
-        normal_iterator(normal_iterator&& other) noexcept = delete;
-
-
-        
-        /// \brief Iterator Move Constructor.
-        ///
-        /// \param other type: iterator_type&&
-        constexpr explicit
-        normal_iterator(iterator_type&& other) noexcept = delete;
 
         
         /// \brief Copy Assignment.
         /// 
-        /// \details Uses copy semantics to assign current to the
-        /// underlying iterator of other. Uses the \code {.cpp}
-        /// %normal_iterator::base()
-        /// \endcode
-        /// method to access other's underlying iterator.
-        /// Returns a reference to this.
+        /// \details Uses copy semantics to initialise current from
+        /// another normal_iterator from the same underlying iterator 
+        /// type. Returns a reference to this.
         /// 
         /// \param other type: const normal_iterator&
+        constexpr auto
+        operator= (const normal_iterator& other) 
+            noexcept 
+            -> normal_iterator&
+        { 
+            current = other.base();
+            return *this;
+        }
+
+
+        /// \brief Converting Copy Assignment.
+        /// 
+        /// \details Uses copy semantics to initialise current from
+        /// another normal_iterator from the same underlying iterator 
+        /// type. Returns a reference to this.
+        /// 
+        /// \param other type: const normal_iterator<U>&
         ///
-        /// \returns normal_iterator&
-        constexpr explicit 
-        normal_iterator& operator= (const normal_iterator& other) noexcept
+        /// \returns normal_iterator<U, Container>&
+        template<typename U>
+#if __cpp_lib_concepts
+	        requires requires {
+                !std::is_same_v<U, Iterator>
+                && std::convertible_to<const U&, Iterator>;
+            }
+#endif
+        constexpr auto
+        operator= (const normal_iterator<U, Container>& other) 
+            noexcept 
+            -> normal_iterator<U, Container>&
         { 
             current = other.base();
             return *this;
@@ -148,8 +191,10 @@ namespace cxl
         /// 
         /// \param other type: const iterator_type&
         /// \returns normal_iterator&
-        constexpr explicit
-        normal_iterator& operator= (const iterator_type& other) noexcept
+        constexpr auto 
+        operator= (const iterator_type& other) 
+            noexcept
+            -> normal_iterator&
         {
             current = other; 
             return *this;
@@ -162,7 +207,10 @@ namespace cxl
         /// reference of the value to the caller.
         /// 
         /// \returns reference
-        constexpr reference operator* () noexcept
+        constexpr auto
+        operator* () 
+            noexcept 
+            -> reference
         { return *current; }
 
 
@@ -173,7 +221,10 @@ namespace cxl
         /// reference of the value to the caller.
         /// 
         /// \returns reference
-        constexpr reference operator* () const noexcept
+        constexpr auto
+        operator* () 
+            const noexcept
+            -> reference
         { return *current; }
 
         
@@ -185,7 +236,10 @@ namespace cxl
         /// "indirection chaining".
         /// 
         /// \returns pointer
-        constexpr pointer operator-> () noexcept
+        constexpr auto
+        operator-> () 
+            noexcept
+            -> pointer
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
 	     || requires(const iterator_type i) { i.operator->(); }
@@ -201,7 +255,10 @@ namespace cxl
         /// "indirection chaining".
         /// 
         /// \returns pointer
-        constexpr pointer operator-> () const noexcept
+        constexpr auto
+        operator-> () 
+            const noexcept
+            -> pointer
 #   if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type>
 	     || requires(const iterator_type i) { i.operator->(); }
@@ -215,7 +272,10 @@ namespace cxl
         /// current and returns a reference to this.
         /// 
         /// \returns normal_iterator&
-        constexpr normal_iterator& operator++ () noexcept
+        constexpr auto
+        operator++ () 
+            noexcept
+            -> normal_iterator&
         {
             ++current; 
             return *this;
@@ -231,7 +291,9 @@ namespace cxl
         /// current equal to the last value of this current. 
         /// 
         /// \returns normal_iterator
-        constexpr normal_iterator operator++ (int) noexcept
+        constexpr auto operator++ (int) 
+            noexcept 
+            -> normal_iterator
         { return normal_iterator(current++); }
 
         
@@ -241,7 +303,10 @@ namespace cxl
         /// current and returns a reference to this.
         /// 
         /// \returns normal_iterator&
-        constexpr normal_iterator& operator-- () noexcept
+        constexpr auto
+        operator-- () 
+            noexcept
+            -> normal_iterator&
         {
             --current;
             return *this;
@@ -257,7 +322,10 @@ namespace cxl
         /// current equal to the last value of this current. 
         /// 
         /// \returns normal_iterator
-        constexpr normal_iterator operator-- (int) noexcept
+        constexpr auto
+        operator-- (int) 
+            noexcept
+            -> normal_iterator
         { return normal_iterator(current--); }
 
         
@@ -269,7 +337,10 @@ namespace cxl
         /// 
         /// \param n type: difference_type
         /// \returns reference
-        constexpr reference operator[] (difference_type n) noexcept
+        constexpr auto
+        operator[] (difference_type n) 
+            noexcept
+            -> reference
         { return current[n]; }
 
         
@@ -281,7 +352,10 @@ namespace cxl
         /// 
         /// \param step 
         /// \returns normal_iterator&
-        constexpr normal_iterator& operator+= (difference_type step) noexcept
+        constexpr auto
+        operator+= (difference_type step) 
+            noexcept
+            -> normal_iterator&
         {
             current += step;
             return *this;
@@ -296,7 +370,10 @@ namespace cxl
         /// 
         /// \param step 
         /// \returns normal_iterator&
-        constexpr normal_iterator& operator-= (difference_type step) noexcept
+        constexpr auto
+        operator-= (difference_type step) 
+            noexcept
+            -> normal_iterator&
         {
             current -= step;
             return *this;
@@ -310,7 +387,10 @@ namespace cxl
         /// 
         /// \param step 
         /// \returns normal_iterator
-        constexpr normal_iterator operator+ (difference_type step) const noexcept
+        constexpr auto
+        operator+ (difference_type step) 
+            const noexcept
+            -> normal_iterator
         { return normal_iterator(current + step); }
 
 
@@ -322,7 +402,10 @@ namespace cxl
         /// 
         /// \param step 
         /// \returns normal_iterator 
-        constexpr normal_iterator operator- (difference_type step) const noexcept
+        constexpr auto
+        operator- (difference_type step) 
+            const noexcept
+            -> normal_iterator
         { return normal_iterator(current - step); }
 
         
@@ -331,44 +414,11 @@ namespace cxl
         /// \details Returns a raw copy of current.
         /// 
         /// \returns iterator_type
-        constexpr const iterator_type base() const noexcept
+        constexpr const auto
+        base() 
+            const noexcept
+            -> iterator_type
         { return current; }
-
-
-        /// \brief rvalue cast
-        /// \tparam Iter 
-        ///
-        /// \details Casts the underlying iterator to
-        /// its rvalue reference type.
-        /// 
-        /// \param i type: const normal_iterator&
-        /// \return std::iter_rvalue_reference_t<Iter>
-        friend constexpr auto
-        std::iter_move(const normal_iterator& i)
-            noexcept (
-                std::is_nothrow_copy_constructible_v<Iter> 
-                && noexcept(std::ranges::iter_move(std::declval<Iterator&>()))
-            ) -> std::iter_rvalue_reference_t<Iterator>
-        { return std::ranges::iter_move(i.base()); }
-
-
-        /// \brief Swaps iterator objects
-        ///
-        /// \details Swaps objects pointed to by the underlying iterator
-        ///
-        /// \tparam Iter2 concept: std::indirectly_swappable<Iterator>
-        ///
-        /// \param x type: const normal_iterator&
-        /// \param y type: const normal_iterator<Iter2>&
-        template<std::indirectly_swappable<Iterator> Iter2>
-        friend constexpr auto
-        std::iter_swap(const normal_iterator& x, const normal_iterator<Iter2>& y)
-            noexcept (
-                std::is_nothrow_copy_constructible_v<Iterator> 
-                && std::is_nothrow_copy_constructible_v<Iter2> 
-                && noexcept(ranges::iter_swap(std::declval<Iterator&>(), std::declval<Iter2&>()))
-            ) -> void
-        { std::ranges::iter_swap(x, y); }
 
 
     private:
@@ -387,8 +437,9 @@ namespace cxl
         ///
         /// \returns  P*
         template<typename P>
-	    static constexpr P*
+	    static constexpr auto
 	    _S_to_pointer(P* ptr)
+            -> P*
         { return ptr; }
 
 
@@ -405,8 +456,9 @@ namespace cxl
         ///
         /// \returns pointer      
         template<typename P>
-        static constexpr pointer
+        static constexpr auto
 	    _S_to_pointer(P obj)
+            -> pointer
         { return obj.operator->(); }
 
     }; /// class normal_iterator
@@ -796,8 +848,8 @@ namespace cxl
     
     /// \brief Addition Operator Overload.
     /// 
-    /// \details Takes an offset \param n and a %normal_iterator 
-    /// \param i. Constructs a new %normal_iterator by adding
+    /// \details Takes an offset \param n and a normal_iterators 
+    /// \param i. Constructs a new normal_iterators by adding
     /// \param n to \param i.base().
     /// 
     /// \tparam Iterator 
@@ -823,7 +875,7 @@ namespace cxl
     /// \tparam Container 
     /// 
     /// \param i type: Container::iterator
-    /// \returns constexpr auto normal_iterator<typename Container::iterator, Container>
+    /// \returns normal_iterator<typename Container::iterator, Container>
     template<typename Container>
     constexpr auto
     make_normal_iterator(typename Container::iterator i)
@@ -832,7 +884,7 @@ namespace cxl
     { return normal_iterator<typename Container::iterator, Container>(i); }
 
     
-    /// \brief Makes a new %normal_iterator.
+    /// \brief Makes a new normal_iterators.
     /// 
     /// \details An adaptor for making slice pointers 
     /// into normal_iterators.
@@ -845,34 +897,54 @@ namespace cxl
     template<typename Iterator, typename Container>
     constexpr auto
     make_normal_iterator(Iterator i)
-    noexcept
+        noexcept
         -> normal_iterator<Iterator, Container>
     { return normal_iterator<Iterator, Container>(i); }
-
-
-#   if __cplusplus >= 201703L /// C++17
-    
-    /// \brief Makes a new %normal_iterator.
-    /// 
-    /// \details An adaptor for making STL container iterators
-    /// into normal_iterators using C++17 type deduction.
-    /// 
-    /// \tparam Container 
-    /// \tparam Iterator 
-    /// 
-    /// \param c type: [[maybe_unused]] const Container&
-    /// \param i type: Iterator
-    /// \returns normal_iterator<Iterator, Container> 
-    template<typename Container, typename Iterator>
-    constexpr auto
-    make_normal_iterator([[maybe_unused]] const Container& c, Iterator i)
-    noexcept
-        -> normal_iterator<Iterator, Container>
-    { return normal_iterator<Iterator, Container>(i); }
-
-#   endif  /// __cplusplus >= 201703L
 
 }  /// namespace cxl
+
+namespace std
+{
+
+    /// \brief rvalue cast
+    /// \tparam Iter 
+    ///
+    /// \details Casts the underlying iterator to
+    /// its rvalue reference type.
+    /// 
+    /// \param i type: const cxl::normal_iterator<Iterator, Container>&
+    /// \return std::iter_rvalue_reference_t<Iterator>
+    template<typename Iterator, typename Container>
+    constexpr auto
+    iter_move(const cxl::normal_iterator<Iterator, Container>& i)
+        noexcept (
+            is_nothrow_copy_constructible_v<Iterator> 
+            && noexcept(ranges::iter_move(declval<Iterator&>()))
+        ) -> iter_rvalue_reference_t<Iterator>
+    { return ranges::iter_move(i.base()); }
+
+    
+    /// \brief Swaps iterator objects
+    ///
+    /// \details Swaps objects pointed to by the underlying iterator
+    ///
+    /// \tparam Iterator
+    /// \tparam Iter2 concept: std::indirectly_swappable<Iterator>
+    /// \tparam Container
+    ///
+    /// \param x type: const cxl::normal_iterator<Iterator, Container>&
+    /// \param y type: const cxl::normal_iterator<Iter2, Container>&
+    template<typename Iterator, std::indirectly_swappable<Iterator> Iter2, typename Container>
+    constexpr auto
+    iter_swap(const cxl::normal_iterator<Iterator, Container>& x, const cxl::normal_iterator<Iter2, Container>& y)
+        noexcept (
+            std::is_nothrow_copy_constructible_v<Iterator> 
+            && std::is_nothrow_copy_constructible_v<Iter2> 
+            && noexcept(ranges::iter_swap(std::declval<Iterator&>(), std::declval<Iter2&>()))
+        ) -> void
+    { ranges::iter_swap(x.base(), y.base()); }
+
+}  /// namespace std
 
 #   endif  /// __cplusplus >= 201402L
 

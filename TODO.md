@@ -90,14 +90,14 @@
 
 ## Iterators
 
-- [ ] Normal (adaptor)
+- [x] Normal (adaptor)
   - [x] Constructors & Destructors
     - [x] Default
     - [x] Explicit Iterator Type Copy
-    - [ ] Explicit Converting
+    - [x] Explicit Converting
     - [x] Copy
-    - [x] Delete Move
-    - [x] Delete Iterator Type Move
+    - ~~[x] Delete Move~~
+    - ~~[x] Delete Iterator Type Move~~
   - [x] Assignment
     - [x] Copy
     - [x] Explicit Iterator Type
@@ -128,7 +128,8 @@
     - [x] `make_normal_iterator()`
     - [x] `std::iter_move()` injection
     - [x] `std::iter_swap()` injection
-  - [ ] Testing
+  - [x] Testing
+  - [x] Refactor to trailing return
 
 ## Literals
 
