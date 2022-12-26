@@ -5,9 +5,9 @@
 ///
 /// Author: Tyler Swann (tyler.swann05@gmail.com)
 /// 
-/// Header Version: v0.1.0
+/// Header Version: v1.0.0
 ///
-/// Date: 23-12-2022
+/// Date: 24-12-2022
 ///
 /// License: MIT
 ///
@@ -35,7 +35,7 @@
 
 
 namespace cxl
-{    
+{
     /// \brief Normal Iterator
     /// 
     /// \details This iterator is used to adapt non-iterator 

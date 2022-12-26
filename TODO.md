@@ -10,7 +10,7 @@
   - [Iterators](#iterators)
   - [Literals](#literals)
   - [Allocators](#allocators)
-  - [Misc.](#misc)
+  - [Miscellaneous](#miscellaneous)
 
 ---
 
@@ -144,9 +144,13 @@
 - [ ] Free List
 - [ ] Stack
 
-## Misc.
+## Miscellaneous
 
 - [ ] Match Expression
+  - [x] Match overload
+  - [ ] Support syntax sugar for match expression
+    - [ ] Decide final syntax (operator)
+  - [ ] Fallthrough type (otherwise) instead of `auto&&`
 - [ ] Indices generator
 - [ ] Pretty Printing
   - [ ] Support `std::formatter` for custom data structures
