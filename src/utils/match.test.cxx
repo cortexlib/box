@@ -25,14 +25,14 @@ TEST_CASE("match test")
             [](std::string& s){ fmt::print("s: std::string = {}\n", s); },
             [](int& i){ fmt::print("i: int = {}\n", i); },
             [](float& f){ fmt::print("s: float = {}\n", f); },
-            [](auto&& o){ fmt::print("Other = {}\n", o); }
+            [](cxl::_){ fmt::print("Other\n"); }
         }, var7);
 
         auto r = std::visit(cxl::utils::match{
             []([[maybe_unused]] std::string& s){ return "String"s; },
             []([[maybe_unused]] int& i){ return "Int"s; },
             []([[maybe_unused]] float& f){ return "Float"s; },
-            []([[maybe_unused]] auto&& o){ return "Other"s; }
+            [](cxl::_){ return "Other"s; }
         }, varf);
 
         REQUIRE(r == "Float"s);
@@ -46,14 +46,16 @@ TEST_CASE("match test")
             [](std::string s){ fmt::print("s: std::string = {}\n", s); },
             [](int i){ fmt::print("i: int = {}\n", i); },
             [](float f){ fmt::print("s: float = {}\n", f); },
-            [](auto&& o){ fmt::print("Other = {}\n", o); }
+            [](cxl::_){ fmt::print("Other\n"); }
         };
+
+        using namespace cxl;
 
         auto name_match = cxl::utils::match{
             []([[maybe_unused]] std::string s){ return "String"s; },
             []([[maybe_unused]] int i){ return "Int"s; },
             []([[maybe_unused]] float f){ return "Float"s; },
-            []([[maybe_unused]] auto&& o){ return "Other"s; }
+            [](_){ return "Other"s; }
         };
 
         SECTION("Regular match expression")
@@ -62,7 +64,7 @@ TEST_CASE("match test")
                 [](std::string s){ fmt::print("s: std::string = {}\n", s); },
                 [](int i){ fmt::print("i: int = {}\n", i); },
                 [](float f){ fmt::print("s: float = {}\n", f); },
-                [](auto&& o){ fmt::print("Other = {}\n", o); }
+                [](cxl::_){ fmt::print("Other\n"); }
             };
 
             varf | print_match;
@@ -76,7 +78,7 @@ TEST_CASE("match test")
                 []([[maybe_unused]] std::string s){ return "String"s; },
                 []([[maybe_unused]] int i){ return "Int"s; },
                 []([[maybe_unused]] float f){ return "Float"s; },
-                []([[maybe_unused]] auto&& o){ return "Other"s; }
+                [](cxl::_){ return "Other"s; }
             };
 
             fmt::print("r = {}\n", r);

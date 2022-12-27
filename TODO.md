@@ -146,11 +146,12 @@
 
 ## Miscellaneous
 
-- [ ] Match Expression
+- [x] Match Expression
   - [x] Match overload
-  - [ ] Support syntax sugar for match expression
-    - [ ] Decide final syntax (operator)
-  - [ ] Fallthrough type (otherwise) instead of `auto&&`
+  - [x] Support syntax sugar for match expression
+    - [x] Decide final syntax (operator)
+  - [x] Fallthrough type (~~otherwise~~ `_`) instead of `auto&&` (for un-retrievable values)
+    - ~~[ ] Maybe use `std::any`~~
 - [ ] Indices generator
 - [ ] Pretty Printing
   - [ ] Support `std::formatter` for custom data structures
