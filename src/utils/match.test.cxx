@@ -58,21 +58,21 @@ TEST_CASE("match test")
 
         SECTION("Regular match expression")
         {
-            varstr >> cxl::utils::match{
+            varstr | cxl::utils::match{
                 [](std::string s){ fmt::print("s: std::string = {}\n", s); },
                 [](int i){ fmt::print("i: int = {}\n", i); },
                 [](float f){ fmt::print("s: float = {}\n", f); },
                 [](auto&& o){ fmt::print("Other = {}\n", o); }
             };
 
-            varf >> print_match;
+            varf | print_match;
 
-            REQUIRE(std::is_void_v<decltype(var7 >> name_match)> == true);
+            REQUIRE(std::is_void_v<decltype(var7 | name_match)> == true);
         }
 
         SECTION("Returning match expression")
         {
-            auto r = varstr >>= cxl::utils::match{
+            auto r = varstr |= cxl::utils::match{
                 []([[maybe_unused]] std::string s){ return "String"s; },
                 []([[maybe_unused]] int i){ return "Int"s; },
                 []([[maybe_unused]] float f){ return "Float"s; },
@@ -81,7 +81,7 @@ TEST_CASE("match test")
 
             fmt::print("r = {}\n", r);
 
-            auto name = var7 >>= name_match;
+            auto name = var7 |= name_match;
             fmt::print("name = {}\n", name);
         }
     }

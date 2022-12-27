@@ -78,7 +78,7 @@ namespace cxl::utils
     /// \return decltype(auto)
     template<typename... Ts, typename... Fs>
     constexpr auto 
-    operator>> (const std::variant<Ts...>& var, const match<Fs...>& m)
+    operator| (const std::variant<Ts...>& var, const match<Fs...>& m)
         -> void
     { std::visit(m, var); }
 
@@ -99,7 +99,7 @@ namespace cxl::utils
     /// \return R
     template<typename... Ts, typename... Fs>
     constexpr auto 
-    operator>>= (const std::variant<Ts...>& var, const match<Fs...>& m)
+    operator|= (const std::variant<Ts...>& var, const match<Fs...>& m)
         -> decltype(auto)
     { return std::visit(m, var); }
 
