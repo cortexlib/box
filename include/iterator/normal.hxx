@@ -367,7 +367,7 @@ namespace cxl
         /// \details Returns a raw copy of current.
         ///
         /// \returns iterator_type
-        constexpr const auto
+        constexpr auto
         base() const noexcept -> iterator_type {
             return current;
         }

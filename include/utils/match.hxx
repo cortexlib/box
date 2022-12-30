@@ -16,10 +16,9 @@
 /// Copyright: Copyright (c) 2022
 /// \file match.hxx
 
-#ifndef CORTEX_LITERALS
-#define CORTEX_LITERALS
+#ifndef CORTEX_MATCH
+#define CORTEX_MATCH
 
-#include <type_traits>
 #include <utility>
 #include <variant>
 
@@ -53,7 +52,7 @@ namespace cxl
             ///
             /// \param ...ts
             template<class... Ts>
-            match(Ts&&... ts)
+            explicit match(Ts&&... ts)
                 : Fs { std::forward<Ts>(ts) }... { }
 
             /// \brief Invocation declaration
@@ -118,10 +117,20 @@ namespace cxl
     struct _
     {
         template<typename T>
-        _(T&& t)
-        noexcept { }
+        explicit constexpr _([[maybe_unused]] T&& t) noexcept { }
+
+        explicit constexpr _(const _&) noexcept = delete;
+        explicit constexpr _(_&&) noexcept      = delete;
+
+        constexpr auto
+        operator= (const _&) noexcept -> _& = delete;
+
+        constexpr auto
+        operator= (_&&) noexcept -> _& = delete;
+
+        constexpr ~_() noexcept = delete;
     };
 
 }  // namespace cxl
 
-#endif  /// CORTEX_LITERALS
+#endif  /// CORTEX_MATCH
