@@ -10,7 +10,7 @@
 
 ## Welcome
 
-The Cortex Library is small, personal collection of types, functions and utilities.
+The Cortex Library is a personal collection of types, functions and other general purpose C++ utilities, mostly aimed at developing with C++20 and above.
 
 Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository. Head to the [Install](#install) section to get up and running.
 
