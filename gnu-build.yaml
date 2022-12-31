@@ -1,0 +1,8 @@
+compiler_id: 'gnu'
+c_compiler: 'gcc'
+cxx_compiler: 'g++'
+
+flags: [
+  '-std=c++20',
+  '-fconcepts-diagnostics-depth=4'
+]

@@ -1,24 +1,22 @@
 /// -*- C++ -*- Header compatibility <box/box.hxx>
 
-/// \brief Two Dimensional Access To Contiguous Data.
+/// \brief Two dimensional data structure.
 ///
 /// Author: Tyler Swann (tyler.swann05@gmail.com)
 /// 
-/// Header Version: v0.0.1
+/// Header Version: v0.1.0
 ///
-/// Date: 21-12-2022
+/// Date: 31-12-2022
 ///
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022
 /// \file box/box.hxx
 
-#ifndef CORTEX_BOX_H
-#   define CORTEX_BOX_H
+#ifndef CORTEX_BOX
+#   define CORTEX_BOX
 
 #include <iterator/normal.hxx>
-
-#if __cplusplus >= 202002L
 
 #include <algorithm>
 #include <cassert>
@@ -33,16 +31,13 @@ namespace cxl
 {
     /// \brief Box - Two Dimensional Array
     ///
-    /// \group box Box
-    ///
-    /// \details Box is a two dimensional generic container.
-    /// It aims to support expressive methods and operations
-    /// that allow unique manipulation an structural access 
-    /// to data.
+    /// \details Box is a two dimensional, owning generic
+    /// array. It aims to support expressive methods and 
+    /// operations that allow unique manipulation of data.
     /// Elements are stored continuously in memory and are 
     /// layed out in a row-wise fashion.
     /// 
-    /// \tparam T concept: Any
+    /// \tparam T
     /// \tparam Alloc default: std::allocator<T>
     template <typename T, typename Alloc = std::allocator<T>>
     class box
@@ -60,8 +55,8 @@ namespace cxl
         using pointer                               = typename alloc_traits::pointer;
         using const_pointer                         = typename alloc_traits::pointer;
 
-        using iterator                              = cxl::normal_iterator<pointer, box<value_type>>;
-        using const_iterator                        = cxl::normal_iterator<const_pointer, box<value_type>>;
+        using iterator                              = cxl::normal_iterator<pointer, box>;
+        using const_iterator                        = cxl::normal_iterator<const_pointer, box>;
         using reverse_iterator                      = std::reverse_iterator<iterator>;
         using const_reverse_iterator                = std::reverse_iterator<const_iterator>;
 
@@ -78,12 +73,13 @@ namespace cxl
         /// \brief Default Constructor
         ///
         /// \details Default constructor for box.
-        constexpr box() noexcept
-        : m_num_rows(size_type())
-        , m_num_columns(size_type())
-        , m_allocator(allocator_type())
-        , m_start(pointer())
-        , m_finish(pointer())
+        explicit constexpr
+        box() noexcept
+        : m_num_rows{ size_type{} }
+        , m_num_columns{ size_type{} }
+        , m_allocator{ allocator_type{} }
+        , m_start{ pointer{} }
+        , m_finish{ pointer{} }
         { }
 
 
@@ -92,56 +88,59 @@ namespace cxl
         /// \details Default Constructs a box with a
         /// given allocator.
         ///
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
-        constexpr explicit box(const allocator_type& alloc) noexcept
-        : m_num_rows(size_type())
-        , m_num_columns(size_type())
-        , m_allocator(alloc)
-        , m_start(pointer())
-        , m_finish(pointer())
+        /// \param alloc type: const allocator_type&
+        explicit constexpr 
+        box(const allocator_type& alloc) noexcept
+        : m_num_rows{ size_type{} }
+        , m_num_columns{ size_type{} }
+        , m_allocator{ alloc }
+        , m_start{ pointer{} }
+        , m_finish{ pointer{} }
         { }
 
 
-        /// \brief Size Constructor
+        /// \brief Default Size Constructor
         ///
         /// \details Constructs a box with dimensions of
         /// num_rows x num_columns. Values are default constructed 
         /// or fill constructed depending on the default 
         /// contractibility qualification.
         ///
-        /// \param num_columns type: {size_type}
-        /// \param num_rows type: {size_type}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
-        constexpr explicit box(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type())
-        : m_num_rows(num_rows)
-        , m_num_columns(num_columns)
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param num_columns type: size_type
+        /// \param num_rows type: size_type
+        /// \param alloc type: const allocator_type&
+        explicit constexpr 
+        box(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type{})
+        : m_num_rows{ num_rows }
+        , m_num_columns{ num_columns }
+        , m_allocator{ alloc }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         {
             if constexpr (std::is_default_constructible_v<value_type>)
                 std::ranges::uninitialized_default_construct(*this);
             else
-                std::ranges::uninitialized_fill(*this, value_type());
+                std::ranges::uninitialized_fill(*this, value_type{});
         }
 
 
-        /// \brief Size + Value Constructor
+        /// \brief Explicit Value and Size Constructor
         ///
         /// \details Constructs a box with dimensions of
         /// num_rows x num_columns. Values are constructed from 
         /// the a constant reference to a provided value.
         ///
-        /// \param num_columns type: {size_type}
-        /// \param num_rows type: {size_type}
-        /// \param value type: value_type | qualifiers: {const, ref}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
-        constexpr box(size_type num_rows, size_type num_columns, const_reference value, const allocator_type& alloc = allocator_type())
-        : m_num_rows(num_rows)
-        , m_num_columns(num_columns)
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param num_columns type: size_type
+        /// \param num_rows type: size_type
+        /// \param value type: value_type
+        /// \param alloc type: const allocator_type&
+        explicit constexpr 
+        box(size_type num_rows, size_type num_columns, const_reference value, const allocator_type& alloc = allocator_type())
+        : m_num_rows{ num_rows }
+        , m_num_columns{ num_columns }
+        , m_allocator{ alloc }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { std::ranges::uninitialized_fill(*this, value); }
 
 
@@ -150,13 +149,14 @@ namespace cxl
         /// \details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// \param other type: {box} | qualifiers: {const, ref}
-        constexpr box(const box& other)
-        : m_num_rows(other.m_num_rows)
-        , m_num_columns(other.m_num_columns)
-        , m_allocator(other.m_allocator)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param other type: const box&
+        explicit constexpr
+        box(const box& other)
+        : m_num_rows{ other.m_num_rows }
+        , m_num_columns{ other.m_num_columns}
+        , m_allocator{ other.m_allocator }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { std::ranges::uninitialized_copy(other, *this); }
 
 
@@ -165,14 +165,15 @@ namespace cxl
         /// \details Constructs a box that is a copy of
         /// another box of the same underlying type.
         ///
-        /// \param other type: {box} | qualifiers: {const, ref}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref}
-        constexpr box(const box& other, const allocator_type& alloc)
-        : m_num_rows(other.m_num_rows)
-        , m_num_columns(other.m_num_columns)
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param other type: const box&
+        /// \param alloc type: const allocator_type&
+        explicit constexpr
+        box(const box& other, const allocator_type& alloc)
+        : m_num_rows{ other.m_num_rows }
+        , m_num_columns{ other.m_num_columns }
+        , m_allocator{ alloc }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { std::ranges::uninitialized_copy(other, *this); }
 
 
@@ -182,19 +183,20 @@ namespace cxl
         /// resources to this box and leaves the other box
         /// in a default constructed state.
         ///
-        /// \param other type: {box} | qualifiers: {move}
-        constexpr box(box&& other) noexcept
-        : m_num_rows(other.m_num_rows)
-        , m_num_columns(other.m_num_columns)
-        , m_allocator(std::move(other.m_allocator))
-        , m_start(other.m_start)
-        , m_finish(other.m_finish)
+        /// \param other type: box&&
+        explicit constexpr
+        box(box&& other) noexcept
+        : m_num_rows{ other.m_num_rows }
+        , m_num_columns{ other.m_num_columns }
+        , m_allocator{ std::move(other.m_allocator) }
+        , m_start{ other.m_start }
+        , m_finish{ other.m_finish }
         {
-            other.m_start = pointer();
-            other.m_finish = pointer();
-            other.m_allocator = allocator_type();
-            other.m_num_rows = size_type();
-            other.m_num_columns = size_type();
+            other.m_start = pointer{};
+            other.m_finish = pointer{};
+            other.m_allocator = allocator_type{};
+            other.m_num_rows = size_type{};
+            other.m_num_columns = size_type{};
         }
 
 
@@ -205,46 +207,23 @@ namespace cxl
         /// in a default constructed state. Uses an alternative
         /// allocator for construction of `this` box.
         ///
-        /// \param other type: {box} | qualifiers: {move}
-        /// \param alloc type: {{allocator_type}} | qualifiers: {const, ref}
-        constexpr box(box&& other, const allocator_type& alloc) noexcept
-        : m_num_rows(other.m_num_rows)
-        , m_num_columns(other.m_num_columns)
-        , m_allocator(alloc)
-        , m_start(other.m_start)
-        , m_finish(other.m_finish)
+        /// \param other type: box&&
+        /// \param alloc type: const allocator_type&
+        explicit constexpr 
+        box(box&& other, const allocator_type& alloc) noexcept
+        : m_num_rows{ other.m_num_rows }
+        , m_num_columns{ other.m_num_columns }
+        , m_allocator{ alloc }
+        , m_start{ other.m_start }
+        , m_finish{ other.m_finish }
         {
-            other.m_start = pointer();
-            other.m_finish = pointer();
-            other.m_allocator = allocator_type();
-            other.m_num_rows = size_type();
-            other.m_num_columns = size_type();
-            other.m_size = size_type();
+            other.m_start = pointer{};
+            other.m_finish = pointer{};
+            other.m_allocator = allocator_type{};
+            other.m_num_rows = size_type{};
+            other.m_num_columns = size_type{};
+            other.m_size = size_type{};
         }
-
-
-        /// \brief Assign Copy Constructor
-        ///
-        /// \details Iterates from first to last and copys the
-        /// elements to this box. Copy is done through the boxes
-        /// begin() iterator, thus copy is done row-wise.
-        ///
-        /// \tparam It concept: {std::input_iterator}
-        /// \param first type: {It}
-        /// \param last type: {It}
-        /// \param num_rows type: {size_type}
-        /// \param num_columns type: {size_type}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
-        template <std::input_iterator It>
-        constexpr box(It first, It last
-                    , size_type num_rows, size_type num_columns
-                    , [[maybe_unused]] const allocator_type& alloc = allocator_type())
-        : m_num_rows(num_rows)
-        , m_num_columns(num_columns)
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
-        { std::ranges::uninitialized_copy(first, last, begin(), end()); }
 
 
         /// \brief Initialiser List Constructor
@@ -253,22 +232,22 @@ namespace cxl
         /// from an initializer list of initializer lists. Elements
         /// ownership is moved to the box's memory.
         ///
-        /// \param list type: [std::initializer_list<std::initializer_list<value_type>>] | qualifiers: {const, ref}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
-        constexpr box(std::initializer_list<std::initializer_list<value_type>> list
-                    , [[maybe_unused]] const allocator_type& alloc = allocator_type())
-        : m_num_rows(list.size())
-        , m_num_columns(list.begin()->size())
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param list type: std::initializer_list<std::initializer_list<value_type>>
+        /// \param alloc type: [[maybe_unused]] const allocator_type&
+        constexpr 
+        box(std::initializer_list<std::initializer_list<value_type>> list, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        : m_num_rows{ list.size() }
+        , m_num_columns{ list.begin()->size() }
+        , m_allocator{ alloc }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         {
-            using init_iter = typename decltype(list)::iterator;
             auto offset{ 0uL };
-            for (init_iter row{list.begin()}; row != list.end(); ++row)
+            for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
                     throw std::invalid_argument("Columns must be all the same size");
+
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
             }
@@ -281,20 +260,20 @@ namespace cxl
         /// of another. The box is default constructed. Takes
         /// the result of a call to `box::dimension()`.
         ///
-        /// \param dimensions type: {std::tuple<size_type, size_type>} | qualifiers: {const, ref}
-        /// \param alloc type: {allocator_type} | qualifiers: {const, ref} | attribute: [[maybe_unused]]
-        constexpr box(const std::tuple<size_type, size_type>& dimensions
-                     , [[maybe_unused]] const allocator_type& alloc = allocator_type())
-        : m_num_rows(std::get<0>(dimensions))
-        , m_num_columns(std::get<1>(dimensions))
-        , m_allocator(alloc)
-        , m_start(_M_allocate(_M_size(m_num_rows, m_num_columns)))
-        , m_finish(m_start + _M_size(m_num_rows, m_num_columns))
+        /// \param dimensions type: const std::tuple<size_type, size_type>&
+        /// \param alloc type: [[maybe_unused]] const allocator_type&
+        explicit constexpr 
+        box(const std::tuple<size_type, size_type>& dimensions, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        : m_num_rows{ std::get<0>(dimensions) }
+        , m_num_columns{ std::get<1>(dimensions) }
+        , m_allocator{ alloc }
+        , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
+        , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { 
             if constexpr (std::is_default_constructible_v<value_type>)
                 std::ranges::uninitialized_default_construct(*this);
             else
-                std::ranges::uninitialized_fill(*this, value_type());
+                std::ranges::uninitialized_fill(*this, value_type{});
         }
 
 
@@ -304,12 +283,16 @@ namespace cxl
         /// this box and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         ///
-        /// \param other type: {box} | qualifiers: {const, ref}
-        /// \returns constexpr box&
-        constexpr box& operator= (const box& other)
+        /// \param other type: const box&
+        /// \returns box&
+        constexpr auto
+        operator= (const box& other) -> box&
         {
             if (*this != other)
             {
+                std::ranges::destroy(*this);
+                _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
+
                 m_num_rows = other.m_num_rows;
                 m_num_columns = other.m_num_columns;
                 m_allocator = other.m_allocator;
@@ -327,23 +310,27 @@ namespace cxl
         /// constructed state. Returns///this. If self assignment
         /// occurs then///this is returned immediately.
         ///
-        /// \param other type: {box} | qualifiers: {move}
-        /// \returns constexpr box&
-        constexpr box& operator= (box&& other) noexcept
+        /// \param other type: box
+        /// \returns box&
+        constexpr auto
+        operator= (box&& other) noexcept -> box&
         {
             if (*this != other)
             {
+                std::ranges::destroy(*this);
+                _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
+
                 m_num_rows = other.m_num_rows;
                 m_num_columns = other.m_num_columns;
                 m_allocator = std::move(other.m_allocator);
                 m_start = other.m_start;
                 m_finish = other.m_finish;
 
-                other.m_start = pointer();
-                other.m_finish = pointer();
-                other.m_allocator = allocator_type();
-                other.m_num_rows = size_type();
-                other.m_num_columns = size_type();
+                other.m_start = pointer{};
+                other.m_finish = pointer{};
+                other.m_allocator = allocator_type{};
+                other.m_num_rows = size_type{};
+                other.m_num_columns = size_type{};
             }
             return *this;
         }
@@ -356,20 +343,24 @@ namespace cxl
         ///
         /// \param list type: [std::initializer_list<std::initializer_list<value_type>>]
         /// \returns constexpr box&
-        constexpr box& operator= (std::initializer_list<std::initializer_list<value_type>> list)
+        constexpr auto
+        operator= (std::initializer_list<std::initializer_list<value_type>> list) -> box&
         {
-            m_allocator = allocator_type();
+            std::ranges::destroy(*this);
+            _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
+
+            m_allocator = allocator_type{};
             m_num_rows = list.size();
             m_num_columns = list.begin()->size();
             m_start = _M_allocate(_M_size(m_num_rows, m_num_columns));
             m_finish = m_start + _M_size(m_num_rows, m_num_columns);
 
-            using init_iter = typename decltype(list)::iterator;
-            auto offset{0uL};
-            for (init_iter row{list.begin()}; row != list.end(); ++row)
+            auto offset{ 0uL };
+            for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
                     throw std::invalid_argument("Columns must be all the same size");
+
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
             }
@@ -382,7 +373,7 @@ namespace cxl
         /// \details Releases the resources of this box
         /// and leaves the box in an uninitialized state.
 #if __cplusplus >= 202202L
-        constexpr ~box()
+        constexpr
 #else
         ~box()
 #endif
@@ -393,22 +384,22 @@ namespace cxl
                 _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
             }
 
-            m_num_rows = size_type();
-            m_num_columns = size_type();
-            m_start = pointer();
-            m_finish = pointer();
-            m_allocator = allocator_type();
+            m_num_rows = size_type{};
+            m_num_columns = size_type{};
+            m_start = pointer{};
+            m_finish = pointer{};
+            m_allocator = allocator_type{};
         }
 
 
-        /// \brief Intialiser List Assign
+        /// \brief Initialiser List Assign
         ///
         /// \details Uses std::initializer_list to reassign 
         /// values to a box. If the lists dimensions are not
         /// the same as the box's dimensions, then the box
         /// is resized to match the dimensions of the list.
         /// 
-        /// \param list type: [std::initializer_list<std::initializer_list<value_type>>]
+        /// \param list type: std::initializer_list<std::initializer_list<value_type>>
         constexpr void assign(std::initializer_list<std::initializer_list<value_type>> list)
         {
             auto new_rows { list.size() };
@@ -696,8 +687,8 @@ namespace cxl
         ///
         /// \returns constexpr auto
         constexpr auto dimensions() const noexcept
-            -> std::pair<size_type, size_type>
-        { return std::pair{m_num_rows, m_num_columns}; }
+            -> std::tuple<size_type, size_type>
+        { return std::make_tuple(m_num_rows, m_num_columns); }
 
 
         /// \brief Is Square
@@ -1448,6 +1439,4 @@ namespace std
     { x.swap(y); }
 }
 
-#endif // __cplusplus >= 201703L
-
-#endif // CORTEX_BOX_H
+#endif  /// CORTEX_BOX_H

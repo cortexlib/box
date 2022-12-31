@@ -17,23 +17,23 @@
 ## Data Structures
 
 - [ ] Box
-  - [ ] Constructors & Destructors
-    - [ ] Default
-    - [ ] Explicit Allocator
-    - [ ] Explicit Size & Allocator
-    - [ ] Explicit Size, Value & Allocator
-    - [ ] Copy
-    - [ ] Copy & Allocator
-    - [ ] Move
-    - [ ] Move & Allocator
-    - [ ] Explicit Initialiser List (Nested)
-    - [ ] Explicit Shape & allocator
-    - [ ] Destructor
-  - [ ] Assignment
-    - [ ] Copy
-    - [ ] Move
-    - [ ] Initialiser List (Nested)
-    - [ ] Initialiser List [assign method] (Nested)
+  - [x] Constructors & Destructors
+    - [x] Default
+    - [x] Explicit Allocator
+    - [x] Explicit Size & Allocator
+    - [x] Explicit Size, Value & Allocator
+    - [x] Copy
+    - [x] Copy & Allocator
+    - [x] Move
+    - [x] Move & Allocator
+    - [x] Explicit Initialiser List (Nested)
+    - [x] Explicit Shape & allocator
+    - [x] Destructor
+  - [x] Assignment
+    - [x] Copy
+    - [x] Move
+    - [x] Initialiser List (Nested)
+    - ~~[ ] Initialiser List [assign method] (Nested)~~
   - [ ] Element Access
     - [ ] `.at()`
     - [ ] `.slice()`

@@ -79,23 +79,14 @@ namespace cxl
         using pointer   = typename iter_traits_type::pointer;
         using reference = typename iter_traits_type::reference;
 
+public:
         /// \brief Default Constructor
         ///
         /// \details Initialises current to the default value of
         /// the type Iterator.
-        constexpr explicit normal_iterator() noexcept
-            : current(Iterator()) { }
-
-        /// \brief Copy Constructor.
-        ///
-        /// \details Uses copy semantics to initialise current from
-        /// another normal_iterator of the same underlying iterator
-        /// type.
-        ///
-        /// \param other type: const normal_iterator&
-        constexpr explicit normal_iterator(
-            const normal_iterator& other) noexcept
-            : current(other.base()) { }
+        constexpr
+        normal_iterator() noexcept
+            : current{ Iterator{} } { }
 
         /// \brief Converting Copy Constructor.
         ///
@@ -103,20 +94,16 @@ namespace cxl
         /// another normal_iterator from a different underlying
         /// iterator type.
         ///
-        /// \tparam U
+        /// \tparam Iter
         ///
-        /// \param other type: const normal_iterator<U, Container>&
-        template<typename U>
+        /// \param other type: const normal_iterator<Iter, Container>&
+        template<typename Iter>
 #    if __cpp_lib_concepts
-            requires requires {
-                         !std::is_same_v<U, Iterator>&&
-                             std::convertible_to<const U&, Iterator>;
-                     }
+            requires std::is_same_v<Iter, typename Container::pointer>
 #    endif
-        constexpr explicit normal_iterator(
-            const normal_iterator<U, Container>& other) noexcept
-            : current(other.base()) {
-        }
+        constexpr explicit 
+        normal_iterator(const normal_iterator<Iter, Container>& other) noexcept
+            : current{ other.base() } { }
 
         /// \brief Iterator Copy Constructor.
         ///
@@ -126,62 +113,11 @@ namespace cxl
         /// directly initialised from other.
         ///
         /// \param other type: const iterator_type&
-        constexpr explicit normal_iterator(
+        constexpr explicit 
+        normal_iterator(
             const iterator_type& other) noexcept
-            : current(other) { }
+            : current{ other } { }
 
-        /// \brief Copy Assignment.
-        ///
-        /// \details Uses copy semantics to initialise current from
-        /// another normal_iterator from the same underlying iterator
-        /// type. Returns a reference to this.
-        ///
-        /// \param other type: const normal_iterator&
-        constexpr auto
-        operator= (const normal_iterator& other) noexcept
-            -> normal_iterator& {
-            current = other.base();
-            return *this;
-        }
-
-        /// \brief Converting Copy Assignment.
-        ///
-        /// \details Uses copy semantics to initialise current from
-        /// another normal_iterator from the same underlying iterator
-        /// type. Returns a reference to this.
-        ///
-        /// \param other type: const normal_iterator<U>&
-        ///
-        /// \returns normal_iterator<U, Container>&
-        template<typename U>
-#    if __cpp_lib_concepts
-            requires requires {
-                         !std::is_same_v<U, Iterator>&&
-                             std::convertible_to<const U&, Iterator>;
-                     }
-#    endif
-        constexpr auto
-        operator= (
-            const normal_iterator<U, Container>& other) noexcept
-            -> normal_iterator<U, Container>& {
-            current = other.base();
-            return *this;
-        }
-
-        /// \brief Copy Assignment.
-        ///
-        /// \details Uses copy semantics to assign current to
-        /// other. other must be of type iterator_type.
-        /// Returns a reference to this.
-        ///
-        /// \param other type: const iterator_type&
-        /// \returns normal_iterator&
-        constexpr auto
-        operator= (const iterator_type& other) noexcept
-            -> normal_iterator& {
-            current = other;
-            return *this;
-        }
 
         /// \brief Dereference Operator Overload.
         ///
