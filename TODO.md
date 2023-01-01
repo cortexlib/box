@@ -35,45 +35,46 @@
     - [x] Initialiser List (Nested)
     - ~~[ ] Initialiser List [assign method] (Nested)~~
   - [ ] Element Access
-    - [ ] `.at()`
+    - [x] `.at()`
     - [ ] `.slice()`
     - [ ] Operator `()`
+      - [x] Operator `(x, y)`
       - [ ] Operator `(pair, pair)`
       - [ ] Operator `(pair, ::all{})`
       - [ ] Operator `(::all{}, pair)`
       - [ ] Operator `(3-tuple, 3-tuple)`
       - [ ] Operator `(3-tuple, ::all{})`
       - [ ] Operator `(::all{}, 3-tuple)`
-    - [ ] `.front()`
-    - [ ] `.back()`
-    - [ ] `.data()`
-  - [ ] Iterators
-    - [ ] `.begin()`
-    - [ ] `.cbegin()`
-    - [ ] `.rbegin()`
-    - [ ] `.crbegin()`
-    - [ ] `.end()`
-    - [ ] `.cend()`
-    - [ ] `.rend()`
-    - [ ] `.crend()`
+    - [x] `.front()`
+    - [x] `.back()`
+    - [x] `.data()`
+  - [x] Iterators
+    - [x] `.begin()`
+    - [x] `.cbegin()`
+    - [x] `.rbegin()`
+    - [x] `.crbegin()`
+    - [x] `.end()`
+    - [x] `.cend()`
+    - [x] `.rend()`
+    - [x] `.crend()`
   - [ ] Modifiers
-    - [ ] `.clear`
-    - [ ] `.resize()`
-    - [ ] `.reshape()`
-    - [ ] `.swap()`
+    - [x] `.clear`
+    - [x] `.resize()`
+    - [x] `.reshape()`
+    - [x] `.swap()`
     - [ ] `std::swap()` injection
-    - [ ] `.erase()`
+    - [x] `.erase()`
     - [ ] `std::erase` injection
     - [ ] `.map()`
     - [ ] `.transpose()`
-  - [ ] Capacity
-    - [ ] `.empty()`
-    - [ ] `.size()`
-    - [ ] `.max_size()`
-    - [ ] `.shape()`
-    - [ ] `.is_square()`
-    - [ ] `.num_columns()`
-    - [ ] `.num_rows()`
+  - [x] Capacity
+    - [x] `.empty()`
+    - [x] `.size()`
+    - [x] `.max_size()`
+    - [x] `.shape()`
+    - [x] `.is_square()`
+    - [x] `.num_columns()`
+    - [x] `.num_rows()`
   - [ ] Operators
     - [ ] `||` - map
     - [ ] `/` - reduce
@@ -83,9 +84,12 @@
     - [ ] `%` - dot product
     - [ ] `==` - equality
     - [ ] `<=>` - spaceship
-  - [ ] Misc.
-    - [ ] `.get_allocator()`
+  - [x] Misc.
+    - [x] `.get_allocator()`
   - [ ] Testing
+  - [ ] Improvements
+    - [ ] Make .at() return an optional
+    - [ ] Make operators return optionals
 - [ ] Tensor
 
 ## Iterators

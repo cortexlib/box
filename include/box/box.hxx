@@ -1,4 +1,4 @@
-/// -*- C++ -*- Header compatibility <box/box.hxx>
+/// -*- C++ -*- Header compatibility <Box/Box.hxx>
 
 /// \brief Two dimensional data structure.
 ///
@@ -11,7 +11,7 @@
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022
-/// \file box/box.hxx
+/// \file Box/Box.hxx
 
 #ifndef CORTEX_BOX
 #   define CORTEX_BOX
@@ -40,7 +40,7 @@ namespace cxl
     /// \tparam T
     /// \tparam Alloc default: std::allocator<T>
     template <typename T, typename Alloc = std::allocator<T>>
-    class box
+    class Box
     {
     public:
         using value_type                            = T;
@@ -55,8 +55,8 @@ namespace cxl
         using pointer                               = typename alloc_traits::pointer;
         using const_pointer                         = typename alloc_traits::pointer;
 
-        using iterator                              = cxl::normal_iterator<pointer, box>;
-        using const_iterator                        = cxl::normal_iterator<const_pointer, box>;
+        using iterator                              = cxl::normal_iterator<pointer, Box>;
+        using const_iterator                        = cxl::normal_iterator<const_pointer, Box>;
         using reverse_iterator                      = std::reverse_iterator<iterator>;
         using const_reverse_iterator                = std::reverse_iterator<const_iterator>;
 
@@ -72,9 +72,9 @@ namespace cxl
 
         /// \brief Default Constructor
         ///
-        /// \details Default constructor for box.
+        /// \details Default constructor for Box.
         explicit constexpr
-        box() noexcept
+        Box() noexcept
         : m_num_rows{ size_type{} }
         , m_num_columns{ size_type{} }
         , m_allocator{ allocator_type{} }
@@ -82,15 +82,14 @@ namespace cxl
         , m_finish{ pointer{} }
         { }
 
-
         /// \brief Allocator Constructor
         ///
-        /// \details Default Constructs a box with a
+        /// \details Default Constructs a Box with a
         /// given allocator.
         ///
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        box(const allocator_type& alloc) noexcept
+        Box(const allocator_type& alloc) noexcept
         : m_num_rows{ size_type{} }
         , m_num_columns{ size_type{} }
         , m_allocator{ alloc }
@@ -98,10 +97,9 @@ namespace cxl
         , m_finish{ pointer{} }
         { }
 
-
         /// \brief Default Size Constructor
         ///
-        /// \details Constructs a box with dimensions of
+        /// \details Constructs a Box with dimensions of
         /// num_rows x num_columns. Values are default constructed 
         /// or fill constructed depending on the default 
         /// contractibility qualification.
@@ -110,7 +108,7 @@ namespace cxl
         /// \param num_rows type: size_type
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        box(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type{})
+        Box(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type{})
         : m_num_rows{ num_rows }
         , m_num_columns{ num_columns }
         , m_allocator{ alloc }
@@ -123,35 +121,33 @@ namespace cxl
                 std::ranges::uninitialized_fill(*this, value_type{});
         }
 
-
         /// \brief Explicit Value and Size Constructor
         ///
-        /// \details Constructs a box with dimensions of
+        /// \details Constructs a Box with dimensions of
         /// num_rows x num_columns. Values are constructed from 
-        /// the a constant reference to a provided value.
+        /// the a constant reference to a provided fill_value.
         ///
         /// \param num_columns type: size_type
         /// \param num_rows type: size_type
-        /// \param value type: value_type
+        /// \param fill_value type: value_type
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        box(size_type num_rows, size_type num_columns, const_reference value, const allocator_type& alloc = allocator_type())
+        Box(size_type num_rows, size_type num_columns, const_reference fill_value, const allocator_type& alloc = allocator_type())
         : m_num_rows{ num_rows }
         , m_num_columns{ num_columns }
         , m_allocator{ alloc }
         , m_start{ _M_allocate(_M_size(m_num_rows, m_num_columns)) }
         , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
-        { std::ranges::uninitialized_fill(*this, value); }
-
+        { std::ranges::uninitialized_fill(*this, fill_value); }
 
         /// \brief Copy Constructor
         ///
-        /// \details Constructs a box that is a copy of
-        /// another box of the same underlying type.
+        /// \details Constructs a Box that is a copy of
+        /// another Box of the same underlying type.
         ///
-        /// \param other type: const box&
+        /// \param other type: const Box&
         explicit constexpr
-        box(const box& other)
+        Box(const Box& other)
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns}
         , m_allocator{ other.m_allocator }
@@ -159,16 +155,15 @@ namespace cxl
         , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { std::ranges::uninitialized_copy(other, *this); }
 
-
         /// \brief Copy Constructor with Alternative Allocator
         ///
-        /// \details Constructs a box that is a copy of
-        /// another box of the same underlying type.
+        /// \details Constructs a Box that is a copy of
+        /// another Box of the same underlying type.
         ///
-        /// \param other type: const box&
+        /// \param other type: const Box&
         /// \param alloc type: const allocator_type&
         explicit constexpr
-        box(const box& other, const allocator_type& alloc)
+        Box(const Box& other, const allocator_type& alloc)
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns }
         , m_allocator{ alloc }
@@ -176,16 +171,15 @@ namespace cxl
         , m_finish{ m_start + _M_size(m_num_rows, m_num_columns) }
         { std::ranges::uninitialized_copy(other, *this); }
 
-
         /// \brief Move Constructor
         ///
-        /// \details Moves ownership of an existing box's
-        /// resources to this box and leaves the other box
+        /// \details Moves ownership of an existing Boxes
+        /// resources to this Box and leaves the other Box
         /// in a default constructed state.
         ///
-        /// \param other type: box&&
+        /// \param other type: Box&&
         explicit constexpr
-        box(box&& other) noexcept
+        Box(Box&& other) noexcept
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns }
         , m_allocator{ std::move(other.m_allocator) }
@@ -199,18 +193,17 @@ namespace cxl
             other.m_num_columns = size_type{};
         }
 
-
         /// \brief Move Constructor with Alternative Allocator
         ///
-        /// \details Moves ownership of an existing box's
-        /// resources to this box and leaves the other box
+        /// \details Moves ownership of an existing Boxes
+        /// resources to this Box and leaves the other Box
         /// in a default constructed state. Uses an alternative
-        /// allocator for construction of `this` box.
+        /// allocator for construction of `this` Box.
         ///
-        /// \param other type: box&&
+        /// \param other type: Box&&
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        box(box&& other, const allocator_type& alloc) noexcept
+        Box(Box&& other, const allocator_type& alloc) noexcept
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns }
         , m_allocator{ alloc }
@@ -225,17 +218,18 @@ namespace cxl
             other.m_size = size_type{};
         }
 
-
         /// \brief Initialiser List Constructor
         ///
-        /// \details Uses std::initializer_list to create a box
+        /// \details Uses std::initializer_list to create a Box
         /// from an initializer list of initializer lists. Elements
-        /// ownership is moved to the box's memory.
+        /// ownership is moved to the Boxes memory.
+        ///
+        /// \exception std::invalid_argument
         ///
         /// \param list type: std::initializer_list<std::initializer_list<value_type>>
         /// \param alloc type: [[maybe_unused]] const allocator_type&
         constexpr 
-        box(std::initializer_list<std::initializer_list<value_type>> list, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        Box(std::initializer_list<std::initializer_list<value_type>> list, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
         : m_num_rows{ list.size() }
         , m_num_columns{ list.begin()->size() }
         , m_allocator{ alloc }
@@ -246,24 +240,23 @@ namespace cxl
             for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("Columns must be all the same size");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
             }
         }
 
-
         /// \brief Dimension Constructor
         ///
-        /// \details Constructs a box from the dimensions 
-        /// of another. The box is default constructed. Takes
-        /// the result of a call to `box::dimension()`.
+        /// \details Constructs a Box from the dimensions 
+        /// of another. The Box is default constructed. Takes
+        /// the result of a call to `Box::dimension()`.
         ///
         /// \param dimensions type: const std::tuple<size_type, size_type>&
         /// \param alloc type: [[maybe_unused]] const allocator_type&
         explicit constexpr 
-        box(const std::tuple<size_type, size_type>& dimensions, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        Box(const std::tuple<size_type, size_type>& dimensions, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
         : m_num_rows{ std::get<0>(dimensions) }
         , m_num_columns{ std::get<1>(dimensions) }
         , m_allocator{ alloc }
@@ -276,17 +269,16 @@ namespace cxl
                 std::ranges::uninitialized_fill(*this, value_type{});
         }
 
-
         /// \brief Copy Assignment
         ///
-        /// \details Copies the contents of another box into
-        /// this box and returns///this. If self assignment occurs
+        /// \details Copies the contents of another Box into
+        /// this Box and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         ///
-        /// \param other type: const box&
-        /// \returns box&
+        /// \param other type: const Box&
+        /// \returns constexpr Box&
         constexpr auto
-        operator= (const box& other) -> box&
+        operator= (const Box& other) -> Box&
         {
             if (*this != other)
             {
@@ -306,14 +298,14 @@ namespace cxl
         /// \brief Move Assignment
         ///
         /// \details Moves the ownership of other's resources to
-        /// this box and leaves the other box in a default
+        /// this Box and leaves the other Box in a default
         /// constructed state. Returns///this. If self assignment
         /// occurs then///this is returned immediately.
         ///
-        /// \param other type: box
-        /// \returns box&
+        /// \param other type: Box&&
+        /// \returns constexpr Box&
         constexpr auto
-        operator= (box&& other) noexcept -> box&
+        operator= (Box&& other) noexcept -> Box&
         {
             if (*this != other)
             {
@@ -337,14 +329,16 @@ namespace cxl
 
         /// \brief Initialiser List Assignment
         ///
-        /// \details Uses std::initializer_list to create a box
+        /// \details Uses std::initializer_list to create a Box
         /// from an initializer list of initializer lists. Elements
-        /// ownership is moved to the box's memory.
+        /// ownership is moved to the Boxes memory.
+        ///
+        /// \exception std::invalid_argument
         ///
         /// \param list type: [std::initializer_list<std::initializer_list<value_type>>]
-        /// \returns constexpr box&
+        /// \returns constexpr Box&
         constexpr auto
-        operator= (std::initializer_list<std::initializer_list<value_type>> list) -> box&
+        operator= (std::initializer_list<std::initializer_list<value_type>> list) -> Box&
         {
             std::ranges::destroy(*this);
             _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
@@ -359,7 +353,7 @@ namespace cxl
             for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("Columns must be all the same size");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
@@ -370,12 +364,12 @@ namespace cxl
 
         /// \brief Destructor
         ///
-        /// \details Releases the resources of this box
-        /// and leaves the box in an uninitialized state.
+        /// \details Releases the resources of this Box
+        /// and leaves the Box in an uninitialized state.
 #if __cplusplus >= 202202L
         constexpr
 #else
-        ~box()
+        ~Box()
 #endif
         {
             if (m_start)
@@ -391,16 +385,18 @@ namespace cxl
             m_allocator = allocator_type{};
         }
 
-
         /// \brief Initialiser List Assign
         ///
         /// \details Uses std::initializer_list to reassign 
-        /// values to a box. If the lists dimensions are not
-        /// the same as the box's dimensions, then the box
+        /// values to a Box. If the lists dimensions are not
+        /// the same as the Boxes dimensions, then the Box
         /// is resized to match the dimensions of the list.
+        ///
+        /// \exception std::invalid_argument
         /// 
         /// \param list type: std::initializer_list<std::initializer_list<value_type>>
-        constexpr void assign(std::initializer_list<std::initializer_list<value_type>> list)
+        constexpr auto
+        assign(std::initializer_list<std::initializer_list<value_type>> list) -> void
         {
             auto new_rows { list.size() };
             auto new_columns { list.begin()->size() };
@@ -419,158 +415,109 @@ namespace cxl
             m_num_rows = new_rows;
             m_num_columns = new_columns;
 
-            using init_iter = typename decltype(list)::iterator;
             auto offset{ 0uL };
-            for (init_iter row{ list.begin() }; row != list.end(); ++row)
+            for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("Columns must be all the same size");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
             }
         }
 
+        /// \brief Resizes the Box memory.
+        ///
+        /// \details 
+        ///
+        /// \param new_rows type: size_type
+        /// \param new_columns type: size_type
+        constexpr auto 
+        resize(size_type new_rows, size_type new_columns) -> void
+        { resize(new_rows, new_columns, value_type{}); }
 
-        /// \brief Resizes the box to dimensions new_rows x new_columns.
+        /// \brief Resizes Boxes memory
         ///
-        /// \details Resizes the box to dimensions new_rows x new_columns,
-        /// the resize will result in a new memory block being allocated
-        /// if the new dimensions are larger or smaller than the current dimensions.
-        /// Reallocation or destruction of elements causes iterators and references
-        /// to be invalidated. If new dimensions don't change the overall size, only
-        /// the view over the data (ie. the dimension sizes) are changed, elements
-        /// of the box remain unchanged, however, this is unchecked. For a checked
-        /// change that can only changes the dimension sizes, use box::reshape.
+        /// \details Resizes the Box to a new shape of new_rows x new_columns.
+        /// Resizing could cause reallocation if the new shape than the current shape.
+        /// Previous values are copied to the new sequential memory location which will
+        /// reshuffle the data's layout. New memory is given the value of fill_value.
+        /// A smaller resize shape will result in elements past the new shape's
+        /// sequential extent to be destroyed and deallocated. If the overall 
+        /// memory size remains the same, the data is only reshaped.
         ///
-        /// \param new_rows type: {size_type}
-        /// \param new_columns type: {size_type}
-        constexpr void resize(size_type new_rows, size_type new_columns)
+        /// \exception std::length_error
+        ///
+        /// \param new_rows type: size_type
+        /// \param new_columns type: size_type
+        /// \param fill_value type: const_reference
+        constexpr auto 
+        resize(size_type new_rows, size_type new_columns, const_reference fill_value) -> void
         {
-            auto old_size{_M_size(m_num_rows, m_num_columns)};
+            auto old_size{ _M_size(m_num_rows, m_num_columns) };
 
-            if (auto new_size{_M_size(new_rows, new_columns)}; new_size > alloc_traits::max_size(m_allocator))
-                throw std::length_error("Matrix resize too large");
+            if (auto new_size{ _M_size(new_rows, new_columns) }; new_size > alloc_traits::max_size(m_allocator))
+                throw std::length_error("Box resize too large");
             else
             {
-                auto new_start{_M_allocate(new_size)};
-                auto old_finish_pos_in_new{new_start + old_size};
-                auto new_finish{new_start + new_size};
-
                 if (old_size < new_size)
                 {
+                    auto new_start{ _M_allocate(new_size) };
+                    auto old_finish_pos_in_new{ new_start + old_size };
+                    auto new_finish{ new_start + new_size };
+
                     if (m_start)
                     {
                         std::ranges::uninitialized_copy(m_start, m_finish, new_start, old_finish_pos_in_new);
-                        std::ranges::uninitialized_default_construct(old_finish_pos_in_new, new_finish);
+                        std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, fill_value);
                     }
                     else
-                        std::ranges::uninitialized_default_construct(new_start, new_finish);
+                        std::ranges::uninitialized_fill(new_start, new_finish, fill_value);
+
+                    std::ranges::destroy(*this);
+                    _M_deallocate(m_start, old_size);
+    
+                    m_start = new_start;
+                    m_finish = new_finish;
                 }
                 else if (old_size > new_size)
                 {
-                    if (m_start)
-                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, new_finish);
-                    else
-                        std::ranges::uninitialized_default_construct(old_finish_pos_in_new, new_finish);
+                    auto size_diff { old_size - new_size };
+                    std::ranges::destroy_n(m_start + new_size, size_diff);
+                    _M_deallocate(m_start + new_size, size_diff);                   
                 }
-
-                std::ranges::destroy(*this);
-                _M_deallocate(m_start, old_size);
-
-                m_start = new_start;
-                m_finish = new_finish;
             }
 
             m_num_rows = new_rows;
             m_num_columns = new_columns;
         }
-
-
-        /// \brief Resizes the box to dimensions new_rows x new_columns with default value
-        ///
-        /// \details Resizes the box to dimensions new_rows x new_columns,
-        /// the resize will result in a new memory block being allocated
-        /// if the new dimensions are larger or smaller than the current dimensions.
-        /// Reallocation or destruction of elements causes iterators and references
-        /// to be invalidated. The new box is initialised with value. If new dimensions
-        /// don't change the overall size, only the view over the data (ie. the dimension
-        /// sizes) are changed, elements of the box remain unchanged, however, this is
-        /// unchecked. For a checked change that can only changes the dimension sizes, use
-        /// box::reshape.
-        ///
-        /// \param new_rows type: {size_type}
-        /// \param new_columns type: {size_type}
-        /// \param value type: value_type | qualifiers: {const, ref}
-        constexpr void resize(size_type new_rows, size_type new_columns, const_reference value)
-        {
-            auto old_size{_M_size(m_num_rows, m_num_columns)};
-
-            if (auto new_size{_M_size(new_rows, new_columns)}; new_size > alloc_traits::max_size(m_allocator))
-                throw std::length_error("Matrix resize too large");
-            else
-            {
-                auto new_start{_M_allocate(new_size)};
-                auto old_finish_pos_in_new{new_start + old_size};
-                auto new_finish{new_start + new_size};
-
-                if (old_size < new_size)
-                {
-                    if (!empty())
-                    {
-                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, old_finish_pos_in_new);
-                        std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, value);
-                    }
-                    else
-                        std::ranges::uninitialized_fill(new_start, new_finish, value);
-                }
-                else if (old_size > new_size)
-                {
-                    if (!empty())
-                        std::ranges::uninitialized_copy(m_start, m_finish, new_start, new_finish);
-                    else
-                        std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, value);
-                }
-
-                std::ranges::destroy(*this);
-                _M_deallocate(m_start, old_size);
-
-                m_start = new_start;
-                m_finish = new_finish;
-            }
-
-            m_num_rows = new_rows;
-            m_num_columns = new_columns;
-        }
-
 
         /// \brief Erases element indicated by position
         ///
-        /// \details Erases the value of the box at position
-        /// and resets it to value_type().
+        /// \details Erases the value of the Box at position
+        /// and resets it to value_type.
         ///
-        /// \param position type: [const_iterator]
-        /// \returns constexpr iterator | attribute: [[maybe_unused]]
-        [[maybe_unused]] constexpr iterator 
-        erase(const_iterator position)
+        /// \param position type: const_iterator
+        /// \returns [[maybe_unused]] constexpr iterator
+        [[maybe_unused]] constexpr auto 
+        erase(const_iterator position) -> iterator
         {
             std::ranges::destroy_at(std::addressof(*position));
-            std::ranges::uninitialized_fill(position, position + 1, value_type());
+            std::ranges::uninitialized_fill(position, position + 1, value_type{});
 
             return position;
         }
 
-
-        /// \brief Erases value between first and last
+        /// \brief Erases elements between first and last
         ///
-        /// \details Elements between first and last and then
-        /// resets memory to value_type()
+        /// \details Erases elements between first and last and then
+        /// resets memory to value_type.
         ///
-        /// \param first type: [const_iterator]
-        /// \param last type: [const_iterator]
-        /// \returns constexpr iterator | attribute: [[maybe_unused]]
-        [[maybe_unused]] constexpr iterator 
-        erase(const_iterator first, const_iterator last)
+        /// \param first type: const_iterator
+        /// \param last type: const_iterator
+        /// \returns [[maybe_unused]] constexpr iterator
+        [[maybe_unused]] constexpr auto
+        erase(const_iterator first, const_iterator last) -> iterator
         {
             std::ranges::destroy(first, last);
             std::ranges::uninitialized_fill(first, last, value_type());
@@ -578,146 +525,144 @@ namespace cxl
             return first;
         }
 
-
-        /// \brief Clears the box elements
+        /// \brief Clears the Box elements
         ///
-        /// \details The elements of the box are destroyed and
-        /// the memory is deallocated entirely. The box is however,
-        /// left in a state where it could be re-initialised or
-        /// destructed which is up to user descretionbx. box::resize
-        /// has to be used to allocate storage for the new elements.
-        constexpr void clear()
+        /// \details The elements of the Box are destroyed and
+        /// the memory is deallocated entirely. The Box is however,
+        /// left in a state where it could be re-initialised through 
+        /// Box::resize or reassignment.
+        constexpr auto
+        clear() -> void
         {
             if (_M_size(m_num_rows, m_num_columns))
             {
                 erase(begin(), end());
 
                 _M_deallocate(m_start, _M_size(m_num_rows, m_num_columns));
-                m_num_rows = size_type();
-                m_num_columns = size_type();
-                m_finish = m_start = pointer();
+                m_num_rows = size_type{};
+                m_num_columns = size_type{};
+                m_finish = pointer{};
+                m_start = pointer{};
             }
         }
 
-
-        /// \brief Reshape current box elements to new dimensions
+        /// \brief Reshape current Box elements to new dimensions
         ///
-        /// \details Reshapes the current box's dimensions while
-        /// guaranteeing that now reallocation occurs. Elements are
-        /// preserved.
+        /// \details Reshapes the current Boxes dimensions while
+        /// guaranteeing that no reallocation occurs. Elements are
+        /// preserved but reordered.
         ///
-        /// \param new_rows type: {size_type}
-        /// \param new_columns type: {size_type}
-        constexpr void reshape(size_type new_rows, size_type new_columns)
+        /// \exception std::length_error
+        ///
+        /// \param new_rows type: size_type
+        /// \param new_columns type: size_type
+        constexpr auto 
+        reshape(size_type new_rows, size_type new_columns) -> void
         {
             auto new_size{ _M_size(new_rows, new_columns) };
 
             if (new_size != _M_size(m_num_rows, m_num_columns))
-                throw std::length_error("Cannot reshape box that has different total size");
+                throw std::length_error("Cannot reshape Box that has different total size");
             else
                 resize(new_rows, new_columns);
         }
 
-
-        /// \brief Swaps two matrices of the same type.
+        /// \brief Swaps two Boxes of the same type.
         ///
-        /// \details Swaps the contents of two matrices of
-        /// which they are the same type. The swap is performed
-        /// by moving ownership of the matrices resources.
+        /// \details Swaps the contents of two Boxes 
+        /// with the same underlying value and allocator
+        /// types. The swap is performed by moving ownership
+        /// of the matrices resources.
         ///
-        /// \param other type: {box} | qualifiers: [ref]
-        void swap(box& other) noexcept
+        /// \param other type: Box&
+        void swap(Box& other) noexcept
         {
-            box tmp = std::move(other);
+            Box tmp = std::move(other);
             other = std::move(*this);
             *this = std::move(tmp);
         }
 
-
         /// \brief Get Allocator
         ///
-        /// \details Returns the allocator used by the box.
+        /// \details Returns the allocator used by the Box.
         ///
         /// \returns constexpr allocator_type
-        constexpr allocator_type get_allocator() const noexcept
+        constexpr auto 
+        get_allocator() const noexcept -> allocator_type
         { return m_allocator; }
-
 
         /// \brief Box Size
         /// 
-        /// \details Returns the overall size of the box.
+        /// \details Returns the overall size of the Box.
         ///
         /// \returns constexpr size_type
-        constexpr size_type size() const noexcept
-        { return empty() ? size_type(0) : _M_size(m_num_rows, m_num_columns); }
+        constexpr auto
+        size() const noexcept -> size_type
+        { return empty() ? size_type{ 0 } : _M_size(m_num_rows, m_num_columns); }
 
-
-        /// \brief Row Size
+        /// \brief Number of rows 
         /// 
-        /// \details Returns the number of the num_rows of the box.
+        /// \details Returns the number of rows of the Box.
         ///
         /// \returns constexpr size_type
-        constexpr size_type num_rows() const noexcept
+        constexpr auto
+        num_rows() const noexcept -> size_type
         { return m_num_rows; }
 
-
-        /// \brief Column Size
+        /// \brief Number of Columns
         /// 
-        /// \details Returns the the number of num_columns in the box.
+        /// \details Returns the number of columns of the Box.
         ///
         /// \returns constexpr size_type
-        constexpr size_type num_columns() const noexcept
+        constexpr auto
+        num_columns() const noexcept -> size_type
         { return m_num_columns; }
-
 
         /// \brief Max Box Size
         /// 
         /// \details Returns the maximum number of elements that
-        /// can be stored in the box.
+        /// can be stored in the Box per the allocator.
         ///
         /// \returns constexpr size_type
-        constexpr size_type max_size() const noexcept
+        constexpr auto
+        max_size() const noexcept -> size_type
         { return alloc_traits::max_size(m_allocator); }
-
 
         /// \brief Dimensions
         /// 
-        /// \details Returns a structured binding of the box's
-        /// dimensions.
+        /// \details Returns a tuple of the Boxes shape.
         ///
-        /// \returns constexpr auto
-        constexpr auto dimensions() const noexcept
-            -> std::tuple<size_type, size_type>
+        /// \returns constexpr std::tuple<size_type, size_type>
+        constexpr auto 
+        shape() const noexcept -> std::tuple<size_type, size_type>
         { return std::make_tuple(m_num_rows, m_num_columns); }
 
-
-        /// \brief Is Square
+        /// \brief Is Square Predicate
         ///
-        /// \details If the number of num_rows and num_columns 
-        /// are equal, the box is square.
+        /// \details If the number of rows and columns 
+        /// are equal, the Box is square.
         ///
-        /// \returns true
-        /// \returns false
-        constexpr bool is_square() const noexcept
+        /// \returns constexpr bool
+        constexpr auto
+        is_square() const noexcept -> bool
         { return m_num_rows == m_num_columns; }
-
 
         /// \brief Empty
         ///
-        /// \details Checks whether the box is empty.
+        /// \details Checks whether the Box is empty.
         ///
-        /// \returns true
-        /// \returns false
-        constexpr bool empty() const noexcept
+        /// \returns constexpr bool
+        constexpr auto
+        empty() const noexcept -> bool
         { return m_start == m_finish; }
-
 
         /// \brief Data
         ///
         /// \details Returns the underlying data pointer.
         ///
         /// \returns pointer
-        pointer data() noexcept
+        constexpr auto
+        data() noexcept -> pointer
         { return _M_data_ptr(m_start); }
 
         /// \brief Data
@@ -725,217 +670,230 @@ namespace cxl
         /// \details Returns the underlying data pointer.
         ///
         /// \returns const_pointer
-        const_pointer data() const noexcept
+        constexpr auto
+        data() const noexcept -> const_pointer 
         { return _M_data_ptr(m_start); }
 
-        /// \brief Two Dimensional Element Access (Point Access).
+        /// \brief Point based element access
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
-        /// box.
+        /// Box.
         ///
-        /// \exception std::out_of_range
-        ///
-        /// \param column type: {size_type}
-        /// \param row type: {size_type}
+        /// \param column type: size_type
+        /// \param row type: size_type
         /// \returns constexpr reference
-        constexpr reference at(size_type row, size_type column)
+        constexpr auto
+        at(size_type row, size_type column) -> reference
         {
             _M_range_check(row, column);
-            return *(m_start + (m_num_columns * row) + column);
+            return *(m_start + _M_index(row, column));
         }
 
-        /// \brief At
+        /// \brief Point based element access
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
-        /// box.
+        /// Box.
         ///
-        /// \exception std::out_of_range
-        ///
-        /// \param column type: {size_type}
-        /// \param row type: {size_type}
+        /// \param column type: size_type
+        /// \param row type: size_type
         /// \returns constexpr const_reference
-        constexpr const_reference at(size_type row, size_type column) const
+        constexpr auto
+        at(size_type row, size_type column) const -> const_reference
         {
             _M_range_check(row, column);
-            return *(m_start + (m_num_columns * row) + column);
+            return *(m_start + _M_index(row, column));
         }
 
-        /// \brief Point Access Operator
+        /// \brief Point based element access operator
         ///
-        /// \details Provides point access to box's elements.
+        /// \details Provides point access to Boxes elements.
         /// Overloads the invocation operator. Utilises the at() method.
         ///
-        /// \exception std::out_of_range
-        ///
-        /// \param column type: {size_type}
-        /// \param row type: {size_type}
+        /// \param column type: size_type
+        /// \param row type: size_type
         /// \returns constexpr reference
-        constexpr reference operator()(size_type row, size_type column)
+        constexpr auto
+        operator() (size_type row, size_type column) -> reference
         { return at(row, column); }
 
-        /// \brief Point Access Operator
+        /// \brief Point based element access operator
         ///
-        /// \details Provides point access to box's elements.
+        /// \details Provides point access to Boxes elements.
         /// Overloads the invocation operator. Utilises the at() method.
-        ///
-        /// \exception std::out_of_range
         ///
         /// \param column type: {size_type}
         /// \param row type: {size_type}
         /// \returns constexpr const_reference
-        constexpr const_reference operator()(size_type row, size_type column) const
+        constexpr auto
+        operator() (size_type row, size_type column) const -> const_reference 
         { return at(row, column); }
 
         /// \brief Front
         /// 
         /// \details Returns a reference to the front element
-        /// of the box.
+        /// of the Box.
         ///
         /// \returns constexpr reference
-        constexpr reference front() noexcept
+        constexpr auto
+        front() noexcept -> reference
         { return *begin(); }
 
         /// \brief Front
         ///
         /// \details Returns a reference to the front element
-        /// of the box.
+        /// of the Box.
         ///
         /// \returns constexpr const_reference
-        constexpr const_reference front() const noexcept
+        constexpr auto
+        front() const noexcept -> const_reference
         { return *begin(); }
 
         /// \brief Back
         ///
         /// \details Returns a reference to the back element
-        /// of the box.
+        /// of the Box.
         ///
         /// \returns constexpr reference
-        constexpr reference back() noexcept
+        constexpr auto
+        back() noexcept -> reference
         { return *(end() - 1); }
 
         /// \brief Back
         /// 
         /// \details Returns a reference to the back element
-        /// of the box.
+        /// of the Box.
         ///
         /// \returns constexpr const_reference
-        constexpr const_reference back() const noexcept
-        { return *(this->end() - 1); }
+        constexpr auto
+        back() const noexcept -> const_reference
+        { return *(end() - 1); }
 
         /// \brief Begin Iterator
         /// 
         /// \details Iterator to the beginning of 
-        /// the box's data.
+        /// the Boxes data.
         ///
         /// \returns constexpr iterator
-        constexpr iterator begin() noexcept
+        constexpr auto
+        begin() noexcept -> iterator
         { return iterator(m_start); }
 
         /// \brief Begin Iterator (const)
         /// 
         /// \details Constant iterator to the beginning 
-        /// of the box's data.
+        /// of the Boxes data.
         ///
         /// \returns constexpr const_iterator
-        constexpr const_iterator begin() const noexcept
+        constexpr auto
+        begin() const noexcept -> const_iterator
         { return const_iterator(m_start); }
 
         /// \brief Constant Begin Iterator
         /// 
         /// \details Constant iterator to the beginning 
-        /// of the box.
+        /// of the Box.
         ///
         /// \returns constexpr const_iterator
-        constexpr const_iterator cbegin() const noexcept
+        constexpr auto 
+        cbegin() const noexcept -> const_iterator
         { return const_iterator(m_start); }
 
         /// \brief Reverse Begin Iterator
         /// 
         /// \details Iterator to the reversed beginning
-        /// of the box's data.
+        /// of the Boxes data.
         ///
         /// \returns constexpr reverse_iterator
-        constexpr reverse_iterator rbegin() noexcept
+        constexpr auto
+        rbegin() noexcept -> reverse_iterator
         { return reverse_iterator(end()); }
 
         /// \brief Reverse Begin Iterator (const)
         /// 
         /// \details Constant iterator to the reversed 
-        /// beginning of the box's data.
+        /// beginning of the Boxes data.
         ///
         /// \returns constexpr const_reverse_iterator
-        constexpr const_reverse_iterator rbegin() const noexcept
+        constexpr auto
+        rbegin() const noexcept -> const_reverse_iterator
         { return const_reverse_iterator(end()); }
 
         /// \brief Constant Reverse Begin Iterator
         ///
         /// \details Constant iterator to the reversed
-        /// beginning of the box's data.
+        /// beginning of the Boxes data.
         ///
         /// \returns constexpr const_reverse_iterator
-        constexpr const_reverse_iterator crbegin() const noexcept
+        constexpr auto
+        crbegin() const noexcept -> const_reverse_iterator
         { return const_reverse_iterator(end()); }
 
         /// \brief End Iterator
         ///
         /// \details Iterator to the end of the 
-        /// box's data.
+        /// Boxes data.
         ///
         /// \returns constexpr iterator
-        constexpr iterator end() noexcept
+        constexpr auto
+        end() noexcept -> iterator
         { return iterator(m_finish); }
 
         /// \brief End Iterator (const)
         /// 
         /// \details Constant iterator to the 
-        /// end of the box's data.
+        /// end of the Boxes data.
         ///
         /// \returns constexpr const_iterator
-        constexpr const_iterator end() const noexcept
+        constexpr auto
+        end() const noexcept -> const_iterator
         { return const_iterator(m_finish); }
 
         /// \brief Constant End Iterator
         ///
         /// \details Constant iterator to the
-        /// end of the box's data.
+        /// end of the Boxes data.
         ///
         /// \returns constexpr const_iterator
-        constexpr const_iterator cend() const noexcept
+        constexpr auto
+        cend() const noexcept -> const_iterator
         { return const_iterator(m_finish); }
 
         /// \brief Reverse End Iterator
         ///
         /// \details Iterator to the reversed end
-        /// of the box's data.
+        /// of the Boxes data.
         ///
         /// \returns constexpr reverse_iterator
-        constexpr reverse_iterator rend() noexcept
+        constexpr auto
+        rend() noexcept -> reverse_iterator
         { return reverse_iterator(begin()); }
 
         /// \brief Reverse End Iterator (const)
         ///
         /// \details Constant iterator to the reversed
-        /// end of the box's data.
+        /// end of the Boxes data.
         ///
         /// \returns constexpr const_reverse_iterator
-        constexpr const_reverse_iterator rend() const noexcept
+        constexpr auto
+        rend() const noexcept -> const_reverse_iterator
         { return const_reverse_iterator(begin()); }
 
         /// \brief Constant Reverse End Iterator
         ///
         /// \details Constant iterator to the reversed
-        /// end of the box's data.
+        /// end of the Boxes data.
         ///
         /// \returns constexpr const_reverse_iterator
-        constexpr const_reverse_iterator crend() const noexcept
+        constexpr auto 
+        crend() const noexcept -> const_reverse_iterator
         { return const_reverse_iterator(begin()); }
 
 
         /// \brief Box Transpose
         ///
-        /// \details Performs a box transpose.
+        /// \details Performs a Box transpose.
         /// Uses std::copy over std::ranges::copy as the output
         /// iterator is required to be std::constructible_v which
         /// column_iterator doesn't satisfy yet.
@@ -944,7 +902,7 @@ namespace cxl
         // constexpr auto 
         // transpose()
         // {
-        //     box<value_type> result(this->num_columns(), this->num_rows());
+        //     Box<value_type> result(this->num_columns(), this->num_rows());
 
         //     if (empty())
         //         return result;
@@ -957,22 +915,22 @@ namespace cxl
 
         /// \brief Box Map
         ///
-        /// \details Maps a function over the box, returning 
-        /// the mapped box.
+        /// \details Maps a function over the Box, returning 
+        /// the mapped Box.
         /// 
-        /// \tparam F concept: std::copy_constructible
+        /// \tparam F
         /// \param func type: F 
         /// \returns constexpr auto 
-        template<std::copy_constructible F>
+        template<typename F>
         constexpr auto
         map(F func) const
         {
 
             if (empty())
-                return box<std::invoke_result_t<F, value_type>>{};
+                return Box<std::invoke_result_t<F, value_type>>{};
             else
             {
-                box<std::invoke_result_t<F, value_type>> result(this->num_rows(), this->num_columns());
+                Box<std::invoke_result_t<F, value_type>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(*this, result.begin(), func);
                 return result;
             }
@@ -981,9 +939,9 @@ namespace cxl
 
         /// \brief Map - Range 
         ///
-        /// \details Maps a function over the box and another 
-        /// range object, returning the mapped box. Returns an 
-        /// empty box if `this` is empty.
+        /// \details Maps a function over the Box and another 
+        /// range object, returning the mapped Box. Returns an 
+        /// empty Box if `this` is empty.
         /// 
         /// \tparam Rng concept: std::ranges::input_range
         /// \tparam F concept: std::copy_constructible
@@ -997,10 +955,10 @@ namespace cxl
             using range_elem_t = typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>;
 
             if (empty())
-                return box<std::invoke_result_t<F, value_type, range_elem_t>>{};
+                return Box<std::invoke_result_t<F, value_type, range_elem_t>>{};
             else
             {
-                box<std::invoke_result_t<F, value_type, range_elem_t>> result(this->num_rows(), this->num_columns());
+                Box<std::invoke_result_t<F, value_type, range_elem_t>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(*this, rng, result.begin(), func);
                 return result;
             }
@@ -1009,9 +967,9 @@ namespace cxl
 
         /// \brief Map - Iterator Pair
         ///
-        /// \details Maps a function over the box and a range
+        /// \details Maps a function over the Box and a range
         /// denoted by an iterator pair, returning the mapped 
-        /// box. Returns an empty box if `this` is empty.
+        /// Box. Returns an empty Box if `this` is empty.
         /// 
         /// \tparam It concept: std::input_iterator
         /// \tparam F concept: std::copy_constructible
@@ -1026,10 +984,10 @@ namespace cxl
             using iterator_elem_t = typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>;
 
             if (empty())
-                return box<std::invoke_result_t<F, value_type, iterator_elem_t>>{};
+                return Box<std::invoke_result_t<F, value_type, iterator_elem_t>>{};
             else
             {
-                box<std::invoke_result_t<F, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
+                Box<std::invoke_result_t<F, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(this->begin(), this->end(), first, last, result.begin(), func);
                 return result;
             }
@@ -1038,19 +996,19 @@ namespace cxl
 
         /// \brief Vertical Flip
         ///
-        /// \details Performs a vertical flip of the box.
+        /// \details Performs a vertical flip of the Box.
         /// ie. The order of the num_rows is reversed. If 
-        /// `this` box is empty, an empty box is returned
+        /// `this` Box is empty, an empty Box is returned
         /// with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto vflip() const
         // {
         //     if (empty())
-        //         return box<value_type>{};
+        //         return Box<value_type>{};
         //     else
         //     {
-        //         box<value_type> result(this->num_rows(), this->num_columns());
+        //         Box<value_type> result(this->num_rows(), this->num_columns());
 
         //         for (auto cidx { 0u }; cidx < this->num_columns(); ++cidx)
         //             std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.column_rbegin(cidx));
@@ -1061,19 +1019,19 @@ namespace cxl
 
         /// \brief Horizontal Flip
         ///
-        /// \details Performs a horizontal flip of the box.
+        /// \details Performs a horizontal flip of the Box.
         /// ie. The order of the num_columns is reversed. If 
-        /// `this` box is empty, an empty box is returned
+        /// `this` Box is empty, an empty Box is returned
         /// with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto hflip() const
         // {
         //     if (empty())
-        //         return box<value_type>{};
+        //         return Box<value_type>{};
         //     else
         //     {
-        //         box<value_type> result(this->num_rows(), this->num_columns());
+        //         Box<value_type> result(this->num_rows(), this->num_columns());
         //             for (auto ridx { 0u }; ridx < this->num_rows(); ++ridx)
         //                 std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
 
@@ -1084,18 +1042,18 @@ namespace cxl
 
         /// \brief Right Rotate
         ///
-        /// Rotates the box 90 degrees clockwise. Inverts the 
-        /// dimension sizes of the box. If `this` box is empty,
-        /// an empty box is returned with no memory allocated to it.
+        /// Rotates the Box 90 degrees clockwise. Inverts the 
+        /// dimension sizes of the Box. If `this` Box is empty,
+        /// an empty Box is returned with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto rrotate() const
         // {
         //     if (empty())
-        //         return box<value_type>{};
+        //         return Box<value_type>{};
         //     else
         //     {
-        //         box<value_type> result(this->num_columns(), this->num_rows());
+        //         Box<value_type> result(this->num_columns(), this->num_rows());
 
         //         for (auto cidx { 0u }; cidx < this->num_columns(); ++cidx)
         //             std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.row_rbegin(cidx));
@@ -1107,18 +1065,18 @@ namespace cxl
 
         /// \brief Left Rotate
         ///
-        /// Rotates the box 90 degrees counter-clockwise. Inverts 
-        /// the dimension sizes of the box. If `this` box is empty,
-        /// an empty box is returned with no memory allocated to it.
+        /// Rotates the Box 90 degrees counter-clockwise. Inverts 
+        /// the dimension sizes of the Box. If `this` Box is empty,
+        /// an empty Box is returned with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto lrotate() const
         // {
         //     if (empty())
-        //         return box<value_type>{};
+        //         return Box<value_type>{};
         //     else
         //     {
-        //         box<value_type> result(this->num_columns(), this->num_rows());
+        //         Box<value_type> result(this->num_columns(), this->num_rows());
 
         //         for (auto ridx { 0u }; ridx < this->num_rows(); ++ridx)
         //             std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.column_rbegin(ridx));
@@ -1128,56 +1086,58 @@ namespace cxl
         // }
 
     private:
-        /// \brief Allocates `Box` Resources
+        /// \brief Allocates memory for Box
         ///
-        /// \details Allocates the memory for the box
+        /// \details Allocates the memory for the Box
         /// using the allocator of the container. Uses
         /// std::allocator_traits to get the allocators
         /// relevant methods.
         ///
-        /// \notes Default allocator is std::allocator<value_type>.
-        ///
-        /// \param n type: {size_type}
+        /// \param n type: size_type
         /// \returns constexpr pointer
-        constexpr pointer _M_allocate(size_type n)
-        { return n != 0 ? alloc_traits::allocate(m_allocator, n) : pointer(); }
+        constexpr auto
+        _M_allocate(size_type n) -> pointer
+        { return n != 0 ? alloc_traits::allocate(m_allocator, n) : pointer{}; }
 
-        /// \brief Deallocates `Box` Resources
+        /// \brief Deallocates memory for Box
         ///
-        /// \details Deallocates the memory for the box
+        /// \details Deallocates the memory for the Box
         /// using the allocator of the container. Uses
         /// std::allocator_traits to get the allocators
         /// relevant methods.
         ///
         /// \param ptr type: pointer
-        /// \param n type: {size_type} | attribute: [[maybe_unused]]
-        constexpr void _M_deallocate(pointer ptr, [[maybe_unused]] size_type n)
+        /// \param n type: [[maybe_unused]] size_type
+        constexpr auto
+        _M_deallocate(pointer ptr, [[maybe_unused]] size_type n) -> void
         {
             if (ptr)
                 alloc_traits::deallocate(m_allocator, ptr, n);
         }
 
-        /// \brief Checks index's are in the bounds of the box
+        /// \brief Checks index's are in the bounds of the Box
         ///
         /// \details Checks if column and row are withing
-        /// the box's bounds.
+        /// the Boxes bounds.
         ///
         /// \exception std::out_of_range
         ///
-        /// \param column type: {size_type}
-        /// \param row type: {size_type}
-        constexpr void _M_range_check(size_type row, size_type column) const
+        /// \param column type: size_type
+        /// \param row type: size_type
+        constexpr auto
+        _M_range_check(size_type row, size_type column) const -> void
         {
-            if (row >= this->num_rows() || column >= this->num_columns())
-                throw std::out_of_range("box::_M_range_check - index out of range.");
+            if (row >= m_num_rows || column >= m_num_columns)
+                throw std::out_of_range("Box::_M_range_check - index out of range.");
         }
 
-        constexpr size_type _M_size(size_type num_rows, size_type num_columns) const noexcept
+        constexpr auto
+        _M_size(size_type num_rows, size_type num_columns) const noexcept -> size_type
         { return num_rows * num_columns != 0 ? num_rows * num_columns : std::max(num_rows, num_columns); }
 
-
-        constexpr size_type _M_index(size_type row, size_type column) const noexcept
-        { return row * num_columns() + column; }
+        constexpr auto
+        _M_index(size_type row, size_type column) const noexcept -> size_type
+        { return row * m_num_columns + column; }
 
         /// \brief Returns the pointer passed to it.
         ///
@@ -1185,14 +1145,15 @@ namespace cxl
         /// \param ptr type: U*
         /// \returns U*
         template <typename U>
-        U* _M_data_ptr(U* ptr) const noexcept
+        constexpr auto
+        _M_data_ptr(U* ptr) const noexcept -> U*
         { return ptr; }
 
 #if __cplusplus >= 201103L
 
         /// \brief Returns the pointer passed to it.
         ///
-        /// \details If the value given is not a builtin
+        /// \details If the fill_value given is not a builtin
         /// pointer type, a pointer is created from the
         /// underlying element type.
         ///
@@ -1220,11 +1181,11 @@ namespace cxl
         }
 #endif // __cplusplus >= 201103L
     
-    };  /// class box
+    };  /// class Box
 
     /// \brief Compares two matrices for equality.
     ///
-    /// \group box Part of the operator set on boxes that perform comparisons. 
+    /// \group Box Part of the operator set on Boxes that perform comparisons. 
     ///
     /// \details Uses std::equal to compare the matrices.
     /// Takes at least O(n) where n = num_columns x num_rows = lhs.end() - lhs.begin()
@@ -1233,15 +1194,15 @@ namespace cxl
     /// that converts to a bool
     ///
     /// \exception Operation is has no exception iff the comparison
-    /// between box elements is noexcept and std::equal is
+    /// between Box elements is noexcept and std::equal is
     /// noexcept across the range
     ///
     /// \tparam ElemL
     /// \tparam ElemR
     /// \rparam lhsE type: [ElemL]
     /// \rparam rhsE type: [ElemR]
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
@@ -1253,12 +1214,12 @@ namespace cxl
             } -> std::convertible_to<bool>;
     }
     constexpr inline bool
-    operator== (const box<ElemL>& lhs, const box<ElemR>& rhs) noexcept(
+    operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs) noexcept(
         noexcept(std::declval<ElemL>() == std::declval<ElemR>())
            & &noexcept(std::ranges::equal(lhs, rhs);))
 #else
     inline bool
-    operator== (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
 #endif
     {
         if (lhs.dimensions() != rhs.dimensions())
@@ -1267,14 +1228,14 @@ namespace cxl
     }
 
 /// Current bug with GCC-11.1 with lexicographical_compare_three_way
-/// causes cxl::box to not compile. Issue: PR
+/// causes cxl::Box to not compile. Issue: PR
 /// Current bug with Clang++-12 with lexicographical_compare_three_way
-/// cause cxl::box to be compared on box size over value precidence
+/// cause cxl::Box to be compared on Box size over fill_value precidence
 #if __cpp_lib_three_way_comparison && !(lexicographical_compare_bug)
 
     /// \brief Spaceship Operator for matrices.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \details Uses std::lexicographical_compare_three_way to
     /// compare the matrices and generates the !=, <, >, <=, >=
@@ -1282,12 +1243,12 @@ namespace cxl
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
     /// \returns constexpr inline auto
     template <typename ElemL, typename ElemR>
     constexpr inline auto
-    operator<=> (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator<=> (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::compare_three_way{});
     }
@@ -1296,103 +1257,103 @@ namespace cxl
 
     /// \brief Compares two matrices for inequality.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \details Inverts the result of a equality comparison
     /// between two matrices.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
     inline bool
-    operator!= (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator!= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return !(lhs == rhs);
     }
 
-    /// \brief Compares if a box is lexicographically
+    /// \brief Compares if a Box is lexicographically
     /// less than another.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
     inline bool
-    operator< (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator< (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return std::ranges::lexicographical_compare(lhs, rhs);
     }
 
-    /// \brief Compares if a box is lexicographically
+    /// \brief Compares if a Box is lexicographically
     /// greater than another.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \details Uses less than comparison and swaps the
     /// order of the arguments.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
     inline bool
-    operator> (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator> (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return rhs < lhs;
     }
 
-    /// \brief Compares if a box is lexicographically
+    /// \brief Compares if a Box is lexicographically
     /// less than or equal to another.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \details Uses less than comparison and swaps the
-    /// order of the arguments. If the rhs box is less
-    /// than the lhs box, then the lhs box cannot
-    /// be less then or equal to the rhs box.
+    /// order of the arguments. If the rhs Box is less
+    /// than the lhs Box, then the lhs Box cannot
+    /// be less then or equal to the rhs Box.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
     inline bool
-    operator<= (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator<= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return !(rhs < lhs);
     }
 
-    /// \brief Compares if a box is lexicographically
+    /// \brief Compares if a Box is lexicographically
     /// greater than or equal to another.
     ///
-    /// \group box
+    /// \group Box
     ///
     /// \details Inverts the result of a less than comparison
     /// between the two matrices.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [box<ElemR>] | qualifiers: {const, ref}
+    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
     /// \returns true
     /// \returns false
     template <typename ElemL, typename ElemR>
     inline bool
-    operator>= (const box<ElemL>& lhs, const box<ElemR>& rhs)
+    operator>= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
     {
         return !(lhs < rhs);
     }
@@ -1402,19 +1363,19 @@ namespace cxl
 
     /// @brief Map Operator
     ///
-    /// \group box
+    /// \group Box
     ///
-    /// \details Maps a function over the elements of a box
-    /// and returns a new box with the mapped values. 
+    /// \details Maps a function over the elements of a Box
+    /// and returns a new Box with the mapped values. 
     /// 
     /// @tparam E concept: Any
     /// @tparam F concept: std::copy_constructible
-    /// @param bx type: box<E> | qualifiers: {const, ref}
+    /// @param bx type: Box<E> | qualifiers: {const, ref}
     /// @param f type: F
     /// @return constexpr auto 
     template<typename E, std::copy_constructible F>
     constexpr auto
-    operator|| (const box<E>& bx, F f)
+    operator|| (const Box<E>& bx, F f)
     { return bx.map(f); }
 
 } // namespace cxl
@@ -1431,11 +1392,11 @@ namespace std
     /// \exception std::swap is noexcept if x.swap(y) is noexcept.
     ///
     /// \tparam T
-    /// \param x type: [cxl::box<T>] | qualifiers: {const, ref}
-    /// \param y type: [cxl::box<T>] | qualifiers: {const, ref}
+    /// \param x type: [cxl::Box<T>] | qualifiers: {const, ref}
+    /// \param y type: [cxl::Box<T>] | qualifiers: {const, ref}
     /// \returns inline void
     template <typename T>
-    inline void swap(cxl::box<T>& x, cxl::box<T>& y) noexcept
+    inline void swap(cxl::Box<T>& x, cxl::Box<T>& y) noexcept
     { x.swap(y); }
 }
 
