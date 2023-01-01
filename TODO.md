@@ -36,7 +36,7 @@
     - ~~[ ] Initialiser List [assign method] (Nested)~~
   - [ ] Element Access
     - [x] `.at()`
-    - [ ] `.slice()`
+    - ~~[ ] `.slice()`~~
     - [ ] Operator `()`
       - [x] Operator `(x, y)`
       - [ ] Operator `(pair, pair)`
@@ -62,10 +62,10 @@
     - [x] `.resize()`
     - [x] `.reshape()`
     - [x] `.swap()`
-    - [ ] `std::swap()` injection
+    - [x] `std::swap()` injection
     - [x] `.erase()`
-    - [ ] `std::erase` injection
-    - [ ] `.map()`
+    - ~~[ ] `std::erase` injection~~
+    - [x] `.map()`
     - [ ] `.transpose()`
   - [x] Capacity
     - [x] `.empty()`

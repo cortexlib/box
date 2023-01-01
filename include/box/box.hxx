@@ -6,7 +6,7 @@
 /// 
 /// Header Version: v0.1.0
 ///
-/// Date: 31-12-2022
+/// Date: 02-01-2023
 ///
 /// License: MIT
 ///
@@ -896,7 +896,6 @@ namespace cxl
         crend() const noexcept -> const_reverse_iterator
         { return const_reverse_iterator(begin()); }
 
-
         /// \brief Box Transpose
         ///
         /// \details Performs a Box transpose.
@@ -918,20 +917,18 @@ namespace cxl
         //     return result;
         // }
 
-
-        /// \brief Box Map
+        /// \brief Box map
         ///
         /// \details Maps a function over the Box, returning 
         /// the mapped Box.
         /// 
-        /// \tparam F
+        /// \tparam F concept: std::copy_constructible
         /// \param func type: F 
-        /// \returns constexpr auto 
-        template<typename F>
+        /// \returns constexpr Box<std::invoke_result_t<F, value_type>> 
+        template<std::copy_constructible F>
         constexpr auto
-        map(F func) const
+        map(F func) const -> Box<std::invoke_result_t<F, value_type>>
         {
-
             if (empty())
                 return Box<std::invoke_result_t<F, value_type>>{};
             else
@@ -942,8 +939,7 @@ namespace cxl
             }
         }
 
-
-        /// \brief Map - Range 
+        /// \brief Box map with range 
         ///
         /// \details Maps a function over the Box and another 
         /// range object, returning the mapped Box. Returns an 
@@ -951,12 +947,12 @@ namespace cxl
         /// 
         /// \tparam Rng concept: std::ranges::input_range
         /// \tparam F concept: std::copy_constructible
-        /// \param rng type Rng | qualifiers: [move-semantics]
+        /// \param rng type Rng&&
         /// \param func type F
-        /// \returns constexpr auto 
+        /// \returns constexpr Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>
         template<std::ranges::input_range Rng, std::copy_constructible F>
         constexpr auto
-        map(Rng&& rng, F func) const
+        map(Rng&& rng, F func) const -> Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>>
         {
             using range_elem_t = typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>;
 
@@ -970,7 +966,6 @@ namespace cxl
             }
         }
 
-
         /// \brief Map - Iterator Pair
         ///
         /// \details Maps a function over the Box and a range
@@ -978,27 +973,27 @@ namespace cxl
         /// Box. Returns an empty Box if `this` is empty.
         /// 
         /// \tparam It concept: std::input_iterator
+        /// \tparam Sn concept: std::sentinel_for<It>
         /// \tparam F concept: std::copy_constructible
         /// \param first type: It 
-        /// \param last type It
-        /// \param func type: F
-        /// \returns constexpr auto 
-        template<std::input_iterator It, std::copy_constructible F>
+        /// \param last type Sn
+        /// \param func type: Fn
+        /// \returns constexpr Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
+        template<std::input_iterator It, std::sentinel_for<It> Sn, std::copy_constructible Fn>
         constexpr auto
-        map(It first, It last, F func) const
+        map(It first, Sn last, Fn func) const -> Box<std::invoke_result_t<Fn, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
         {
             using iterator_elem_t = typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>;
 
             if (empty())
-                return Box<std::invoke_result_t<F, value_type, iterator_elem_t>>{};
+                return Box<std::invoke_result_t<Fn, value_type, iterator_elem_t>>{};
             else
             {
-                Box<std::invoke_result_t<F, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
+                Box<std::invoke_result_t<Fn, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(this->begin(), this->end(), first, last, result.begin(), func);
                 return result;
             }
         }
-
 
         /// \brief Vertical Flip
         ///
@@ -1045,7 +1040,6 @@ namespace cxl
         //     }
         // }
 
-
         /// \brief Right Rotate
         ///
         /// Rotates the Box 90 degrees clockwise. Inverts the 
@@ -1067,7 +1061,6 @@ namespace cxl
         //         return result;
         //     }
         // }
-
 
         /// \brief Left Rotate
         ///
@@ -1156,7 +1149,6 @@ namespace cxl
         { return ptr; }
 
 #if __cplusplus >= 201103L
-
         /// \brief Returns the pointer passed to it.
         ///
         /// \details If the fill_value given is not a builtin
@@ -1167,8 +1159,8 @@ namespace cxl
         /// \param ptr type: Ptr
         /// \returns typename std::pointer_traits<Ptr>::element_type*
         template <typename Ptr>
-        typename std::pointer_traits<Ptr>::element_type*
-        _M_data_ptr(Ptr ptr) const
+        constexpr auto
+        _M_data_ptr(Ptr ptr) const -> typename std::pointer_traits<Ptr>::element_type*
         { return empty() ? nullptr : std::to_address(*ptr); }
 #else
 
@@ -1181,10 +1173,9 @@ namespace cxl
         /// \param ptr type: U*
         /// \returns U*
         template <typename U>
-        U* _M_data_ptr(U* ptr) noexcept
-        {
-            return ptr;
-        }
+        constexpr auto
+        _M_data_ptr(U* ptr) noexcept -> U*
+        { return ptr; }
 #endif // __cplusplus >= 201103L
     
     };  /// class Box

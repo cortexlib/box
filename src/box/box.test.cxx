@@ -733,6 +733,396 @@ TEST_CASE("Box Tests")
                 }
             }
         }
+    
+        SECTION("box::map")
+        {
+            SECTION("Box only Mapping")
+            {
+                SECTION("Lambda")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 7, 6 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 2 }
+                                            , { 4, 6 }
+                                            , { 8, 10 }
+                                            , { 12, 14 }
+                                            , { 16, 18 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    auto rbx { bx.map([](int i) { return i * 2; }) };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.num_rows() == 5);
+                }
+
+                SECTION("Lambda - Empty")
+                {
+                    cxl::Box<int> bx;
+
+                    REQUIRE(bx.empty());
+                    REQUIRE(bx.size() == 0);
+                    REQUIRE(bx.num_rows() == 0);
+                    REQUIRE(bx.num_columns() == 0);
+
+                    auto rbx { bx.map([](int i) { return i * 2; }) };
+
+                    REQUIRE(rbx.empty());
+                    REQUIRE(rbx.size() == 0);
+                    REQUIRE(rbx.num_rows() == 0);
+                    REQUIRE(rbx.num_columns() == 0);
+
+                    REQUIRE(rbx == bx);
+                }
+
+                SECTION("Double Call - Intermidiate")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> ibxcheck = { { 0, 2 }
+                                             , { 4, 6 }
+                                             , { 8, 10 }
+                                             , { 12, 14 }
+                                             , { 16, 18 } };
+
+                    cxl::Box<int> rbxcheck = { { -3, -1 }
+                                             , { -7, -5 }
+                                             , { -11, -9 }
+                                             , { -15, -13 }
+                                             , { -19, -17 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    auto ibx { bx.map([](int i) { return i * 2; }) };
+
+                    REQUIRE(bx == bxcheck);
+
+                    REQUIRE(ibx.size() == 10);
+                    REQUIRE(ibx.num_rows() == 5);
+                    REQUIRE(ibx.num_columns() == 2);
+                    REQUIRE(ibx == ibxcheck);
+
+                    auto rbx { ibx.map([](int i) { return i ^ -3; }) };
+
+                    REQUIRE(ibx == ibxcheck);
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.num_rows() == 5);
+                    REQUIRE(rbx.num_columns() == 2);
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Double Call - Chained")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { -3, -1 }
+                                             , { -7, -5 }
+                                             , { -11, -9 }
+                                             , { -15, -13 }
+                                             , { -19, -17 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    auto rbx { bx.map([](int i) { return i * 2; }).map([](int i) { return i ^ -3; }) };
+
+                    REQUIRE(bx == bxcheck);
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.num_rows() == 5);
+                    REQUIRE(rbx.num_columns() == 2);
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Named Lambda")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    auto square = [](const auto& i) { return i * i; };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 4, 9 }
+                                            , { 16, 25 }
+                                            , { 36, 49 }
+                                            , { 64, 81 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    auto rbx { bx.map(square) };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 5);
+                    REQUIRE(bx.num_columns() == 2);
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.num_rows() == 5);
+                }
+            }
+
+            SECTION("Box and Range")
+            {
+                SECTION("Lambda - With Box")  
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 0, 2 }
+                                             , { 48, -3 }
+                                             , { -12, 280 }
+                                             , { -24, 14 }
+                                             , { -40, 36 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    cxl::Box<int> x = { { 5, 2 }
+                                      , { 24, -1 }
+                                      , { -3, 56 }
+                                      , { -4, 2 }
+                                      , { -5, 4 } };
+
+                    auto rbx { bx.map(x, [](auto e, auto x) { return e * x; }) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Lambda - With Other Range")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 0, 2 }
+                                             , { 48, -3 }
+                                             , { -12, 280 }
+                                             , { -24, 14 }
+                                             , { -40, 36 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    std::vector<int> v = { 5, 2, 24, -1, -3, 56,-4, 2, -5, 4 };
+
+                    auto rbx { bx.map(v, [](auto x, auto v) { return x * v; }) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Named Lambda")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                        , { 2, 3 }
+                                        , { 4, 5 }
+                                        , { 6, 7 }
+                                        , { 8, 9 } };
+
+                    auto add = [](const auto& x, const auto& y) { return x + y; };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 5, 3 }
+                                                , { 26, 2 }
+                                                , { 1, 61 }
+                                                , { 2, 9 }
+                                                , { 3, 13 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    cxl::Box<int> x = { { 5, 2 }
+                                        , { 24, -1 }
+                                        , { -3, 56 }
+                                        , { -4, 2 }
+                                        , { -5, 4 } };
+
+                    auto rbx { bx.map(x, add) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+            }
+
+            SECTION("Box and Iterators")
+            {
+                SECTION("Lambda - With Box")  
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 0, 2 }
+                                             , { 48, -3 }
+                                             , { -12, 280 }
+                                             , { -24, 14 }
+                                             , { -40, 36 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    cxl::Box<int> x = { { 5, 2 }
+                                      , { 24, -1 }
+                                      , { -3, 56 }
+                                      , { -4, 2 }
+                                      , { -5, 4 } };
+
+                    auto rbx { bx.map(x.begin(), x.end(), [](auto e, auto x) { return e * x; }) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Lambda - With Other Container")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 0, 2 }
+                                             , { 48, -3 }
+                                             , { -12, 280 }
+                                             , { -24, 14 }
+                                             , { -40, 36 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    std::vector<int> v = { 5, 2, 24, -1, -3, 56,-4, 2, -5, 4 };
+
+                    auto rbx { bx.map(v.begin(), v.end(), [](auto x, auto v) { return x * v; }) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+
+                SECTION("Named Lambda")
+                {
+                    cxl::Box<int> bx = { { 0, 1 }
+                                       , { 2, 3 }
+                                       , { 4, 5 }
+                                       , { 6, 7 }
+                                       , { 8, 9 } };
+
+                    auto add = [](const auto& x, const auto& y) { return x + y; };
+
+                    cxl::Box<int> bxcheck = { { 0, 1 }
+                                            , { 2, 3 }
+                                            , { 4, 5 }
+                                            , { 6, 7 }
+                                            , { 8, 9 } };
+
+                    cxl::Box<int> rbxcheck = { { 5, 3 }
+                                             , { 26, 2 }
+                                             , { 1, 61 }
+                                             , { 2, 9 }
+                                             , { 3, 13 } };
+
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(bx == bxcheck);
+
+                    cxl::Box<int> x = { { 5, 2 }
+                                      , { 24, -1 }
+                                      , { -3, 56 }
+                                      , { -4, 2 }
+                                      , { -5, 4 } };
+
+                    auto rbx { bx.map(x.begin(), x.end(), add) };
+
+                    REQUIRE(rbx.size() == 10);
+                    REQUIRE(rbx.shape() == std::tuple{ 5, 2 });
+                    REQUIRE(rbx == rbxcheck);
+                }
+            }
+        }
     }
 
     SECTION("Iterators")
