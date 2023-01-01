@@ -1,12 +1,11 @@
 #include <catch2/catch.hpp>
+#include <fmt/core.h>
+
 #include <box/box.hxx>
 
+#include <iostream>
 #include <tuple>
 #include <utility>
-#include <ranges>
-#include <concepts>
-#include <memory>
-#include <vector>
 
 
 TEST_CASE("Box Tests")
@@ -17,7 +16,7 @@ TEST_CASE("Box Tests")
         {
             SECTION("Default constructor")
             {
-                cxl::box<int> bx;
+                cxl::Box<int> bx;
                 REQUIRE(bx.size() == 0);
                 REQUIRE(bx.num_rows() == 0);
                 REQUIRE(bx.num_columns() == 0);
@@ -25,7 +24,7 @@ TEST_CASE("Box Tests")
 
             SECTION("Size Constructor")
             {
-                cxl::box<int> bx(4, 5);
+                cxl::Box<int> bx(4, 5);
                 REQUIRE(bx.size() == 20);
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 5);
@@ -33,7 +32,7 @@ TEST_CASE("Box Tests")
 
             SECTION("Size and Value Constructor")
             {
-                cxl::box<int> bx(4, 5, 1);
+                cxl::Box<int> bx(4, 5, 1);
                 REQUIRE(bx.size() == 20);
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 5);
@@ -41,8 +40,8 @@ TEST_CASE("Box Tests")
 
             SECTION("Copy constructor")
             {
-                cxl::box<int> bx(4, 5, 1);
-                cxl::box<int> nbx(bx);
+                cxl::Box<int> bx(4, 5, 1);
+                cxl::Box<int> nbx(bx);
 
                 REQUIRE(nbx.size() == 20);
                 REQUIRE(nbx.num_rows() == 4);
@@ -57,12 +56,12 @@ TEST_CASE("Box Tests")
 
             SECTION("Move constructor")
             {
-                cxl::box<int> bx(4, 5, 1);
+                cxl::Box<int> bx(4, 5, 1);
 
                 for (auto& v : bx)
                     REQUIRE(v == 1);
 
-                cxl::box<int> nbx(std::move(bx));
+                cxl::Box<int> nbx(std::move(bx));
 
                 REQUIRE(nbx.size() == 20);
                 REQUIRE(nbx.num_rows() == 4);
@@ -74,7 +73,7 @@ TEST_CASE("Box Tests")
 
             SECTION("Initializer List Constructor")
             {
-                cxl::box<int> bx { { 1, 2 }
+                cxl::Box<int> bx { { 1, 2 }
                                     , { 3, 4 }
                                     , { 5, 6 }
                                     , { 7, 8 }
@@ -90,26 +89,26 @@ TEST_CASE("Box Tests")
 
             SECTION("Dimension Constructor") 
             {
-                cxl::box<int> bx(2, 5);
+                cxl::Box<int> bx(2, 5);
                 bx = { { 1, 2, 3, 4, 5 }
                     , { 6, 7, 8, 9, 10 } };
                 
                 REQUIRE(bx.num_rows() == 2);
                 REQUIRE(bx.num_columns() == 5);
                 REQUIRE(bx.size() == 10);
-                REQUIRE(bx.dimensions() == std::tuple{ 2, 5 });
+                REQUIRE(bx.shape() == std::tuple{ 2, 5 });
                 
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3, 4, 5 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3, 4, 5 }
                                             , { 6, 7, 8, 9, 10 } });
 
-                cxl::box<std::string> nbx(bx.dimensions());
+                cxl::Box<std::string> nbx(bx.shape());
 
                 REQUIRE(nbx.num_rows() == 2);
                 REQUIRE(nbx.num_columns() == 5);
                 REQUIRE(nbx.size() == 10);
-                REQUIRE(nbx.dimensions() == std::tuple{ 2, 5 });
+                REQUIRE(nbx.shape() == std::tuple{ 2, 5 });
 
-                REQUIRE(nbx == cxl::box<std::string> { { "", "", "", "", "" }
+                REQUIRE(nbx == cxl::Box<std::string> { { "", "", "", "", "" }
                                                         , { "", "", "", "", "" } });
             }
         }
@@ -119,7 +118,7 @@ TEST_CASE("Box Tests")
             SECTION("Allocator Constructor")
             {
                 std::allocator<int> alloc;
-                cxl::box<int> bx(alloc);
+                cxl::Box<int> bx(alloc);
                 REQUIRE(bx.size() == 0);
                 REQUIRE(bx.num_rows() == 0);
                 REQUIRE(bx.num_columns() == 0);
@@ -129,7 +128,7 @@ TEST_CASE("Box Tests")
             SECTION("Size Constructor")
             {
                 std::allocator<int> alloc;
-                cxl::box<int> bx(4, 5, alloc);
+                cxl::Box<int> bx(4, 5, alloc);
                 REQUIRE(bx.size() == 20);
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 5);
@@ -139,7 +138,7 @@ TEST_CASE("Box Tests")
             SECTION("Size and Value Constructor")
             {
                 std::allocator<int> alloc;
-                cxl::box<int> bx(4, 5, 1, alloc);
+                cxl::Box<int> bx(4, 5, 1, alloc);
                 REQUIRE(bx.size() == 20);
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 5);
@@ -149,8 +148,8 @@ TEST_CASE("Box Tests")
             SECTION("Copy constructor")
             {
                 std::allocator<int> alloc;
-                cxl::box<int> bx(4, 5, 1, alloc);
-                cxl::box<int> nbx(bx);
+                cxl::Box<int> bx(4, 5, 1, alloc);
+                cxl::Box<int> nbx(bx);
 
                 REQUIRE(nbx.size() == 20);
                 REQUIRE(nbx.num_rows() == 4);
@@ -167,12 +166,12 @@ TEST_CASE("Box Tests")
             SECTION("Move constructor")
             {
                 std::allocator<int> alloc;
-                cxl::box<int> bx(4, 5, 1, alloc);
+                cxl::Box<int> bx(4, 5, 1, alloc);
 
                 for (auto& v : bx)
                     REQUIRE(v == 1);
 
-                cxl::box<int> nbx(std::move(bx));
+                cxl::Box<int> nbx(std::move(bx));
 
                 REQUIRE(nbx.size() == 20);
                 REQUIRE(nbx.num_rows() == 4);
@@ -185,27 +184,27 @@ TEST_CASE("Box Tests")
 
             SECTION("Dimension Constructor") 
             {
-                cxl::box<int> bx(2, 5);
+                cxl::Box<int> bx(2, 5);
                 bx = { { 1, 2, 3, 4, 5 }
                     , { 6, 7, 8, 9, 10 } };
                 
                 REQUIRE(bx.num_rows() == 2);
                 REQUIRE(bx.num_columns() == 5);
                 REQUIRE(bx.size() == 10);
-                REQUIRE(bx.dimensions() == std::tuple{ 2, 5 });
+                REQUIRE(bx.shape() == std::tuple{ 2, 5 });
                 
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3, 4, 5 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3, 4, 5 }
                                             , { 6, 7, 8, 9, 10 } });
 
                 std::allocator<std::string> alloc;
-                cxl::box<std::string> nbx(bx.dimensions(), alloc);
+                cxl::Box<std::string> nbx(bx.shape(), alloc);
 
                 REQUIRE(nbx.num_rows() == 2);
                 REQUIRE(nbx.num_columns() == 5);
                 REQUIRE(nbx.size() == 10);
-                REQUIRE(nbx.dimensions() == std::tuple{ 2, 5 });
+                REQUIRE(nbx.shape() == std::tuple{ 2, 5 });
 
-                REQUIRE(nbx == cxl::box<std::string> { { "", "", "", "", "" }
+                REQUIRE(nbx == cxl::Box<std::string> { { "", "", "", "", "" }
                                                         , { "", "", "", "", "" } });
             }
         }
@@ -214,8 +213,8 @@ TEST_CASE("Box Tests")
         {
             SECTION("Copy assignment")
             {
-                cxl::box<int> bx(4, 5, 1);
-                cxl::box<int> nbx;
+                cxl::Box<int> bx(4, 5, 1);
+                cxl::Box<int> nbx;
 
                 REQUIRE(nbx.size() == 0);
                 REQUIRE(nbx.num_rows() == 0);
@@ -235,8 +234,8 @@ TEST_CASE("Box Tests")
 
             SECTION("Move assignment")
             {
-                cxl::box<int> bx(4, 5, 1);
-                cxl::box<int> nbx;
+                cxl::Box<int> bx(4, 5, 1);
+                cxl::Box<int> nbx;
 
                 REQUIRE(nbx.size() == 0);
                 REQUIRE(nbx.num_rows() == 0);
@@ -253,7 +252,7 @@ TEST_CASE("Box Tests")
 
             SECTION("Initializer List Assignment")
             {
-                cxl::box<int> bx = { { 1, 2, 3 }
+                cxl::Box<int> bx = { { 1, 2, 3 }
                                    , { 4, 5, 6 }
                                    , { 7, 8, 9 } };
 
@@ -269,18 +268,18 @@ TEST_CASE("Box Tests")
 
     SECTION("Modifiers")
     {
-        SECTION("Assignment - box::assign")
+        SECTION("Assignment - Box::assign")
         {
             SECTION("Same Size")
             {
-                cxl::box<int> bx(3, 3, 1);
+                cxl::Box<int> bx(3, 3, 1);
 
                 auto ptr { bx.data() };
 
                 REQUIRE(bx.size() == 9);
-                REQUIRE(bx.dimensions() == std::tuple{3, 3});
+                REQUIRE(bx.shape() == std::tuple{3, 3});
                 REQUIRE(bx.data() == ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 1, 1 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 1, 1 }
                                             , { 1, 1, 1 }
                                             , { 1, 1, 1 } });
 
@@ -289,23 +288,23 @@ TEST_CASE("Box Tests")
                         , { 7, 8, 9 } });
                 
                 REQUIRE(bx.size() == 9);
-                REQUIRE(bx.dimensions() == std::tuple{3, 3});
+                REQUIRE(bx.shape() == std::tuple{3, 3});
                 REQUIRE(bx.data() == ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3 }
                                             , { 4, 5, 6 }
                                             , { 7, 8, 9 } });
             }
 
             SECTION("Larger Size")
             {
-                cxl::box<int> bx(3, 3, 1);
+                cxl::Box<int> bx(3, 3, 1);
 
                 auto ptr { bx.data() };
 
                 REQUIRE(bx.size() == 9);
-                REQUIRE(bx.dimensions() == std::tuple{3, 3});
+                REQUIRE(bx.shape() == std::tuple{3, 3});
                 REQUIRE(ptr == bx.data());
-                REQUIRE(bx == cxl::box<int> { { 1, 1, 1 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 1, 1 }
                                             , { 1, 1, 1 }
                                             , { 1, 1, 1 } });
 
@@ -316,9 +315,9 @@ TEST_CASE("Box Tests")
                         , { 10, 11, 12 } });
                 
                 REQUIRE(bx.size() == 12);
-                REQUIRE(bx.dimensions() == std::tuple{4, 3});
+                REQUIRE(bx.shape() == std::tuple{4, 3});
                 REQUIRE(bx.data() != ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3 }
                                             , { 4, 5, 6 }
                                             , { 7, 8, 9 }
                                             , { 10, 11, 12 } });
@@ -326,46 +325,547 @@ TEST_CASE("Box Tests")
 
             SECTION("Smaller Box")
             {
-                cxl::box<int> bx(3, 3, 1);
+                cxl::Box<int> bx(3, 3, 1);
 
                 auto ptr { bx.data() };
 
                 REQUIRE(bx.size() == 9);
-                REQUIRE(bx.dimensions() == std::tuple{3, 3});
+                REQUIRE(bx.shape() == std::tuple{3, 3});
                 REQUIRE(bx.data() == ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 1, 1 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 1, 1 }
                                             , { 1, 1, 1 }
                                             , { 1, 1, 1 } });
 
                 bx.assign({ { 1, 2, 3, 4 } });
 
                 REQUIRE(bx.size() == 4);
-                REQUIRE(bx.dimensions() == std::tuple{1, 4});
+                REQUIRE(bx.shape() == std::tuple{1, 4});
                 REQUIRE(bx.data() != ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3, 4 } });
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3, 4 } });
             }
 
             SECTION("Empty Box")
             {
-                cxl::box<int> bx;
+                cxl::Box<int> bx;
 
                 auto ptr { bx.data() };
 
                 REQUIRE(bx.size() == 0);
-                REQUIRE(bx.dimensions() == std::tuple{0, 0});
+                REQUIRE(bx.shape() == std::tuple{0, 0});
                 REQUIRE(ptr == bx.data());
-                REQUIRE(bx == cxl::box<int> { });
+                REQUIRE(bx == cxl::Box<int> { });
 
                 bx.assign({ { 1, 2, 3 }
                         , { 4, 5, 6 }
                         , { 7, 8, 9 } });
                 
                 REQUIRE(bx.size() == 9);
-                REQUIRE(bx.dimensions() == std::tuple{3, 3});
+                REQUIRE(bx.shape() == std::tuple{3, 3});
                 REQUIRE(bx.data() != ptr);
-                REQUIRE(bx == cxl::box<int> { { 1, 2, 3 }
+                REQUIRE(bx == cxl::Box<int> { { 1, 2, 3 }
                                             , { 4, 5, 6 }
                                             , { 7, 8, 9 } });
+            }
+        }
+    }
+
+    SECTION("MetaData Access")
+    {
+        SECTION("Shape and Size")
+        {
+            SECTION("Box::size")
+            {
+                cxl::Box<int> bx(4, 5);
+                REQUIRE(bx.size() == 20);
+            }
+
+            SECTION("Box::max_size")
+            {
+                std::allocator<int> alloc;
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.max_size() == std::allocator_traits<decltype(alloc)>::max_size(alloc));
+            }
+
+            SECTION("Box::num_rows")
+            {
+                cxl::Box<int> bx(4, 5);
+                REQUIRE(bx.num_rows() == 4);
+            }
+
+            SECTION("Box::num_columns")
+            {
+                cxl::Box<int> bx(4, 5);
+                REQUIRE(bx.num_columns() == 5);
+            }
+
+            SECTION("Box::shape - Tuple")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                auto dim = bx.shape();
+
+                REQUIRE(std::get<0>(dim) == 4);
+                REQUIRE(std::get<1>(dim) == 5);
+            }
+
+            SECTION("Box::shape - Structured Binding")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                auto [c, r] = bx.shape();
+
+                REQUIRE(c == 4);
+                REQUIRE(r == 5);
+            }
+        }
+
+        SECTION("Resources")
+        {
+            SECTION("Box::empty")
+            {
+                cxl::Box<int> bx;
+                REQUIRE(bx.empty());
+            }
+
+            SECTION("Box::empty")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(!bx.empty());
+            }
+
+            SECTION("Box::get_allocator")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.get_allocator() == std::allocator<int>());
+            }
+        }
+    }
+
+    SECTION("Modifiers")
+    {
+        SECTION("Swap")
+        {
+            SECTION("Box::swap")
+            {
+                cxl::Box<int> bx(2, 3, 1);
+                cxl::Box<int> nbx(7, 4, 2);
+
+                for (auto& v : bx)
+                    REQUIRE(v == 1);
+                
+                for (auto& v : nbx)
+                    REQUIRE(v == 2);
+
+                bx.swap(nbx);
+
+                for (auto& v : bx)
+                    REQUIRE(v == 2);
+                
+                for (auto& v : nbx)
+                    REQUIRE(v == 1);
+            }
+
+            SECTION("Box - std::swap")
+            {
+                cxl::Box<int> bx(2, 3, 1);
+                cxl::Box<int> nbx(7, 4, 2);
+
+                for (auto& v : bx)
+                    REQUIRE(v == 1);
+                
+                for (auto& v : nbx)
+                    REQUIRE(v == 2);
+
+                std::swap(bx, nbx);
+
+                for (auto& v : bx)
+                    REQUIRE(v == 2);
+                
+                for (auto& v : nbx)
+                    REQUIRE(v == 1);
+            }
+        }
+
+        SECTION("Removal")
+        {
+            SECTION("Box::clear")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+
+                auto ptr { bx.begin().base() };
+                REQUIRE(bx.data() == std::to_address(ptr));
+
+                bx.clear();
+
+                REQUIRE(bx.empty());
+                REQUIRE(bx.size() == 0);
+
+                REQUIRE_THROWS_AS(bx.at(0, 0) = 1, std::out_of_range);
+
+                REQUIRE(bx.empty());
+                REQUIRE(bx.size() == 0);
+                REQUIRE(bx.data() == nullptr);
+                REQUIRE(bx.data() == decltype(bx)::pointer{});
+            }
+
+            SECTION("Box::clear - No allocated resources")
+            {
+                cxl::Box<int> bx;
+
+                REQUIRE(bx.empty());
+                REQUIRE(bx.size() == 0);
+                REQUIRE(bx.data() == nullptr);
+                REQUIRE(bx.data() == decltype(bx)::pointer{});
+
+                bx.clear();
+
+                REQUIRE(bx.empty());
+                REQUIRE(bx.size() == 0);
+                REQUIRE(bx.data() == nullptr);
+                REQUIRE(bx.data() == decltype(bx)::pointer{});
+            }
+
+            SECTION("Box::clear - Uninitialized Resources")
+            {
+                cxl::Box<int> bx(4, 5);
+
+                REQUIRE(!bx.empty());
+                REQUIRE(bx.size() == 20);
+                REQUIRE(bx.num_rows() == 4);
+                REQUIRE(bx.num_columns() == 5);
+                REQUIRE(bx.data() != nullptr);
+
+                bx.clear();
+
+                REQUIRE(bx.empty());
+                REQUIRE(bx.size() == 0);
+                REQUIRE(bx.num_columns() == 0);
+                REQUIRE(bx.num_rows() == 0);
+                REQUIRE(bx.data() == nullptr);
+            }
+        }
+
+        SECTION("Restructuring")
+        {
+            SECTION("Resize")
+            {
+                SECTION("Box::resize - Larger Resize")
+                {
+                    using namespace std::literals;
+
+                    /// std::string was used as it is not trivially constructable 
+                    /// and thus Box<std::string>::resize will actually initialise 
+                    /// the variable to an empty string (unlike ints)
+                    cxl::Box<std::string> bx(2, 5, "h");
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 2);
+                    REQUIRE(bx.num_columns() == 5);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto& elem : bx)
+                        REQUIRE(elem == "h"s);
+
+                    bx.resize(2, 8);
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 16);
+                    REQUIRE(bx.num_rows() == 2);
+                    REQUIRE(bx.num_columns() == 8);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto i { 0 }; auto& elem : bx)
+                    {
+                        if (i < 10)
+                            REQUIRE(elem == "h"s);
+                        else
+                            REQUIRE(elem == ""s);
+
+                        fmt::print("i: {} | elem: {}\n", i, elem);
+
+                        i += 1;
+                    }
+                }
+
+                SECTION("Box::resize - Smaller Resize")
+                {
+                    using namespace std::literals;
+
+                    /// std::string was used as it is not trivially constructable 
+                    /// and thus Box<std::string>::resize will actually initialise 
+                    /// the variable to an empty string (unlike ints)
+                    cxl::Box<std::string> bx(2, 5, "h");
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 2);
+                    REQUIRE(bx.num_columns() == 5);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto& elem : bx)
+                        REQUIRE(elem == "h"s);
+
+                    bx.resize(2, 3);
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 6);
+                    REQUIRE(bx.num_rows() == 2);
+                    REQUIRE(bx.num_columns() == 3);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto& elem : bx)
+                        REQUIRE(elem == "h"s);
+                }
+
+                SECTION("Box::resize - After clear")
+                {
+                    using namespace std::literals;
+
+                    /// std::string was used as it is not trivially constructable 
+                    /// and thus Box<std::string>::resize will actually initialise 
+                    /// the variable to an empty string (unlike ints)
+                    cxl::Box<std::string> bx(2, 5, "h");
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 10);
+                    REQUIRE(bx.num_rows() == 2);
+                    REQUIRE(bx.num_columns() == 5);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto& elem : bx)
+                        REQUIRE(elem == "h"s);
+
+                    bx.clear();
+
+                    REQUIRE(bx.empty());
+                    REQUIRE(bx.size() == 0);
+                    REQUIRE(bx.num_rows() == 0);
+                    REQUIRE(bx.num_columns() == 0);
+                    REQUIRE(bx.data() == nullptr);
+
+                    bx.resize(6, 4);
+
+                    REQUIRE(!bx.empty());
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 6);
+                    REQUIRE(bx.num_columns() == 4);
+                    REQUIRE(bx.data() != nullptr);
+
+                    for (auto& elem : bx)
+                        REQUIRE(elem == ""s);
+                }
+            }
+
+            SECTION("Reshape")
+            {
+                SECTION("Box::reshape - correct reshape")
+                {
+                    cxl::Box<int> bx(4, 6, 1);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+
+                    bx.reshape(3, 8);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 3);
+                    REQUIRE(bx.num_columns() == 8);
+                }
+
+                SECTION("Box::reshape - larger reshape")
+                {
+                    cxl::Box<int> bx(4, 6, 1);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+
+                    REQUIRE_THROWS_AS(bx.reshape(4, 8), std::length_error);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+                }
+
+                SECTION("Box::reshape - smaller reshape")
+                {
+                    cxl::Box<int> bx(4, 6, 1);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+
+                    REQUIRE_THROWS_AS(bx.reshape(3, 5), std::length_error);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+                }
+
+                SECTION("Box::reshape - reshape column vector")
+                {
+                    cxl::Box<int> bx(4, 6, 1);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+
+                    bx.reshape(24, 0);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 24);
+                    REQUIRE(bx.num_columns() == 0);
+                }
+
+                SECTION("Box::reshape - reshape column vector")
+                {
+                    cxl::Box<int> bx(4, 6, 1);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 4);
+                    REQUIRE(bx.num_columns() == 6);
+
+                    bx.reshape(0, 24);
+
+                    REQUIRE(bx.size() == 24);
+                    REQUIRE(bx.num_rows() == 0);
+                    REQUIRE(bx.num_columns() == 24);
+                }
+            }
+        }
+    }
+
+    SECTION("Iterators")
+    {
+        SECTION("Normal Iterators")
+        {
+
+            SECTION("Range for-loop")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+
+                for (auto& elem : bx)
+                {
+                    REQUIRE(elem == 1);
+                    elem = 2;
+                }
+
+                for (auto& elem : bx)
+                    REQUIRE(elem == 2);
+            }
+
+            SECTION("Box::begin and Box::end")
+            {
+                cxl::Box<int> bx(4, 5);
+
+                std::iota(bx.begin(), bx.end(), 1);
+
+                auto value { 1 };
+                for (auto& elem : bx)
+                {
+                    REQUIRE(elem == value++);
+                    elem = 2 * elem;
+                }
+
+                value = 1;
+                for (auto& elem : bx)
+                {
+                    REQUIRE(elem == value * 2);
+                    ++value;
+                }
+            }
+        }
+
+        SECTION("Reverse Iterators")
+        {
+            SECTION("range-for reversed")
+            {
+                cxl::Box<int> bx = { { 1, 2 }
+                                    , { 3, 4 } };
+
+                std::reverse(bx.begin(), bx.end());
+
+                for (auto v { 4 }; auto& elem : bx)
+                
+                    REQUIRE(elem == v--);
+            }
+
+            SECTION("Box::rbegin and Box::rend")
+            {
+                cxl::Box<int> bx(4, 5);
+
+                std::iota(bx.begin(), bx.end(), 1);
+
+                auto value { 20 };
+                std::reverse(bx.begin(), bx.end());
+
+                for (auto& elem : bx)
+                {
+                    REQUIRE(elem == value--);
+                    elem *= 2;
+                }
+
+                value = 20;
+                std::reverse(bx.begin(), bx.end());
+                std::reverse(bx.begin(), bx.end());
+                
+                for (auto& elem : bx)
+                    REQUIRE(elem == 2 * value--);
+            }
+        }
+    }
+
+    SECTION("Element Access")
+    {
+        SECTION("Raw Data")
+        {
+            SECTION("Box::data")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.data() != nullptr);
+            }
+
+            SECTION("Box::front")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.front() == 1);
+
+                bx.front() = 2;
+                REQUIRE(bx.front() == 2);
+            }
+
+            SECTION("Box::back")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.back() == 1);
+
+                bx.back() = 2;
+                REQUIRE(bx.back() == 2);
+            }
+        }
+
+        SECTION("Accessors")
+        {
+            SECTION("Box::at")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx.at(0, 1) == 1);
+
+                bx.at(0, 1) = 2;
+                REQUIRE(bx.at(0, 1) == 2);
+
+                REQUIRE_THROWS_AS(bx.at(10, 1), std::out_of_range);
+            }
+
+            SECTION("Box::operator()")
+            {
+                cxl::Box<int> bx(4, 5, 1);
+                REQUIRE(bx(0, 1) == 1);
+
+                bx(1, 1) = 2;
+                REQUIRE(bx(1, 1) == 2);
+
+                REQUIRE_THROWS_AS(bx(4, 1), std::out_of_range);
             }
         }
     }

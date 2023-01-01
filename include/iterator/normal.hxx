@@ -101,7 +101,7 @@ public:
 #    if __cpp_lib_concepts
             requires std::is_same_v<Iter, typename Container::pointer>
 #    endif
-        constexpr explicit 
+        constexpr
         normal_iterator(const normal_iterator<Iter, Container>& other) noexcept
             : current{ other.base() } { }
 
@@ -113,9 +113,8 @@ public:
         /// directly initialised from other.
         ///
         /// \param other type: const iterator_type&
-        constexpr explicit 
-        normal_iterator(
-            const iterator_type& other) noexcept
+        constexpr
+        normal_iterator(const iterator_type& other) noexcept
             : current{ other } { }
 
 

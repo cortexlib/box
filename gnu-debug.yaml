@@ -4,5 +4,5 @@ cxx_compiler: 'g++'
 cxx_version: c++20
 
 flags: [
-  '-fconcepts-diagnostics-depth=4'
+  '-g'
 ]

@@ -53,7 +53,7 @@ namespace cxl
         using reference                             = T&;
         using const_reference                       = const T&;
         using pointer                               = typename alloc_traits::pointer;
-        using const_pointer                         = typename alloc_traits::pointer;
+        using const_pointer                         = typename alloc_traits::const_pointer;
 
         using iterator                              = cxl::normal_iterator<pointer, Box>;
         using const_iterator                        = cxl::normal_iterator<const_pointer, Box>;
@@ -73,7 +73,7 @@ namespace cxl
         /// \brief Default Constructor
         ///
         /// \details Default constructor for Box.
-        explicit constexpr
+        constexpr
         Box() noexcept
         : m_num_rows{ size_type{} }
         , m_num_columns{ size_type{} }
@@ -146,7 +146,7 @@ namespace cxl
         /// another Box of the same underlying type.
         ///
         /// \param other type: const Box&
-        explicit constexpr
+        constexpr
         Box(const Box& other)
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns}
@@ -178,7 +178,7 @@ namespace cxl
         /// in a default constructed state.
         ///
         /// \param other type: Box&&
-        explicit constexpr
+        constexpr
         Box(Box&& other) noexcept
         : m_num_rows{ other.m_num_rows }
         , m_num_columns{ other.m_num_columns }
@@ -439,12 +439,13 @@ namespace cxl
         /// \brief Resizes Boxes memory
         ///
         /// \details Resizes the Box to a new shape of new_rows x new_columns.
-        /// Resizing could cause reallocation if the new shape than the current shape.
-        /// Previous values are copied to the new sequential memory location which will
-        /// reshuffle the data's layout. New memory is given the value of fill_value.
-        /// A smaller resize shape will result in elements past the new shape's
-        /// sequential extent to be destroyed and deallocated. If the overall 
-        /// memory size remains the same, the data is only reshaped.
+        /// Resizing will cause reallocation to a new memory block if the new 
+        /// shape is larger or smaller than the current shape. For larger shape, 
+        /// previous values are copied to the new sequential memory location 
+        /// which will reshuffle the data's layout. New memory is given the 
+        /// value of fill_value. A smaller resize shape will result in elements 
+        /// past the new shape's sequential extent to be destroyed and deallocated.
+        /// If the overall memory size remains the same, the data is only reshaped.
         ///
         /// \exception std::length_error
         ///
@@ -455,38 +456,38 @@ namespace cxl
         resize(size_type new_rows, size_type new_columns, const_reference fill_value) -> void
         {
             auto old_size{ _M_size(m_num_rows, m_num_columns) };
+            auto new_size{ _M_size(new_rows, new_columns) };
 
-            if (auto new_size{ _M_size(new_rows, new_columns) }; new_size > alloc_traits::max_size(m_allocator))
+            auto new_start{ _M_allocate(new_size) };
+            auto new_finish{ new_start + new_size };
+
+
+            if (new_size > alloc_traits::max_size(m_allocator))
                 throw std::length_error("Box resize too large");
             else
-            {
                 if (old_size < new_size)
                 {
-                    auto new_start{ _M_allocate(new_size) };
-                    auto old_finish_pos_in_new{ new_start + old_size };
-                    auto new_finish{ new_start + new_size };
-
-                    if (m_start)
+                    if (auto old_finish_pos_in_new{ new_start + old_size }; m_start)
                     {
                         std::ranges::uninitialized_copy(m_start, m_finish, new_start, old_finish_pos_in_new);
                         std::ranges::uninitialized_fill(old_finish_pos_in_new, new_finish, fill_value);
                     }
                     else
                         std::ranges::uninitialized_fill(new_start, new_finish, fill_value);
-
-                    std::ranges::destroy(*this);
-                    _M_deallocate(m_start, old_size);
-    
-                    m_start = new_start;
-                    m_finish = new_finish;
                 }
                 else if (old_size > new_size)
                 {
-                    auto size_diff { old_size - new_size };
-                    std::ranges::destroy_n(m_start + new_size, size_diff);
-                    _M_deallocate(m_start + new_size, size_diff);                   
+                    if (auto size_diff { old_size - new_size }; m_start)
+                        std::ranges::uninitialized_copy(m_start, m_finish - size_diff, new_start, new_finish);
+                    else
+                        std::ranges::uninitialized_fill(new_start, new_finish, fill_value);
                 }
-            }
+
+            std::ranges::destroy(*this);
+            _M_deallocate(m_start, old_size);
+    
+            m_start = new_start;
+            m_finish = new_finish;
 
             m_num_rows = new_rows;
             m_num_columns = new_columns;
@@ -502,8 +503,9 @@ namespace cxl
         [[maybe_unused]] constexpr auto 
         erase(const_iterator position) -> iterator
         {
-            std::ranges::destroy_at(std::addressof(*position));
-            std::ranges::uninitialized_fill(position, position + 1, value_type{});
+            auto pos { this->begin() + (position - this->cbegin()) };
+            std::ranges::destroy_at(std::addressof(*pos));
+            std::ranges::uninitialized_fill(pos, pos + 1, value_type{});
 
             return position;
         }
@@ -519,10 +521,14 @@ namespace cxl
         [[maybe_unused]] constexpr auto
         erase(const_iterator first, const_iterator last) -> iterator
         {
-            std::ranges::destroy(first, last);
-            std::ranges::uninitialized_fill(first, last, value_type());
+            const auto bgn { this->begin() };
+            const auto cbgn { this->cbegin() };
 
-            return first;
+            auto fst { bgn + (first - cbgn) };
+            auto lst { bgn + (last - cbgn) };
+
+            std::ranges::destroy(fst, lst);
+            return std::ranges::uninitialized_fill(fst, lst, value_type{});
         }
 
         /// \brief Clears the Box elements
@@ -1222,7 +1228,7 @@ namespace cxl
     operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
 #endif
     {
-        if (lhs.dimensions() != rhs.dimensions())
+        if (lhs.shape() != rhs.shape())
             return false;
         return std::ranges::equal(lhs, rhs);
     }
@@ -1392,11 +1398,11 @@ namespace std
     /// \exception std::swap is noexcept if x.swap(y) is noexcept.
     ///
     /// \tparam T
-    /// \param x type: [cxl::Box<T>] | qualifiers: {const, ref}
-    /// \param y type: [cxl::Box<T>] | qualifiers: {const, ref}
-    /// \returns inline void
+    /// \param x type: const cxl::Box<T>&
+    /// \param y type: const cxl::Box<T>&
     template <typename T>
-    inline void swap(cxl::Box<T>& x, cxl::Box<T>& y) noexcept
+    constexpr inline auto
+    swap(cxl::Box<T>& x, cxl::Box<T>& y) noexcept( noexcept(x.swap(y)) ) -> void
     { x.swap(y); }
 }
 
