@@ -57,7 +57,7 @@
     - [x] `.cend()`
     - [x] `.rend()`
     - [x] `.crend()`
-  - [ ] Modifiers
+  - [x] Modifiers
     - [x] `.clear`
     - [x] `.resize()`
     - [x] `.reshape()`
@@ -65,6 +65,7 @@
     - [x] `std::swap()` injection
     - [x] `.erase()`
     - ~~[ ] `std::erase` injection~~
+  - [ ] Functional
     - [x] `.map()`
     - [ ] `.transpose()`
   - [x] Capacity
@@ -76,17 +77,22 @@
     - [x] `.num_columns()`
     - [x] `.num_rows()`
   - [ ] Operators
-    - [ ] `||` - map
-    - [ ] `/` - reduce
-    - [ ] `!` - transpose
-    - [ ] `+` - horizontally concatenate
-    - [ ] `^` - vertically concatenate
-    - [ ] `%` - dot product
-    - [ ] `==` - equality
-    - [ ] `<=>` - spaceship
+    - [ ] Functional
+      - [x] `||` - map
+      - [ ] `/` - reduce
+      - [ ] `!` - transpose
+      - [ ] `+` - horizontally concatenate
+      - [ ] `^` - vertically concatenate
+      - [ ] `%` - dot product
+    - [ ] Comparison
+      - [x] `==` - equality
+      - [x] `<=>` - spaceship
   - [x] Misc.
     - [x] `.get_allocator()`
-  - [ ] Testing
+  - [ ] Box View
+    - [ ] Create a 2D std::view that lazily applies function calls
+    - [ ] or box_map_result like types
+  - [x] Testing
   - [ ] Improvements
     - [ ] Make .at() return an optional
     - [ ] Make operators return optionals
