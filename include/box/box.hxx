@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <compare>
 #include <functional>
 #include <initializer_list>
 #include <memory>
@@ -1180,202 +1181,63 @@ namespace cxl
     
     };  /// class Box
 
-    /// \brief Compares two matrices for equality.
+    /// \brief Compares two Boxes for equality.
     ///
-    /// \group Box Part of the operator set on Boxes that perform comparisons. 
-    ///
-    /// \details Uses std::equal to compare the matrices.
-    /// Takes at least O(n) where n = num_columns x num_rows = lhs.end() - lhs.begin()
-    ///
-    /// \requires Matrix elements support equality comparison
-    /// that converts to a bool
-    ///
-    /// \exception Operation is has no exception iff the comparison
-    /// between Box elements is noexcept and std::equal is
-    /// noexcept across the range
+    /// \details Uses std::equal to compare the Boxes.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \rparam lhsE type: [ElemL]
-    /// \rparam rhsE type: [ElemR]
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
+    /// \rparam lhsE type: ElemL
+    /// \rparam rhsE type: ElemR
+    /// \param lhs type: const Box<ElemL>&
+    /// \param rhs type: const Box<ElemR>&
+    /// \returns constexpr inline bool
     template <typename ElemL, typename ElemR>
-#if __cpluscplus >= 202002L
-        requires requires(ElemL lhsE, ElemR rhsE)
-    {
-        {
-            lhsE == rhsE
-            } -> std::convertible_to<bool>;
-    }
-    constexpr inline bool
+        requires requires(ElemL lhsE, ElemR rhsE) {
+            { lhsE == rhsE } -> std::convertible_to<bool>;
+        }
+    constexpr inline auto
     operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs) noexcept(
         noexcept(std::declval<ElemL>() == std::declval<ElemR>())
-           & &noexcept(std::ranges::equal(lhs, rhs);))
-#else
-    inline bool
-    operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-#endif
+           && noexcept(std::ranges::equal(lhs, rhs))) -> bool
     {
         if (lhs.shape() != rhs.shape())
             return false;
         return std::ranges::equal(lhs, rhs);
     }
 
-/// Current bug with GCC-11.1 with lexicographical_compare_three_way
-/// causes cxl::Box to not compile. Issue: PR
-/// Current bug with Clang++-12 with lexicographical_compare_three_way
-/// cause cxl::Box to be compared on Box size over fill_value precidence
-#if __cpp_lib_three_way_comparison && !(lexicographical_compare_bug)
-
-    /// \brief Spaceship Operator for matrices.
-    ///
-    /// \group Box
+    /// \brief Spaceship Operator for Box
     ///
     /// \details Uses std::lexicographical_compare_three_way to
-    /// compare the matrices and generates the !=, <, >, <=, >=
+    /// compare the Boxes and generates the !=, <, >, <=, >=
     /// operators.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
+    /// \param lhs type: const Box<ElemL>&
+    /// \param lhs type: const Box<ElemR>&
     /// \returns constexpr inline auto
     template <typename ElemL, typename ElemR>
     constexpr inline auto
     operator<=> (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::compare_three_way{});
-    }
+    { return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::compare_three_way{}); }
 
-#else // !C++20
-
-    /// \brief Compares two matrices for inequality.
-    ///
-    /// \group Box
-    ///
-    /// \details Inverts the result of a equality comparison
-    /// between two matrices.
-    ///
-    /// \tparam ElemL
-    /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
-    template <typename ElemL, typename ElemR>
-    inline bool
-    operator!= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return !(lhs == rhs);
-    }
-
-    /// \brief Compares if a Box is lexicographically
-    /// less than another.
-    ///
-    /// \group Box
-    ///
-    /// \tparam ElemL
-    /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
-    template <typename ElemL, typename ElemR>
-    inline bool
-    operator< (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return std::ranges::lexicographical_compare(lhs, rhs);
-    }
-
-    /// \brief Compares if a Box is lexicographically
-    /// greater than another.
-    ///
-    /// \group Box
-    ///
-    /// \details Uses less than comparison and swaps the
-    /// order of the arguments.
-    ///
-    /// \tparam ElemL
-    /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
-    template <typename ElemL, typename ElemR>
-    inline bool
-    operator> (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return rhs < lhs;
-    }
-
-    /// \brief Compares if a Box is lexicographically
-    /// less than or equal to another.
-    ///
-    /// \group Box
-    ///
-    /// \details Uses less than comparison and swaps the
-    /// order of the arguments. If the rhs Box is less
-    /// than the lhs Box, then the lhs Box cannot
-    /// be less then or equal to the rhs Box.
-    ///
-    /// \tparam ElemL
-    /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
-    template <typename ElemL, typename ElemR>
-    inline bool
-    operator<= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return !(rhs < lhs);
-    }
-
-    /// \brief Compares if a Box is lexicographically
-    /// greater than or equal to another.
-    ///
-    /// \group Box
-    ///
-    /// \details Inverts the result of a less than comparison
-    /// between the two matrices.
-    ///
-    /// \tparam ElemL
-    /// \tparam ElemR
-    /// \param lhs type: [Box<ElemL>] | qualifiers: {const, ref}
-    /// \param rhs type: [Box<ElemR>] | qualifiers: {const, ref}
-    /// \returns true
-    /// \returns false
-    template <typename ElemL, typename ElemR>
-    inline bool
-    operator>= (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
-    {
-        return !(lhs < rhs);
-    }
-
-#endif // three way compare
-
-
-    /// @brief Map Operator
-    ///
-    /// \group Box
+    /// \brief Map Operator
     ///
     /// \details Maps a function over the elements of a Box
     /// and returns a new Box with the mapped values. 
     /// 
-    /// @tparam E concept: Any
-    /// @tparam F concept: std::copy_constructible
-    /// @param bx type: Box<E> | qualifiers: {const, ref}
-    /// @param f type: F
-    /// @return constexpr auto 
+    /// \tparam E
+    /// \tparam F concept: std::copy_constructible
+    /// \param bx type: const Box<E>&
+    /// \param f type: F
+    /// \return constexpr auto 
     template<typename E, std::copy_constructible F>
     constexpr auto
-    operator|| (const Box<E>& bx, F f)
+    operator|| (const Box<E>& bx, F f) -> Box<std::invoke_result_t<F, E>>
     { return bx.map(f); }
 
-} // namespace cxl
+}  /// namespace cxl
 
 
 
