@@ -1,5 +1,5 @@
 name: cortexlib
-version: 0.13.1
+version: 0.1.0
 
 test-dependencies:
   - catch2@2.13.9 using main
@@ -10,7 +10,7 @@ readme: README.md
 
 
 description: |
-  A collection of libraries for containers, algorithms, iterators, utilities and more for C++20.
+  A personal collection of types, functions and other general purpose C++ utilities for C++20.
 
 
 repository: https://github.com/oraqlle/cortexlib
@@ -23,4 +23,4 @@ license: MIT
 
 
 authors:
-  - Tyler Swann <oraqlle@github.com>
+  - Tyler Swann <tyler.swann05@gmail.com>
