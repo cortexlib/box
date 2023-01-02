@@ -1,4 +1,4 @@
-/// -*- C++ -*- Header compatibility <Box/Box.hxx>
+/// -*- C++ -*- Header compatibility <box/box.hxx>
 
 /// \brief Two dimensional data structure.
 ///
@@ -10,8 +10,8 @@
 ///
 /// License: MIT
 ///
-/// Copyright: Copyright (c) 2022
-/// \file Box/Box.hxx
+/// Copyright: Copyright (c) 2022-2023
+/// \file box/box.hxx
 
 #ifndef CORTEX_BOX
 #   define CORTEX_BOX

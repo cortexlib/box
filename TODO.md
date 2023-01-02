@@ -7,8 +7,8 @@
 - [Todo](#todo)
   - [Contents](#contents)
   - [Data Structures](#data-structures)
+  - [Ranges and Views](#ranges-and-views)
   - [Iterators](#iterators)
-  - [Literals](#literals)
   - [Allocators](#allocators)
   - [Miscellaneous](#miscellaneous)
 
@@ -98,6 +98,11 @@
     - [ ] Make operators return optionals
 - [ ] Tensor
 
+## Ranges and Views
+
+- [ ] Column View - Able to move thr
+- [ ] Row View
+
 ## Iterators
 
 - [x] Normal (adaptor)
@@ -140,12 +145,13 @@
     - [x] `std::iter_swap()` injection
   - [x] Testing
   - [x] Refactor to trailing return
+- [ ] Axis Iterator
 
-## Literals
+~~## Literals~~
 
-- [ ] `int`
-- [ ] `float`
-- [ ] `double`
+- ~~[ ] `int`~~
+- ~~[ ] `float`~~
+- ~~[ ] `double`~~
 
 ## Allocators
 
@@ -156,6 +162,7 @@
 
 ## Miscellaneous
 
+- [ ] Support Testing CI using GitHub
 - [x] Match Expression
   - [x] Match overload
   - [x] Support syntax sugar for match expression

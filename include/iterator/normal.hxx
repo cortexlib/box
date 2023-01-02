@@ -5,13 +5,13 @@
 ///
 /// Author: Tyler Swann (tyler.swann05@gmail.com)
 ///
-/// Header Version: v1.0.0
+/// Header Version: v0.1.1
 ///
-/// Date: 24-12-2022
+/// Date: 02-01-2023
 ///
 /// License: MIT
 ///
-/// Copyright: Copyright (c) 2022
+/// Copyright: Copyright (c) 2022-2023
 /// \file normal.hxx
 
 #ifndef CORTEX_NORMAL_ITERATOR
@@ -98,9 +98,7 @@ public:
         ///
         /// \param other type: const normal_iterator<Iter, Container>&
         template<typename Iter>
-#    if __cpp_lib_concepts
-            requires std::is_same_v<Iter, typename Container::pointer>
-#    endif
+            requires std::convertible_to<Iter, Iterator>
         constexpr
         normal_iterator(const normal_iterator<Iter, Container>& other) noexcept
             : current{ other.base() } { }

@@ -22,25 +22,30 @@ Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository
   - [Welcome](#welcome)
   - [Contents](#contents)
   - [Features](#features)
+  - [Example](#example)
   - [Install](#install)
   - [Contributing and License](#contributing-and-license)
-  - [Supported Compilers](#supported-compilers)
+  - [Supported and Tested Compilers](#supported-and-tested-compilers)
   - [Links and Resources](#links-and-resources)
 
 ---
 
 ## Features
 
-- Box - Generic, owning 2D array
-- Allocator Library - A small set of allocators to offer different allocation techniques
-- Primitive Literal Operators - Allows for more explicit type declaration of primitive types.
-- Tensor - Generic, owning multidimensional array
+- Box - Generic, owning 2D array.
+- Allocator Library - A small set of allocators to offer different allocation techniques.
+- Tensor - Generic, owning multidimensional array.
+- Match Visitor - Match pattern to create conditional access to `std::variant`
+
+---
+
+## Example
 
 ---
 
 ## Install
 
-To add Cortex to your bpt project simply add `cortexlib@0.1.0` to your `bpt.yaml` file under dependencies. When building with bpt, use the `--use-repo` or `-r` command to specify lookup through Trove with the link: <https://trovepi.dev>.
+Add `cortexlib@0.1.0` to the 'dependencies' section of your `bpt.yaml` file. When running `bpt build`, use `--use-repo "trovepi.dev"` or `-r "trovepi.dev"` flag option to specify lookup through Trove.
 
 ---
 
@@ -52,7 +57,12 @@ To add Cortex to your bpt project simply add `cortexlib@0.1.0` to your `bpt.yaml
 
 ---
 
-## Supported Compilers
+## Supported and Tested Compilers
+
+> Note: The `-std=c++20 must be used
+
+- GCC-11.3.0
+- Clang-15.0.6
 
 ---
 
@@ -64,5 +74,4 @@ Links to related tools and documentation of bpt, Trove and `cortexlib`'s source.
 - [bpt](https://bpt.pizza)
 - [bpt Install Guide](https://bpt.pizza/docs/latest/tut/install.html)
 - ['Hello World!' from bpt](https://bpt.pizza/docs/latest/tut/hello-world.html)
-- [bpt.yaml](https://bpt.pizza/docs/latest/guide/projects.html#the-project-bpt-yaml-file)
 - [Trove Homepage](https://trovepi.dev)
