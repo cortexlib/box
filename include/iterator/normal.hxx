@@ -51,12 +51,11 @@ namespace cxl
     protected:
         Iterator current;
 
-        using iter_traits_type = std::iterator_traits<Iterator>;
+        using iter_traits_type      = std::iterator_traits<Iterator>;
 
     public:
-        using iterator_type = Iterator;
-        using iterator_category =
-            typename iter_traits_type::iterator_category;
+        using iterator_type         = Iterator;
+        using iterator_category     = typename iter_traits_type::iterator_category;
 
 #    if __cpp_concepts >= 201907L
         using iterator_concept = std::conditional_t<
@@ -73,11 +72,10 @@ namespace cxl
                                        std::output_iterator_tag>>>>;
 #    endif  /// __cpp_concepts >= 201907L
 
-        using value_type = typename iter_traits_type::value_type;
-        using difference_type =
-            typename iter_traits_type::difference_type;
-        using pointer   = typename iter_traits_type::pointer;
-        using reference = typename iter_traits_type::reference;
+        using value_type            = typename iter_traits_type::value_type;
+        using difference_type       = typename iter_traits_type::difference_type;
+        using pointer               = typename iter_traits_type::pointer;
+        using reference             = typename iter_traits_type::reference;
 
 public:
         /// \brief Default Constructor
@@ -86,7 +84,8 @@ public:
         /// the type Iterator.
         constexpr
         normal_iterator() noexcept
-            : current{ Iterator{} } { }
+            : current{ Iterator{} } 
+        { }
 
         /// \brief Converting Copy Constructor.
         ///
@@ -101,7 +100,8 @@ public:
             requires std::convertible_to<Iter, Iterator>
         constexpr
         normal_iterator(const normal_iterator<Iter, Container>& other) noexcept
-            : current{ other.base() } { }
+            : current{ other.base() } 
+        { }
 
         /// \brief Iterator Copy Constructor.
         ///
@@ -113,7 +113,8 @@ public:
         /// \param other type: const iterator_type&
         constexpr
         normal_iterator(const iterator_type& other) noexcept
-            : current{ other } { }
+            : current{ other } 
+        { }
 
 
         /// \brief Dereference Operator Overload.
@@ -123,9 +124,8 @@ public:
         ///
         /// \returns reference
         constexpr auto
-        operator* () noexcept -> reference {
-            return *current;
-        }
+        operator* () noexcept -> reference 
+        { return *current; }
 
         /// \brief Dereference Operator Overload.
         ///
@@ -134,9 +134,8 @@ public:
         ///
         /// \returns reference
         constexpr auto
-        operator* () const noexcept -> reference {
-            return *current;
-        }
+        operator* () const noexcept -> reference 
+        { return *current; }
 
         /// \brief Arrow Deference Operator Overload.
         ///
@@ -152,9 +151,7 @@ public:
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
 #    endif
-        {
-            return _S_to_pointer(current);
-        }
+        { return _S_to_pointer(current); }
 
         /// \brief Arrow Deference Operator Overload.
         ///
@@ -170,9 +167,7 @@ public:
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
 #    endif
-        {
-            return _S_to_pointer(current);
-        }
+        { return _S_to_pointer(current); }
 
         /// \brief Prefix Increment Operator Overload.
         ///
@@ -181,7 +176,8 @@ public:
         ///
         /// \returns normal_iterator&
         constexpr auto
-        operator++ () noexcept -> normal_iterator& {
+        operator++ () noexcept -> normal_iterator& 
+        {
             ++current;
             return *this;
         }
@@ -196,9 +192,8 @@ public:
         ///
         /// \returns normal_iterator
         constexpr auto
-        operator++ (int) noexcept -> normal_iterator {
-            return normal_iterator(current++);
-        }
+        operator++ (int) noexcept -> normal_iterator 
+        { return normal_iterator(current++); }
 
         /// \brief Prefix Decrement Operator Overload.
         ///
@@ -207,7 +202,8 @@ public:
         ///
         /// \returns normal_iterator&
         constexpr auto
-        operator-- () noexcept -> normal_iterator& {
+        operator-- () noexcept -> normal_iterator& 
+        {
             --current;
             return *this;
         }
@@ -222,9 +218,8 @@ public:
         ///
         /// \returns normal_iterator
         constexpr auto
-        operator-- (int) noexcept -> normal_iterator {
-            return normal_iterator(current--);
-        }
+        operator-- (int) noexcept -> normal_iterator 
+        { return normal_iterator(current--); }
 
         /// \brief Subscript Operator Overload.
         ///
@@ -235,9 +230,8 @@ public:
         /// \param n type: difference_type
         /// \returns reference
         constexpr auto
-        operator[] (difference_type n) noexcept -> reference {
-            return current[n];
-        }
+        operator[] (difference_type n) noexcept -> reference 
+        { return current[n]; }
 
         /// \brief Additive Assignment Operator Overload.
         ///
@@ -249,7 +243,8 @@ public:
         /// \returns normal_iterator&
         constexpr auto
         operator+= (difference_type step) noexcept
-            -> normal_iterator& {
+            -> normal_iterator& 
+        {
             current += step;
             return *this;
         }
@@ -264,7 +259,8 @@ public:
         /// \returns normal_iterator&
         constexpr auto
         operator-= (difference_type step) noexcept
-            -> normal_iterator& {
+            -> normal_iterator& 
+        {
             current -= step;
             return *this;
         }
@@ -278,9 +274,8 @@ public:
         /// \returns normal_iterator
         constexpr auto
         operator+ (difference_type step) const noexcept
-            -> normal_iterator {
-            return normal_iterator(current + step);
-        }
+            -> normal_iterator 
+        { return normal_iterator(current + step); }
 
         /// \brief Subtraction Operator Overload.
         ///
@@ -291,9 +286,8 @@ public:
         /// \returns normal_iterator
         constexpr auto
         operator- (difference_type step) const noexcept
-            -> normal_iterator {
-            return normal_iterator(current - step);
-        }
+            -> normal_iterator 
+        { return normal_iterator(current - step); }
 
         /// \brief Base Member Access.
         ///
@@ -301,9 +295,8 @@ public:
         ///
         /// \returns iterator_type
         constexpr auto
-        base() const noexcept -> iterator_type {
-            return current;
-        }
+        base() const noexcept -> iterator_type 
+        { return current; }
 
     private:
         /// \brief Smart pointer indirection adaptor
@@ -321,9 +314,8 @@ public:
         /// \returns  P*
         template<typename P>
         static constexpr auto
-        _S_to_pointer(P* ptr) -> P* {
-            return ptr;
-        }
+        _S_to_pointer(P* ptr) -> P* 
+        { return ptr; }
 
         /// \brief Smart pointer indirection adaptor
         ///
@@ -339,9 +331,8 @@ public:
         /// \returns pointer
         template<typename P>
         static constexpr auto
-        _S_to_pointer(P obj) -> pointer {
-            return obj.operator->();
-        }
+        _S_to_pointer(P obj) -> pointer 
+        { return obj.operator->(); }
 
     };  /// class normal_iterator
 
@@ -363,16 +354,13 @@ public:
     /// \param rhs type: const normal_iterator<IterR, Container>&
     /// \returns bool
     template<typename IterL, typename IterR, typename Container>
-        requires requires (IterL lhsI, IterR rhsI) {
-                     { lhsI == rhsI } -> std::convertible_to<bool>;
-                 }
+        requires requires (IterL lhsI, IterR rhsI) 
+            { { lhsI == rhsI } -> std::convertible_to<bool>; }
     constexpr auto
     operator== (const normal_iterator<IterL, Container>& lhs,
-                const normal_iterator<IterR, Container>&
-                    rhs) noexcept(noexcept(lhs.base() == rhs.base()))
-        -> bool {
-        return lhs.base() == rhs.base();
-    }
+                const normal_iterator<IterR, Container>& rhs) 
+        noexcept(noexcept(lhs.base() == rhs.base())) -> bool 
+    { return lhs.base() == rhs.base(); }
 
     /// \brief Spaceship Operator Overload.
     ///
@@ -391,16 +379,12 @@ public:
     /// \param rhs type: const normal_iterator<IterR, Container>&
     /// \returns std::weak_ordering
     template<typename IterL, typename IterR, typename Container>
-        requires std::three_way_comparable_with<IterL, IterR,
-                                                std::weak_ordering>
+        requires std::three_way_comparable_with<IterL, IterR, std::weak_ordering>
     constexpr auto
     operator<=> (const normal_iterator<IterL, Container>& lhs,
-                 const normal_iterator<IterR, Container>&
-                     rhs) noexcept(noexcept(lhs.base() <=>
-                                            rhs.base()))
-        -> std::weak_ordering {
-        return lhs.base() <=> rhs.base();
-    }
+                 const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() <=> rhs.base())) -> std::weak_ordering 
+    { return lhs.base() <=> rhs.base(); }
 
 #    else  /// __cpp_lib_three_way_comparison -> C++20
 
@@ -421,11 +405,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator== (const normal_iterator<IterL, Container>& lhs,
-                const normal_iterator<IterR, Container>&
-                    rhs) noexcept(noexcept(lhs.base() == rhs.base()))
-        -> bool {
-        return lhs.base() == rhs.base();
-    }
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() == rhs.base())) -> bool 
+    { return lhs.base() == rhs.base(); }
 
     /// \brief Equality Operator Overload.
     ///
@@ -442,11 +424,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator== (const normal_iterator<Iterator, Container>& lhs,
-                const normal_iterator<Iterator, Container>&
-                    rhs) noexcept(noexcept(lhs.base() == rhs.base()))
-        -> bool {
-        return lhs.base() == rhs.base();
-    }
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() == rhs.base())) -> bool
+    { return lhs.base() == rhs.base(); }
 
     /// \brief Inequality Operator Overload.
     ///
@@ -465,11 +445,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator!= (const normal_iterator<IterL, Container>& lhs,
-                const normal_iterator<IterR, Container>&
-                    rhs) noexcept(noexcept(lhs.base() != rhs.base()))
-        -> bool {
-        return lhs.base() != rhs.base();
-    }
+                const normal_iterator<IterR, Container>& rhs) 
+        noexcept(noexcept(lhs.base() != rhs.base())) -> bool 
+    { return lhs.base() != rhs.base(); }
 
     /// \brief Inequality Operator Overload.
     ///
@@ -486,11 +464,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator!= (const normal_iterator<Iterator, Container>& lhs,
-                const normal_iterator<Iterator, Container>&
-                    rhs) noexcept(noexcept(lhs.base() != rhs.base()))
-        -> bool {
-        return lhs.base() != rhs.base();
-    }
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() != rhs.base())) -> bool 
+    { return lhs.base() != rhs.base(); }
 
     /// \brief Less-than Operator Overload.
     ///
@@ -509,11 +485,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator<(const normal_iterator<IterL, Container>& lhs,
-              const normal_iterator<IterR, Container>&
-                  rhs) noexcept(noexcept(lhs.base() < rhs.base()))
-        -> bool {
-        return lhs.base() < rhs.base();
-    }
+              const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() < rhs.base())) -> bool 
+    { return lhs.base() < rhs.base(); }
 
     /// \brief Less-than Operator Overload.
     ///
@@ -530,11 +504,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator<(const normal_iterator<Iterator, Container>& lhs,
-              const normal_iterator<Iterator, Container>&
-                  rhs) noexcept(noexcept(lhs.base() < rhs.base()))
-        -> bool {
-        return lhs.base() < rhs.base();
-    }
+              const normal_iterator<Iterator, Container>& rhs) 
+        noexcept(noexcept(lhs.base() < rhs.base())) -> bool 
+    { return lhs.base() < rhs.base(); }
 
     /// \brief Greater-than Operator Overload.
     ///
@@ -553,11 +525,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator> (const normal_iterator<IterL, Container>& lhs,
-               const normal_iterator<IterR, Container>&
-                   rhs) noexcept(noexcept(lhs.base() > rhs.base()))
-        -> bool {
-        return lhs.base() > rhs.base();
-    }
+               const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() > rhs.base())) -> bool 
+    { return lhs.base() > rhs.base(); }
 
     /// \brief Greater-than Operator Overload.
     ///
@@ -574,11 +544,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator> (const normal_iterator<Iterator, Container>& lhs,
-               const normal_iterator<Iterator, Container>&
-                   rhs) noexcept(noexcept(lhs.base() > rhs.base()))
-        -> bool {
-        return lhs.base() > rhs.base();
-    }
+               const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() > rhs.base())) -> bool 
+    { return lhs.base() > rhs.base(); }
 
     /// \brief Less-than-or-Equal Operator Overload.
     ///
@@ -597,11 +565,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator<= (const normal_iterator<IterL, Container>& lhs,
-                const normal_iterator<IterR, Container>&
-                    rhs) noexcept(noexcept(lhs.base() <= rhs.base()))
-        -> bool {
-        return lhs.base() <= rhs.base();
-    }
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() <= rhs.base())) -> bool 
+    { return lhs.base() <= rhs.base(); }
 
     /// \brief Less-than-or-Equal Operator Overload.
     ///
@@ -618,11 +584,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator<= (const normal_iterator<Iterator, Container>& lhs,
-                const normal_iterator<Iterator, Container>&
-                    rhs) noexcept(noexcept(lhs.base() <= rhs.base()))
-        -> bool {
-        return lhs.base() <= rhs.base();
-    }
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() <= rhs.base())) -> bool 
+    { return lhs.base() <= rhs.base(); }
 
     /// \brief Greater-than-or-Equal Operator Overload.
     ///
@@ -641,11 +605,9 @@ public:
     template<typename IterL, typename IterR, typename Container>
     constexpr inline auto
     operator>= (const normal_iterator<IterL, Container>& lhs,
-                const normal_iterator<IterR, Container>&
-                    rhs) noexcept(noexcept(lhs.base() >= rhs.base()))
-        -> bool {
-        return lhs.base() >= rhs.base();
-    }
+                const normal_iterator<IterR, Container>& rhs)
+        noexcept(noexcept(lhs.base() >= rhs.base())) -> bool 
+    { return lhs.base() >= rhs.base(); }
 
     /// \brief Greater-than-or-Equal Operator Overload.
     ///
@@ -662,11 +624,9 @@ public:
     template<typename Iterator, typename Container>
     constexpr inline bool
     operator>= (const normal_iterator<Iterator, Container>& lhs,
-                const normal_iterator<Iterator, Container>&
-                    rhs) noexcept(noexcept(lhs.base() >= rhs.base()))
-        ->bool {
-        return lhs.base() >= rhs.base();
-    }
+                const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() >= rhs.base())) ->bool 
+    { return lhs.base() >= rhs.base(); }
 
 #    endif  /// __cpp_lib_three_way_comparison
 
@@ -691,17 +651,15 @@ public:
 #    if __cplusplus >= 201103L  /// C++11
     constexpr inline auto
     operator- (const normal_iterator<IterL, Container>& lhs,
-               const normal_iterator<IterR, Container>&
-                   rhs) noexcept(noexcept(lhs.base() - rhs.base()))
+               const normal_iterator<IterR, Container>& rhs) 
+        noexcept(noexcept(lhs.base() - rhs.base())) 
         -> decltype(lhs.base() - rhs.base())
 #    else   /// ! C++11
     inline typename normal_iterator<IterL, Container>::difference_type
     operator- (const normal_iterator<IterL, Container>& lhs,
                const normal_iterator<IterR, Container>& rhs)
 #    endif  /// __cplusplus >= 201103L
-    {
-        return lhs.base() - rhs.base();
-    }
+    { return lhs.base() - rhs.base(); }
 
     /// \brief Difference Operator Overload.
     ///
@@ -714,14 +672,13 @@ public:
     ///
     /// \param lhs type: const normal_iterator<Iterator, Container>&
     /// \param rhs type: const normal_iterator<Iterator, Container>&
-    /// \returns constexpr inline typename normal_iterator<Iterator,
-    /// Container>::difference_type
+    /// \returns constexpr inline typename normal_iterator<Iterator, Container>::difference_type
     template<typename Iterator, typename Container>
 #    if __cplusplus >= 201103L  /// C++11
     constexpr inline auto
     operator- (const normal_iterator<Iterator, Container>& lhs,
-               const normal_iterator<Iterator, Container>&
-                   rhs) noexcept(noexcept(lhs.base() - rhs.base()))
+               const normal_iterator<Iterator, Container>& rhs)
+        noexcept(noexcept(lhs.base() - rhs.base()))
         -> decltype(lhs.base() - rhs.base())
 #    else   /// ! C++11
     inline
@@ -729,9 +686,7 @@ public:
         operator- (const normal_iterator<Iterator, Container>& lhs,
                    const normal_iterator<Iterator, Container>& rhs)
 #    endif  /// __cplusplus >= 201103L
-    {
-        return lhs.base() - rhs.base();
-    }
+    { return lhs.base() - rhs.base(); }
 
     /// \brief Addition Operator Overload.
     ///
@@ -748,12 +703,10 @@ public:
     /// inline normal_iterator<Iterator, Container>
     template<typename Iterator, typename Container>
     constexpr inline auto
-    operator+ (typename normal_iterator<Iterator,
-                                        Container>::difference_type n,
+    operator+ (typename normal_iterator<Iterator, Container>::difference_type n,
                const normal_iterator<Iterator, Container>& i) noexcept
-        -> normal_iterator<Iterator, Container> {
-        return normal_iterator<Iterator, Container>(i.base() + n);
-    }
+        -> normal_iterator<Iterator, Container> 
+    { return normal_iterator<Iterator, Container>(i.base() + n); }
 
     /// \brief Makes a new normal_iterator.
     ///
@@ -768,10 +721,8 @@ public:
     template<typename Container>
     constexpr auto
     make_normal_iterator(typename Container::iterator i) noexcept
-        -> normal_iterator<typename Container::iterator, Container> {
-        return normal_iterator<typename Container::iterator,
-                               Container>(i);
-    }
+        -> normal_iterator<typename Container::iterator, Container> 
+    { return normal_iterator<typename Container::iterator, Container>(i); }
 
     /// \brief Makes a new normal_iterators.
     ///
@@ -786,9 +737,8 @@ public:
     template<typename Iterator, typename Container>
     constexpr auto
     make_normal_iterator(Iterator i) noexcept
-        -> normal_iterator<Iterator, Container> {
-        return normal_iterator<Iterator, Container>(i);
-    }
+        -> normal_iterator<Iterator, Container> 
+    { return normal_iterator<Iterator, Container>(i); }
 
 }  // namespace cxl
 
@@ -805,12 +755,12 @@ namespace std
     /// Container>& \return std::iter_rvalue_reference_t<Iterator>
     template<typename Iterator, typename Container>
     constexpr auto
-    iter_move(const cxl::normal_iterator<Iterator, Container>& i) noexcept(
-        is_nothrow_copy_constructible_v<Iterator>&& noexcept(
-            ranges::iter_move(declval<Iterator&>())))
-        -> iter_rvalue_reference_t<Iterator> {
-        return ranges::iter_move(i.base());
-    }
+    iter_move(const cxl::normal_iterator<Iterator, Container>& i) 
+        noexcept( 
+            is_nothrow_copy_constructible_v<Iterator> 
+         && noexcept(ranges::iter_move(declval<Iterator&>()))
+        ) -> iter_rvalue_reference_t<Iterator> 
+    { return ranges::iter_move(i.base()); }
 
     /// \brief Swaps iterator objects
     ///
@@ -823,23 +773,16 @@ namespace std
     /// \param x type: const cxl::normal_iterator<Iterator,
     /// Container>& \param y type: const cxl::normal_iterator<Iter2,
     /// Container>&
-    template<typename Iterator,
-             std::indirectly_swappable<Iterator> Iter2,
-             typename Container>
+    template<typename Iterator, std::indirectly_swappable<Iterator> Iter2, typename Container>
     constexpr auto
-    iter_swap(
-        const cxl::normal_iterator<Iterator, Container>& x,
-        const cxl::normal_iterator<Iter2, Container>&
-            y) noexcept(std::
-                            is_nothrow_copy_constructible_v<
-                                Iterator>&& std::
-                                is_nothrow_copy_constructible_v<Iter2>&& noexcept(
-                                    ranges::iter_swap(
-                                        std::declval<Iterator&>(),
-                                        std::declval<Iter2&>())))
-        -> void {
-        ranges::iter_swap(x.base(), y.base());
-    }
+    iter_swap(const cxl::normal_iterator<Iterator, Container>& x,
+              const cxl::normal_iterator<Iter2, Container>& y) 
+        noexcept(
+            std::is_nothrow_copy_constructible_v<Iterator>
+         && std::is_nothrow_copy_constructible_v<Iter2>
+         && noexcept(ranges::iter_swap(std::declval<Iterator&>(), std::declval<Iter2&>()))
+        ) -> void 
+    { ranges::iter_swap(x.base(), y.base()); }
 
 }  // namespace std
 

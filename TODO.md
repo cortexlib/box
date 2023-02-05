@@ -8,6 +8,7 @@
   - [Contents](#contents)
   - [Data Structures](#data-structures)
   - [Ranges and Views](#ranges-and-views)
+  - [Coroutines](#coroutines)
   - [Iterators](#iterators)
   - [Allocators](#allocators)
   - [Miscellaneous](#miscellaneous)
@@ -97,11 +98,16 @@
     - [ ] Make .at() return an optional
     - [ ] Make operators return optionals
 - [ ] Tensor
+- [ ] Ring - Circular Buffer (_Maybe better as a repeating range adaptor or generator_)
 
 ## Ranges and Views
 
-- [ ] Column View - Able to move thr
-- [ ] Row View
+- [ ] Column View - Able to move through a range (<space|field>?) in a column wise manner.
+- [ ] Row View - ^^
+
+## Coroutines
+
+- Generator coroutine
 
 ## Iterators
 
@@ -145,7 +151,7 @@
     - [x] `std::iter_swap()` injection
   - [x] Testing
   - [x] Refactor to trailing return
-- [ ] Axis Iterator
+- [ ] Lane Iterator
 
 ~~## Literals~~
 
@@ -163,6 +169,7 @@
 ## Miscellaneous
 
 - [ ] Support Testing CI using GitHub
+- [ ] Move data structures to container sub-library
 - [x] Match Expression
   - [x] Match overload
   - [x] Support syntax sugar for match expression
