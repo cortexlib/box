@@ -575,7 +575,7 @@ TEST_CASE("Modifiers")
                     else
                         REQUIRE(elem == ""s);
 
-                    fmt::print("i: {} | elem: {}\n", i, elem);
+                    // fmt::print("i: {} | elem: {}\n", i, elem);
 
                     i += 1;
                 }
@@ -705,11 +705,11 @@ TEST_CASE("Modifiers")
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 6);
 
-                bx.reshape(24, 0);
+                bx.reshape(24, 1);
 
                 REQUIRE(bx.size() == 24);
                 REQUIRE(bx.num_rows() == 24);
-                REQUIRE(bx.num_columns() == 0);
+                REQUIRE(bx.num_columns() == 1);
             }
 
             SECTION("Box::reshape - reshape column vector")
@@ -720,10 +720,10 @@ TEST_CASE("Modifiers")
                 REQUIRE(bx.num_rows() == 4);
                 REQUIRE(bx.num_columns() == 6);
 
-                bx.reshape(0, 24);
+                bx.reshape(1, 24);
 
                 REQUIRE(bx.size() == 24);
-                REQUIRE(bx.num_rows() == 0);
+                REQUIRE(bx.num_rows() == 1);
                 REQUIRE(bx.num_columns() == 24);
             }
         }
