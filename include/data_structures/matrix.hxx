@@ -1,22 +1,22 @@
-/// -*- C++ -*- Header compatibility <box/box.hxx>
+/// -*- C++ -*- Header compatibility <matrix.hxx>
 
-/// \brief Two dimensional data structure.
+/// \brief Two dimensional array data structure.
 ///
 /// Author: Tyler Swann (tyler.swann05@gmail.com)
 /// 
-/// Header Version: v0.1.0
+/// Header Version: v0.2.0
 ///
-/// Date: 14-02-2023
+/// Date: 12-03-2023
 ///
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022-2023
-/// \file box/box.hxx
+/// \file matrix.hxx
 
 #ifndef CORTEX_BOX
 #   define CORTEX_BOX
 
-#include <iterator/normal.hxx>
+#include <iterators/normal.hxx>
 
 #include <algorithm>
 #include <compare>
@@ -28,7 +28,7 @@
 
 namespace cxl
 {
-    /// \brief Box - Two Dimensional Array
+    /// \brief matrix - Two Dimensional Array
     ///
     /// \details A two dimensional, owning generic
     /// array. Support slicing, array based operations and
@@ -39,7 +39,7 @@ namespace cxl
     /// \tparam T
     /// \tparam Alloc default: std::allocator<T>
     template <typename T, typename Alloc = std::allocator<T>>
-    class Box
+    class matrix
     {
     public:
         using value_type                            = T;
@@ -54,8 +54,8 @@ namespace cxl
         using pointer                               = typename alloc_traits::pointer;
         using const_pointer                         = typename alloc_traits::const_pointer;
 
-        using iterator                              = cxl::normal_iterator<pointer, Box>;
-        using const_iterator                        = cxl::normal_iterator<const_pointer, Box>;
+        using iterator                              = cxl::normal_iterator<pointer, matrix>;
+        using const_iterator                        = cxl::normal_iterator<const_pointer, matrix>;
         using reverse_iterator                      = std::reverse_iterator<iterator>;
         using const_reverse_iterator                = std::reverse_iterator<const_iterator>;
 
@@ -71,9 +71,9 @@ namespace cxl
 
         /// \brief Default Constructor
         ///
-        /// \details Default constructor for Box.
+        /// \details Default constructor for matrix.
         constexpr
-        Box() noexcept
+        matrix() noexcept
             : m_num_rows{ size_type{} }
             , m_num_columns{ size_type{} }
             , m_allocator{ allocator_type{} }
@@ -83,12 +83,12 @@ namespace cxl
 
         /// \brief Allocator Constructor
         ///
-        /// \details Default Constructs a Box with a
+        /// \details Default Constructs a matrix with a
         /// given allocator.
         ///
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        Box(const allocator_type& alloc) noexcept
+        matrix(const allocator_type& alloc) noexcept
             : m_num_rows{ size_type{} }
             , m_num_columns{ size_type{} }
             , m_allocator{ alloc }
@@ -98,7 +98,7 @@ namespace cxl
 
         /// \brief Default Size Constructor
         ///
-        /// \details Constructs a Box with dimensions of
+        /// \details Constructs a matrix with dimensions of
         /// num_rows x num_columns. Values are default constructed 
         /// or fill constructed depending on the default 
         /// contractibility qualification.
@@ -107,7 +107,7 @@ namespace cxl
         /// \param num_rows type: size_type
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        Box(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type{})
+        matrix(size_type num_rows, size_type num_columns, const allocator_type& alloc = allocator_type{})
             : m_num_rows{ num_rows }
             , m_num_columns{ num_columns }
             , m_allocator{ alloc }
@@ -122,7 +122,7 @@ namespace cxl
 
         /// \brief Explicit Value and Size Constructor
         ///
-        /// \details Constructs a Box with dimensions of
+        /// \details Constructs a matrix with dimensions of
         /// num_rows x num_columns. Values are constructed from 
         /// the a constant reference to a provided fill_value.
         ///
@@ -131,7 +131,7 @@ namespace cxl
         /// \param fill_value type: value_type
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        Box(size_type num_rows, size_type num_columns, const_reference fill_value, const allocator_type& alloc = allocator_type())
+        matrix(size_type num_rows, size_type num_columns, const_reference fill_value, const allocator_type& alloc = allocator_type())
             : m_num_rows{ num_rows }
             , m_num_columns{ num_columns }
             , m_allocator{ alloc }
@@ -141,12 +141,12 @@ namespace cxl
 
         /// \brief Copy Constructor
         ///
-        /// \details Constructs a Box that is a copy of
-        /// another Box of the same underlying type.
+        /// \details Constructs a matrix that is a copy of
+        /// another matrix of the same underlying type.
         ///
-        /// \param other type: const Box&
+        /// \param other type: const matrix&
         constexpr
-        Box(const Box& other)
+        matrix(const matrix& other)
             : m_num_rows{ other.m_num_rows }
             , m_num_columns{ other.m_num_columns}
             , m_allocator{ other.m_allocator }
@@ -156,13 +156,13 @@ namespace cxl
 
         /// \brief Copy Constructor with Alternative Allocator
         ///
-        /// \details Constructs a Box that is a copy of
-        /// another Box of the same underlying type.
+        /// \details Constructs a matrix that is a copy of
+        /// another matrix of the same underlying type.
         ///
-        /// \param other type: const Box&
+        /// \param other type: const matrix&
         /// \param alloc type: const allocator_type&
         explicit constexpr
-        Box(const Box& other, const allocator_type& alloc)
+        matrix(const matrix& other, const allocator_type& alloc)
             : m_num_rows{ other.m_num_rows }
             , m_num_columns{ other.m_num_columns }
             , m_allocator{ alloc }
@@ -173,12 +173,12 @@ namespace cxl
         /// \brief Move Constructor
         ///
         /// \details Moves ownership of an existing Boxes
-        /// resources to this Box and leaves the other Box
+        /// resources to this matrix and leaves the other matrix
         /// in a default constructed state.
         ///
-        /// \param other type: Box&&
+        /// \param other type: matrix&&
         constexpr
-        Box(Box&& other) noexcept
+        matrix(matrix&& other) noexcept
             : m_num_rows{ other.m_num_rows }
             , m_num_columns{ other.m_num_columns }
             , m_allocator{ std::move(other.m_allocator) }
@@ -195,14 +195,14 @@ namespace cxl
         /// \brief Move Constructor with Alternative Allocator
         ///
         /// \details Moves ownership of an existing Boxes
-        /// resources to this Box and leaves the other Box
+        /// resources to this matrix and leaves the other matrix
         /// in a default constructed state. Uses an alternative
-        /// allocator for construction of `this` Box.
+        /// allocator for construction of `this` matrix.
         ///
-        /// \param other type: Box&&
+        /// \param other type: matrix&&
         /// \param alloc type: const allocator_type&
         explicit constexpr 
-        Box(Box&& other, const allocator_type& alloc) noexcept
+        matrix(matrix&& other, const allocator_type& alloc) noexcept
             : m_num_rows{ other.m_num_rows }
             , m_num_columns{ other.m_num_columns }
             , m_allocator{ alloc }
@@ -219,7 +219,7 @@ namespace cxl
 
         /// \brief Initialiser List Constructor
         ///
-        /// \details Uses std::initializer_list to create a Box
+        /// \details Uses std::initializer_list to create a matrix
         /// from an initializer list of initializer lists. Elements
         /// ownership is moved to the Boxes memory.
         ///
@@ -228,7 +228,7 @@ namespace cxl
         /// \param list type: std::initializer_list<std::initializer_list<value_type>>
         /// \param alloc type: [[maybe_unused]] const allocator_type&
         constexpr 
-        Box(std::initializer_list<std::initializer_list<value_type>> list, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        matrix(std::initializer_list<std::initializer_list<value_type>> list, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
             : m_num_rows{ list.size() }
             , m_num_columns{ list.begin()->size() }
             , m_allocator{ alloc }
@@ -239,7 +239,7 @@ namespace cxl
             for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the matrix");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
@@ -248,14 +248,14 @@ namespace cxl
 
         /// \brief Dimension Constructor
         ///
-        /// \details Constructs a Box from the dimensions 
-        /// of another. The Box is default constructed. Takes
-        /// the result of a call to `Box::dimension()`.
+        /// \details Constructs a matrix from the dimensions 
+        /// of another. The matrix is default constructed. Takes
+        /// the result of a call to `matrix::dimension()`.
         ///
         /// \param dimensions type: const std::tuple<size_type, size_type>&
         /// \param alloc type: [[maybe_unused]] const allocator_type&
         explicit constexpr 
-        Box(const std::tuple<size_type, size_type>& dimensions, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
+        matrix(const std::tuple<size_type, size_type>& dimensions, [[maybe_unused]] const allocator_type& alloc = allocator_type{})
             : m_num_rows{ std::get<0>(dimensions) }
             , m_num_columns{ std::get<1>(dimensions) }
             , m_allocator{ alloc }
@@ -270,15 +270,15 @@ namespace cxl
 
         /// \brief Copy Assignment
         ///
-        /// \details Copies the contents of another Box into
-        /// this Box and returns///this. If self assignment occurs
+        /// \details Copies the contents of another matrix into
+        /// this matrix and returns///this. If self assignment occurs
         /// then///this is returned immediately.
         ///
-        /// \param other type: const Box&
-        /// \returns constexpr Box&
+        /// \param other type: const matrix&
+        /// \returns constexpr matrix&
         constexpr auto
-        operator= (const Box& other) 
-            -> Box&
+        operator= (const matrix& other) 
+            -> matrix&
         {
             if (*this != other)
             {
@@ -298,15 +298,15 @@ namespace cxl
         /// \brief Move Assignment
         ///
         /// \details Moves the ownership of other's resources to
-        /// this Box and leaves the other Box in a default
+        /// this matrix and leaves the other matrix in a default
         /// constructed state. Returns///this. If self assignment
         /// occurs then///this is returned immediately.
         ///
-        /// \param other type: Box&&
-        /// \returns constexpr Box&
+        /// \param other type: matrix&&
+        /// \returns constexpr matrix&
         constexpr auto
-        operator= (Box&& other) noexcept 
-            -> Box&
+        operator= (matrix&& other) noexcept 
+            -> matrix&
         {
             if (*this != other)
             {
@@ -330,17 +330,17 @@ namespace cxl
 
         /// \brief Initialiser List Assignment
         ///
-        /// \details Uses std::initializer_list to create a Box
+        /// \details Uses std::initializer_list to create a matrix
         /// from an initializer list of initializer lists. Elements
         /// ownership is moved to the Boxes memory.
         ///
         /// \exception std::invalid_argument
         ///
         /// \param list type: [std::initializer_list<std::initializer_list<value_type>>]
-        /// \returns constexpr Box&
+        /// \returns constexpr matrix&
         constexpr auto
         operator= (std::initializer_list<std::initializer_list<value_type>> list) 
-            -> Box&
+            -> matrix&
         {
             std::ranges::destroy(*this);
             _M_deallocate(m_start, size());
@@ -355,7 +355,7 @@ namespace cxl
             for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the matrix");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
@@ -366,12 +366,12 @@ namespace cxl
 
         /// \brief Destructor
         ///
-        /// \details Releases the resources of this Box
-        /// and leaves the Box in an uninitialized state.
+        /// \details Releases the resources of this matrix
+        /// and leaves the matrix in an uninitialized state.
 #if __cplusplus >= 202202L
         constexpr
 #else
-        ~Box()
+        ~matrix()
 #endif
         {
             if (m_start)
@@ -390,8 +390,8 @@ namespace cxl
         /// \brief Initialiser List Assign
         ///
         /// \details Uses std::initializer_list to reassign 
-        /// values to a Box. If the lists dimensions are not
-        /// the same as the Boxes dimensions, then the Box
+        /// values to a matrix. If the lists dimensions are not
+        /// the same as the Boxes dimensions, then the matrix
         /// is resized to match the dimensions of the list.
         ///
         /// \exception std::invalid_argument
@@ -422,14 +422,14 @@ namespace cxl
             for (auto row{ list.begin() }; row != list.end(); ++row)
             {
                 if (row->size() != this->m_num_columns)
-                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the Box");
+                    throw std::invalid_argument("The size of the inner std::initializer_list must be same size as the number of columns in the matrix");
 
                 std::uninitialized_move_n(row->begin(), this->m_num_columns, m_start + offset);
                 offset += this->m_num_columns;
             }
         }
 
-        /// \brief Resizes the Box memory.
+        /// \brief Resizes the matrix memory.
         ///
         /// \details 
         ///
@@ -442,7 +442,7 @@ namespace cxl
 
         /// \brief Resizes Boxes memory
         ///
-        /// \details Resizes the Box to a new shape of new_rows x new_columns.
+        /// \details Resizes the matrix to a new shape of new_rows x new_columns.
         /// Resizing will cause reallocation to a new memory block if the new 
         /// shape is larger or smaller than the current shape. For larger shape, 
         /// previous values are copied to the new sequential memory location 
@@ -468,7 +468,7 @@ namespace cxl
 
 
             if (new_size > alloc_traits::max_size(m_allocator))
-                throw std::length_error("Box resize too large");
+                throw std::length_error("matrix resize too large");
             else
                 if (old_size < new_size)
                 {
@@ -500,7 +500,7 @@ namespace cxl
 
         /// \brief Erases element indicated by position
         ///
-        /// \details Erases the value of the Box at position
+        /// \details Erases the value of the matrix at position
         /// and resets it to value_type.
         ///
         /// \param position type: const_iterator
@@ -538,12 +538,12 @@ namespace cxl
             return std::ranges::uninitialized_fill(fst, lst, value_type{});
         }
 
-        /// \brief Clears the Box elements
+        /// \brief Clears the matrix elements
         ///
-        /// \details The elements of the Box are destroyed and
-        /// the memory is deallocated entirely. The Box is however,
+        /// \details The elements of the matrix are destroyed and
+        /// the memory is deallocated entirely. The matrix is however,
         /// left in a state where it could be re-initialised through 
-        /// Box::resize or reassignment.
+        /// matrix::resize or reassignment.
         constexpr auto
         clear() 
             -> void
@@ -560,7 +560,7 @@ namespace cxl
             }
         }
 
-        /// \brief Reshape current Box elements to new dimensions
+        /// \brief Reshape current matrix elements to new dimensions
         ///
         /// \details Reshapes the current Boxes dimensions while
         /// guaranteeing that no reallocation occurs. Elements are
@@ -577,7 +577,7 @@ namespace cxl
             auto new_size{ _M_size_check(new_rows, new_columns) };
 
             if (new_size != size())
-                throw std::length_error("Cannot reshape Box that has different total size");
+                throw std::length_error("Cannot reshape matrix that has different total size");
             else
                 resize(new_rows, new_columns);
         }
@@ -589,17 +589,17 @@ namespace cxl
         /// types. The swap is performed by moving ownership
         /// of the matrices resources.
         ///
-        /// \param other type: Box&
-        void swap(Box& other) noexcept
+        /// \param other type: matrix&
+        void swap(matrix& other) noexcept
         {
-            Box tmp = std::move(other);
+            matrix tmp = std::move(other);
             other = std::move(*this);
             *this = std::move(tmp);
         }
 
         /// \brief Get Allocator
         ///
-        /// \details Returns the allocator used by the Box.
+        /// \details Returns the allocator used by the matrix.
         ///
         /// \returns constexpr allocator_type
         constexpr auto 
@@ -607,9 +607,9 @@ namespace cxl
             -> allocator_type
         { return m_allocator; }
 
-        /// \brief Box Size
+        /// \brief matrix Size
         /// 
-        /// \details Returns the overall size of the Box.
+        /// \details Returns the overall size of the matrix.
         ///
         /// \returns constexpr size_type
         constexpr auto
@@ -624,7 +624,7 @@ namespace cxl
 
         /// \brief Number of rows 
         /// 
-        /// \details Returns the number of rows of the Box.
+        /// \details Returns the number of rows of the matrix.
         ///
         /// \returns constexpr size_type
         constexpr auto
@@ -634,7 +634,7 @@ namespace cxl
 
         /// \brief Number of Columns
         /// 
-        /// \details Returns the number of columns of the Box.
+        /// \details Returns the number of columns of the matrix.
         ///
         /// \returns constexpr size_type
         constexpr auto
@@ -642,10 +642,10 @@ namespace cxl
             -> size_type
         { return m_num_columns; }
 
-        /// \brief Max Box Size
+        /// \brief Max matrix Size
         /// 
         /// \details Returns the maximum number of elements that
-        /// can be stored in the Box per the allocator.
+        /// can be stored in the matrix per the allocator.
         ///
         /// \returns constexpr size_type
         constexpr auto
@@ -666,7 +666,7 @@ namespace cxl
         /// \brief Is Square Predicate
         ///
         /// \details If the number of rows and columns 
-        /// are equal, the Box is square.
+        /// are equal, the matrix is square.
         ///
         /// \returns constexpr bool
         constexpr auto
@@ -676,7 +676,7 @@ namespace cxl
 
         /// \brief Empty
         ///
-        /// \details Checks whether the Box is empty.
+        /// \details Checks whether the matrix is empty.
         ///
         /// \returns constexpr bool
         constexpr auto
@@ -708,7 +708,7 @@ namespace cxl
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
-        /// Box.
+        /// matrix.
         ///
         /// \param column type: size_type
         /// \param row type: size_type
@@ -725,7 +725,7 @@ namespace cxl
         ///
         /// \details Returns a reference to the element that
         /// is at the point position (column, row) of the
-        /// Box.
+        /// matrix.
         ///
         /// \param column type: size_type
         /// \param row type: size_type
@@ -767,7 +767,7 @@ namespace cxl
         /// \brief Front
         /// 
         /// \details Returns a reference to the front element
-        /// of the Box.
+        /// of the matrix.
         ///
         /// \returns constexpr reference
         constexpr auto
@@ -778,7 +778,7 @@ namespace cxl
         /// \brief Front
         ///
         /// \details Returns a reference to the front element
-        /// of the Box.
+        /// of the matrix.
         ///
         /// \returns constexpr const_reference
         constexpr auto
@@ -789,7 +789,7 @@ namespace cxl
         /// \brief Back
         ///
         /// \details Returns a reference to the back element
-        /// of the Box.
+        /// of the matrix.
         ///
         /// \returns constexpr reference
         constexpr auto
@@ -800,7 +800,7 @@ namespace cxl
         /// \brief Back
         /// 
         /// \details Returns a reference to the back element
-        /// of the Box.
+        /// of the matrix.
         ///
         /// \returns constexpr const_reference
         constexpr auto
@@ -833,7 +833,7 @@ namespace cxl
         /// \brief Constant Begin Iterator
         /// 
         /// \details Constant iterator to the beginning 
-        /// of the Box.
+        /// of the matrix.
         ///
         /// \returns constexpr const_iterator
         constexpr auto 
@@ -940,9 +940,9 @@ namespace cxl
             -> const_reverse_iterator
         { return const_reverse_iterator(begin()); }
 
-        /// \brief Box Transpose
+        /// \brief matrix Transpose
         ///
-        /// \details Performs a Box transpose.
+        /// \details Performs a matrix transpose.
         /// Uses std::copy over std::ranges::copy as the output
         /// iterator is required to be std::constructible_v which
         /// column_iterator doesn't satisfy yet.
@@ -951,7 +951,7 @@ namespace cxl
         // constexpr auto 
         // transpose()
         // {
-        //     Box<value_type> result(this->num_columns(), this->num_rows());
+        //     matrix<value_type> result(this->num_columns(), this->num_rows());
 
         //     if (empty())
         //         return result;
@@ -961,52 +961,52 @@ namespace cxl
         //     return result;
         // }
 
-        /// \brief Box map
+        /// \brief matrix map
         ///
-        /// \details Maps a function over the Box, returning 
-        /// the mapped Box.
+        /// \details Maps a function over the matrix, returning 
+        /// the mapped matrix.
         /// 
         /// \tparam F concept: std::copy_constructible
         /// \param func type: F 
-        /// \returns constexpr Box<std::invoke_result_t<F, value_type>> 
+        /// \returns constexpr matrix<std::invoke_result_t<F, value_type>> 
         template<std::copy_constructible F>
         constexpr auto
         map(F func) const 
-            -> Box<std::invoke_result_t<F, value_type>>
+            -> matrix<std::invoke_result_t<F, value_type>>
         {
             if (empty())
-                return Box<std::invoke_result_t<F, value_type>>{};
+                return matrix<std::invoke_result_t<F, value_type>>{};
             else
             {
-                Box<std::invoke_result_t<F, value_type>> result(this->num_rows(), this->num_columns());
+                matrix<std::invoke_result_t<F, value_type>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(*this, result.begin(), func);
                 return result;
             }
         }
 
-        /// \brief Box map with range 
+        /// \brief matrix map with range 
         ///
-        /// \details Maps a function over the Box and another 
-        /// range object, returning the mapped Box. Returns an 
-        /// empty Box if `this` is empty.
+        /// \details Maps a function over the matrix and another 
+        /// range object, returning the mapped matrix. Returns an 
+        /// empty matrix if `this` is empty.
         /// 
         /// \tparam Rng concept: std::ranges::input_range
         /// \tparam F concept: std::copy_constructible
         /// \param rng type Rng&&
         /// \param func type F
-        /// \returns constexpr Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>
+        /// \returns constexpr matrix<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>
         template<std::ranges::input_range Rng, std::copy_constructible F>
         constexpr auto
         map(Rng&& rng, F func) const 
-            -> Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>>
+            -> matrix<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>>>
         {
             using range_elem_t = typename std::remove_cvref_t<decltype(*std::ranges::begin(rng))>;
 
             if (empty())
-                return Box<std::invoke_result_t<F, value_type, range_elem_t>>{};
+                return matrix<std::invoke_result_t<F, value_type, range_elem_t>>{};
             else
             {
-                Box<std::invoke_result_t<F, value_type, range_elem_t>> result(this->num_rows(), this->num_columns());
+                matrix<std::invoke_result_t<F, value_type, range_elem_t>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(*this, rng, result.begin(), func);
                 return result;
             }
@@ -1014,9 +1014,9 @@ namespace cxl
 
         /// \brief Map - Iterator Pair
         ///
-        /// \details Maps a function over the Box and a range
+        /// \details Maps a function over the matrix and a range
         /// denoted by an iterator pair, returning the mapped 
-        /// Box. Returns an empty Box if `this` is empty.
+        /// matrix. Returns an empty matrix if `this` is empty.
         /// 
         /// \tparam It concept: std::input_iterator
         /// \tparam Sn concept: std::sentinel_for<It>
@@ -1024,19 +1024,19 @@ namespace cxl
         /// \param first type: It 
         /// \param last type Sn
         /// \param func type: Fn
-        /// \returns constexpr Box<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
+        /// \returns constexpr matrix<std::invoke_result_t<F, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
         template<std::input_iterator It, std::sentinel_for<It> Sn, std::copy_constructible Fn>
         constexpr auto
         map(It first, Sn last, Fn func) const 
-            -> Box<std::invoke_result_t<Fn, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
+            -> matrix<std::invoke_result_t<Fn, value_type, typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>>>
         {
             using iterator_elem_t = typename std::remove_cvref_t<typename std::iterator_traits<It>::value_type>;
 
             if (empty())
-                return Box<std::invoke_result_t<Fn, value_type, iterator_elem_t>>{};
+                return matrix<std::invoke_result_t<Fn, value_type, iterator_elem_t>>{};
             else
             {
-                Box<std::invoke_result_t<Fn, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
+                matrix<std::invoke_result_t<Fn, value_type, iterator_elem_t>> result(this->num_rows(), this->num_columns());
                 std::ranges::transform(this->begin(), this->end(), first, last, result.begin(), func);
                 return result;
             }
@@ -1044,19 +1044,19 @@ namespace cxl
 
         /// \brief Vertical Flip
         ///
-        /// \details Performs a vertical flip of the Box.
+        /// \details Performs a vertical flip of the matrix.
         /// ie. The order of the num_rows is reversed. If 
-        /// `this` Box is empty, an empty Box is returned
+        /// `this` matrix is empty, an empty matrix is returned
         /// with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto vflip() const
         // {
         //     if (empty())
-        //         return Box<value_type>{};
+        //         return matrix<value_type>{};
         //     else
         //     {
-        //         Box<value_type> result(this->num_rows(), this->num_columns());
+        //         matrix<value_type> result(this->num_rows(), this->num_columns());
 
         //         for (auto cidx { 0u }; cidx < this->num_columns(); ++cidx)
         //             std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.column_rbegin(cidx));
@@ -1067,19 +1067,19 @@ namespace cxl
 
         /// \brief Horizontal Flip
         ///
-        /// \details Performs a horizontal flip of the Box.
+        /// \details Performs a horizontal flip of the matrix.
         /// ie. The order of the num_columns is reversed. If 
-        /// `this` Box is empty, an empty Box is returned
+        /// `this` matrix is empty, an empty matrix is returned
         /// with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto hflip() const
         // {
         //     if (empty())
-        //         return Box<value_type>{};
+        //         return matrix<value_type>{};
         //     else
         //     {
-        //         Box<value_type> result(this->num_rows(), this->num_columns());
+        //         matrix<value_type> result(this->num_rows(), this->num_columns());
         //             for (auto ridx { 0u }; ridx < this->num_rows(); ++ridx)
         //                 std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.row_rbegin(ridx));
 
@@ -1089,18 +1089,18 @@ namespace cxl
 
         /// \brief Right Rotate
         ///
-        /// Rotates the Box 90 degrees clockwise. Inverts the 
-        /// dimension sizes of the Box. If `this` Box is empty,
-        /// an empty Box is returned with no memory allocated to it.
+        /// Rotates the matrix 90 degrees clockwise. Inverts the 
+        /// dimension sizes of the matrix. If `this` matrix is empty,
+        /// an empty matrix is returned with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto rrotate() const
         // {
         //     if (empty())
-        //         return Box<value_type>{};
+        //         return matrix<value_type>{};
         //     else
         //     {
-        //         Box<value_type> result(this->num_columns(), this->num_rows());
+        //         matrix<value_type> result(this->num_columns(), this->num_rows());
 
         //         for (auto cidx { 0u }; cidx < this->num_columns(); ++cidx)
         //             std::ranges::copy(this->column_begin(cidx), this->column_end(cidx), result.row_rbegin(cidx));
@@ -1111,18 +1111,18 @@ namespace cxl
 
         /// \brief Left Rotate
         ///
-        /// Rotates the Box 90 degrees counter-clockwise. Inverts 
-        /// the dimension sizes of the Box. If `this` Box is empty,
-        /// an empty Box is returned with no memory allocated to it.
+        /// Rotates the matrix 90 degrees counter-clockwise. Inverts 
+        /// the dimension sizes of the matrix. If `this` matrix is empty,
+        /// an empty matrix is returned with no memory allocated to it.
         /// 
         /// \returns constexpr auto 
         // constexpr auto lrotate() const
         // {
         //     if (empty())
-        //         return Box<value_type>{};
+        //         return matrix<value_type>{};
         //     else
         //     {
-        //         Box<value_type> result(this->num_columns(), this->num_rows());
+        //         matrix<value_type> result(this->num_columns(), this->num_rows());
 
         //         for (auto ridx { 0u }; ridx < this->num_rows(); ++ridx)
         //             std::ranges::copy(this->row_begin(ridx), this->row_end(ridx), result.column_rbegin(ridx));
@@ -1132,9 +1132,9 @@ namespace cxl
         // }
 
     private:
-        /// \brief Allocates memory for Box
+        /// \brief Allocates memory for matrix
         ///
-        /// \details Allocates the memory for the Box
+        /// \details Allocates the memory for the matrix
         /// using the allocator of the container. Uses
         /// std::allocator_traits to get the allocators
         /// relevant methods.
@@ -1146,9 +1146,9 @@ namespace cxl
             -> pointer
         { return n != 0 ? alloc_traits::allocate(m_allocator, n) : pointer{}; }
 
-        /// \brief Deallocates memory for Box
+        /// \brief Deallocates memory for matrix
         ///
-        /// \details Deallocates the memory for the Box
+        /// \details Deallocates the memory for the matrix
         /// using the allocator of the container. Uses
         /// std::allocator_traits to get the allocators
         /// relevant methods.
@@ -1163,7 +1163,7 @@ namespace cxl
                 alloc_traits::deallocate(m_allocator, ptr, n);
         }
 
-        /// \brief Checks index's are in the bounds of the Box
+        /// \brief Checks index's are in the bounds of the matrix
         ///
         /// \details Checks if column and row are withing
         /// the Boxes bounds.
@@ -1177,7 +1177,7 @@ namespace cxl
             -> void
         {
             if (row >= m_num_rows || column >= m_num_columns)
-                throw std::out_of_range("Box::_M_range_check - index out of range.");
+                throw std::out_of_range("matrix::_M_range_check - index out of range.");
         }
 
         constexpr auto
@@ -1240,7 +1240,7 @@ namespace cxl
         { return ptr; }
 #endif // __cplusplus >= 201103L
     
-    };  /// class Box
+    };  /// class matrix
 
     /// \brief Compares two Boxes for equality.
     ///
@@ -1250,15 +1250,15 @@ namespace cxl
     /// \tparam ElemR
     /// \rparam lhsE type: ElemL
     /// \rparam rhsE type: ElemR
-    /// \param lhs type: const Box<ElemL>&
-    /// \param rhs type: const Box<ElemR>&
+    /// \param lhs type: const matrix<ElemL>&
+    /// \param rhs type: const matrix<ElemR>&
     /// \returns constexpr inline bool
     template <typename ElemL, typename ElemR>
         requires requires(ElemL lhsE, ElemR rhsE) {
             { lhsE == rhsE } -> std::convertible_to<bool>;
         }
     constexpr inline auto
-    operator== (const Box<ElemL>& lhs, const Box<ElemR>& rhs) noexcept(
+    operator== (const matrix<ElemL>& lhs, const matrix<ElemR>& rhs) noexcept(
         noexcept(std::declval<ElemL>() == std::declval<ElemR>())
            && noexcept(std::ranges::equal(lhs, rhs))) -> bool
     {
@@ -1267,7 +1267,7 @@ namespace cxl
         return std::ranges::equal(lhs, rhs);
     }
 
-    /// \brief Spaceship Operator for Box
+    /// \brief Spaceship Operator for matrix
     ///
     /// \details Uses std::lexicographical_compare_three_way to
     /// compare the Boxes and generates the !=, <, >, <=, >=
@@ -1275,28 +1275,28 @@ namespace cxl
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \param lhs type: const Box<ElemL>&
-    /// \param lhs type: const Box<ElemR>&
+    /// \param lhs type: const matrix<ElemL>&
+    /// \param lhs type: const matrix<ElemR>&
     /// \returns constexpr inline auto
     template <typename ElemL, typename ElemR>
     constexpr inline auto
-    operator<=> (const Box<ElemL>& lhs, const Box<ElemR>& rhs)
+    operator<=> (const matrix<ElemL>& lhs, const matrix<ElemR>& rhs)
     { return std::lexicographical_compare_three_way(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::compare_three_way{}); }
 
     /// \brief Map Operator
     ///
-    /// \details Maps a function over the elements of a Box
-    /// and returns a new Box with the mapped values. 
+    /// \details Maps a function over the elements of a matrix
+    /// and returns a new matrix with the mapped values. 
     /// 
     /// \tparam E
     /// \tparam F concept: std::copy_constructible
-    /// \param bx type: const Box<E>&
+    /// \param bx type: const matrix<E>&
     /// \param f type: F
     /// \return constexpr auto 
     template<typename E, std::copy_constructible F>
     constexpr auto
-    operator|| (const Box<E>& bx, F f) noexcept
-        -> Box<std::invoke_result_t<F, E>>
+    operator|| (const matrix<E>& bx, F f) noexcept
+        -> matrix<std::invoke_result_t<F, E>>
     { return bx.map(f); }
 
 }  /// namespace cxl
@@ -1313,11 +1313,11 @@ namespace std
     /// \exception std::swap is noexcept if x.swap(y) is noexcept.
     ///
     /// \tparam T
-    /// \param x type: const cxl::Box<T>&
-    /// \param y type: const cxl::Box<T>&
+    /// \param x type: const cxl::matrix<T>&
+    /// \param y type: const cxl::matrix<T>&
     template <typename T>
     constexpr inline auto
-    swap(cxl::Box<T>& x, cxl::Box<T>& y) noexcept( noexcept(x.swap(y)) ) -> void
+    swap(cxl::matrix<T>& x, cxl::matrix<T>& y) noexcept( noexcept(x.swap(y)) ) -> void
     { x.swap(y); }
 }
 

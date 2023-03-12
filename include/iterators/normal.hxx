@@ -5,9 +5,9 @@
 ///
 /// Author: Tyler Swann (tyler.swann05@gmail.com)
 ///
-/// Header Version: v0.1.1
+/// Header Version: v0.1.2
 ///
-/// Date: 02-01-2023
+/// Date: 12-03-2023
 ///
 /// License: MIT
 ///
