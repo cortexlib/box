@@ -1,5 +1,5 @@
 #include <iostream>
-#include <box/box.hxx>
+#include <data_structures/matrix.hxx>
 
 template<typename T>
 void print(const cxl::box<T>& bx)
