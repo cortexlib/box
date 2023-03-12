@@ -12,7 +12,7 @@
 
 A library full of random types, classes, functions and other general purpose utilities for C++.
 
-Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository. Head to the [Install](#install) section to get up and running.
+Cortex is available from the CRS repository within [Code Bytes](https://codebytes.dev) . Head to the [Install](#install) section to get up and running.
 
 ---
 
