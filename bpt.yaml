@@ -10,7 +10,7 @@ readme: README.md
 
 
 description: |
-  A personal collection of types, functions and other general purpose C++ utilities for C++20.
+  A library of random types, classes, functions and other general purpose utilities for C++.
 
 
 repository: https://github.com/oraqlle/cortexlib

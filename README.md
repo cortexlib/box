@@ -10,7 +10,7 @@
 
 ## Welcome
 
-The Cortex Library is a personal collection of types, functions and other general purpose C++ utilities, mostly aimed at developing with C++20.
+A library full of random types, classes, functions and other general purpose utilities for C++.
 
 Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository. Head to the [Install](#install) section to get up and running.
 
@@ -26,16 +26,16 @@ Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository
   - [Install](#install)
   - [Contributing and License](#contributing-and-license)
   - [Supported and Tested Compilers](#supported-and-tested-compilers)
-  - [Links and Resources](#links-and-resources)
+  - [Documentation](#documentation)
 
 ---
 
 ## Features
 
-- Box - Generic, owning 2D array.
-- Allocator Library - A small set of allocators to offer different allocation techniques.
+- Matrix - Generic, owning 2D array.
 - Tensor - Generic, owning multidimensional array.
 - Match Visitor - Match pattern to create conditional access to `std::variant`
+- Allocator Library - A small set of allocators to offer different allocation techniques.
 
 ---
 
@@ -45,13 +45,13 @@ Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository
 
 ## Install
 
-Add `cortexlib@0.1.0` to the 'dependencies' section of your `bpt.yaml` file. When running `bpt build`, use `--use-repo "trovepi.dev"` or `-r "trovepi.dev"` flag option to specify lookup through Trove.
+Add `cortexlib@0.1.2` to the 'dependencies' section of your `bpt.yaml` file. When running `bpt build`, use `--use-repo "trovepi.dev"` or `-r "trovepi.dev"` flag option to specify lookup through Trove.
 
 ---
 
 ## Contributing and License
 
-- Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for ways to contribute and support the development of `cortexlib`.
+- Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for ways to contribute and support the development of cortexlib.
 - The Cortex Library is under the MIT License. Refer to [LICENSE](LICENSE) for full details.
 - This repository, it's contributors, maintainers and collaborators are governed by the `Contributor Covenant Code of Conduct v2.1` outlined in the [Code of Conduct](CODE_OF_CONDUCT.md) file.
 
@@ -66,12 +66,6 @@ Add `cortexlib@0.1.0` to the 'dependencies' section of your `bpt.yaml` file. Whe
 
 ---
 
-## Links and Resources
-
-Links to related tools and documentation of bpt, Trove and `cortexlib`'s source.
+## Documentation
 
 - [Docs](/docs/README.md)
-- [bpt](https://bpt.pizza)
-- [bpt Install Guide](https://bpt.pizza/docs/latest/tut/install.html)
-- ['Hello World!' from bpt](https://bpt.pizza/docs/latest/tut/hello-world.html)
-- [Trove Homepage](https://trovepi.dev)
