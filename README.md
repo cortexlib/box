@@ -10,7 +10,7 @@
 
 ## Welcome
 
-A library full of random types, classes, functions and other general purpose utilities for C++.
+This is a library full of random types, classes, functions and other general purpose utilities for C++.
 
 Cortex Library is available from the [Trove](https://tropepi.dev) CRS repository. Head to the [Install](#install) section to get up and running.
 
@@ -68,4 +68,7 @@ Add `cortexlib@0.1.2` to the 'dependencies' section of your `bpt.yaml` file. Whe
 
 ## Documentation
 
-- [Docs](/docs/README.md)
+Documentation is made with [hdoc](https://hdoc.io/)
+
+- Rendered documentation - [cortexlib/docs](...)
+- Raw documentation output - [`docs/`](docs/)
