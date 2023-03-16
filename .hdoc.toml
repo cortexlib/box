@@ -6,7 +6,7 @@ git_default_branch = "main"
 
 [paths]
 compile_commands = "build/compile_commands.json"
-output_dir = "docs/hdoc"
+output_dir = "docs"
 
 [includes]
 paths = []
@@ -20,3 +20,7 @@ paths = [
 
 [pages]
 homepage = "README.md"
+paths = [
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md"
+]
