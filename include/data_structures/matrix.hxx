@@ -1,4 +1,4 @@
-/// -*- C++ -*- Header compatibility <matrix.hxx>
+// -*- C++ -*- Header compatibility <matrix.hxx>
 
 /// \brief Two dimensional array data structure.
 ///
@@ -13,8 +13,8 @@
 /// Copyright: Copyright (c) 2022-2023
 /// \file matrix.hxx
 
-#ifndef CORTEX_BOX
-#   define CORTEX_BOX
+#ifndef CORTEX_MATRIX
+#   define CORTEX_MATRIX
 
 #include <iterators/normal.hxx>
 
@@ -1238,9 +1238,9 @@ namespace cxl
         _M_data_ptr(U* ptr) noexcept 
             -> U*
         { return ptr; }
-#endif // __cplusplus >= 201103L
+#endif  //< __cplusplus >= 201103L
     
-    };  /// class matrix
+    };  //< class matrix
 
     /// \brief Compares two Boxes for equality.
     ///
@@ -1299,9 +1299,7 @@ namespace cxl
         -> matrix<std::invoke_result_t<F, E>>
     { return bx.map(f); }
 
-}  /// namespace cxl
-
-
+}  //< namespace cxl
 
 namespace std
 {
@@ -1317,8 +1315,9 @@ namespace std
     /// \param y type: const cxl::matrix<T>&
     template <typename T>
     constexpr inline auto
-    swap(cxl::matrix<T>& x, cxl::matrix<T>& y) noexcept( noexcept(x.swap(y)) ) -> void
+    swap(cxl::matrix<T>& x, cxl::matrix<T>& y) 
+        noexcept( noexcept(x.swap(y)) ) -> void
     { x.swap(y); }
 }
 
-#endif  /// CORTEX_BOX_H
+#endif  //< CORTEX_MATRIX_H

@@ -24,11 +24,11 @@
 
 #if __cpp_lib_three_way_comparison
 #    include <compare>
-#endif  /// __cpp_lib_three_way_comparison
+#endif  //< __cpp_lib_three_way_comparison
 
 #if __cpp_concepts >= 201907L
 #    include <concepts>
-#endif  /// __cpp_concepts >= 201907L
+#endif  //< __cpp_concepts >= 201907L
 
 #if __cplusplus >= 201402L
 
@@ -70,7 +70,7 @@ namespace cxl
                     std::conditional_t<std::input_iterator<Iterator>,
                                        std::input_iterator_tag,
                                        std::output_iterator_tag>>>>;
-#    endif  /// __cpp_concepts >= 201907L
+#    endif  //< __cpp_concepts >= 201907L
 
         using value_type            = typename iter_traits_type::value_type;
         using difference_type       = typename iter_traits_type::difference_type;
@@ -150,7 +150,7 @@ public:
 #    if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
-#    endif
+#    endif  //< __cplusplus > 201703L && __cpp_concepts >= 201907L
         { return _S_to_pointer(current); }
 
         /// \brief Arrow Deference Operator Overload.
@@ -166,7 +166,7 @@ public:
 #    if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
-#    endif
+#    endif  //< __cplusplus > 201703L && __cpp_concepts >= 201907L
         { return _S_to_pointer(current); }
 
         /// \brief Prefix Increment Operator Overload.
@@ -334,9 +334,9 @@ public:
         _S_to_pointer(P obj) -> pointer 
         { return obj.operator->(); }
 
-    };  /// class normal_iterator
+    };  //< class normal_iterator
 
-#    if __cpp_lib_three_way_comparison  /// C++20
+#    if __cpp_lib_three_way_comparison  //< C++20
 
     /// \brief Equality Operator Overload.
     ///
@@ -386,7 +386,7 @@ public:
         noexcept(noexcept(lhs.base() <=> rhs.base())) -> std::weak_ordering 
     { return lhs.base() <=> rhs.base(); }
 
-#    else  /// __cpp_lib_three_way_comparison -> C++20
+#    else  //< __cpp_lib_three_way_comparison -> C++20
 
     /// \brief Equality Operator Overload.
     ///
@@ -628,7 +628,7 @@ public:
         noexcept(noexcept(lhs.base() >= rhs.base())) ->bool 
     { return lhs.base() >= rhs.base(); }
 
-#    endif  /// __cpp_lib_three_way_comparison
+#    endif  //< __cpp_lib_three_way_comparison
 
     /// \brief Difference Operator Overload.
     ///
@@ -658,7 +658,7 @@ public:
     inline typename normal_iterator<IterL, Container>::difference_type
     operator- (const normal_iterator<IterL, Container>& lhs,
                const normal_iterator<IterR, Container>& rhs)
-#    endif  /// __cplusplus >= 201103L
+#    endif  //< __cplusplus >= 201103L
     { return lhs.base() - rhs.base(); }
 
     /// \brief Difference Operator Overload.
@@ -680,12 +680,12 @@ public:
                const normal_iterator<Iterator, Container>& rhs)
         noexcept(noexcept(lhs.base() - rhs.base()))
         -> decltype(lhs.base() - rhs.base())
-#    else   /// ! C++11
+#    else   //< ! C++11
     inline
         typename normal_iterator<Iterator, Container>::difference_type
         operator- (const normal_iterator<Iterator, Container>& lhs,
                    const normal_iterator<Iterator, Container>& rhs)
-#    endif  /// __cplusplus >= 201103L
+#    endif  //< __cplusplus >= 201103L
     { return lhs.base() - rhs.base(); }
 
     /// \brief Addition Operator Overload.
@@ -740,7 +740,7 @@ public:
         -> normal_iterator<Iterator, Container> 
     { return normal_iterator<Iterator, Container>(i); }
 
-}  // namespace cxl
+}  //< namespace cxl
 
 namespace std
 {
@@ -784,8 +784,8 @@ namespace std
         ) -> void 
     { ranges::iter_swap(x.base(), y.base()); }
 
-}  // namespace std
+}  //< namespace std
 
-#endif  /// __cplusplus >= 201402L
+#endif  //< __cplusplus >= 201402L
 
-#endif  /// CORTEX_NORMAL_ITERATOR
+#endif  //< CORTEX_NORMAL_ITERATOR
