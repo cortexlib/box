@@ -103,6 +103,11 @@ namespace cxl
         /// or fill constructed depending on the default 
         /// contractibility qualification.
         ///
+        /// \code
+        /// /* Construct a zero matrix of size 3x5 */
+        /// cxl::matrix<int> mx(3, 5);
+        /// \endcode
+        ///
         /// \param num_columns type: size_type
         /// \param num_rows type: size_type
         /// \param alloc type: const allocator_type&
