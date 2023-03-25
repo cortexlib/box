@@ -174,7 +174,7 @@ $(function() {
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            : m_num_rows{ other.m_num_rows }</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            , m_num_columns{ other.m_num_columns }</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            , m_allocator{ alloc }</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            , m_start{ _M_allocate(_M_size_check(<a class="code" href="classcxl_1_1matrix.html#a7eea56bede88e05a59dbb31e96e91ce4">num_rows</a>, <a class="code" href="classcxl_1_1matrix.html#ab4f4560db97a54acf4d78c01b9383ad2">num_columns</a>)) }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            , m_start{ _M_allocate(_M_size_check(other.m_num_rows, other.m_num_columns)) }</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;            , m_finish{ m_start + <a class="code" href="classcxl_1_1matrix.html#af4814592732943f790348f4cd99c3218">size</a>() }</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        { std::ranges::uninitialized_copy(other, *<span class="keyword">this</span>); }</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
