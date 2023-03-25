@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <fmt/core.h>
 
-#include <data_structures/matrix.hxx>
+#include <containers/matrix.hxx>
 
 #include <iostream>
 #include <numeric>

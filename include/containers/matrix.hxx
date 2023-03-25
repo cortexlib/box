@@ -171,7 +171,7 @@ namespace cxl
             : m_num_rows{ other.m_num_rows }
             , m_num_columns{ other.m_num_columns }
             , m_allocator{ alloc }
-            , m_start{ _M_allocate(_M_size_check(num_rows, num_columns)) }
+            , m_start{ _M_allocate(_M_size_check(other.m_num_rows, other.m_num_columns)) }
             , m_finish{ m_start + size() }
         { std::ranges::uninitialized_copy(other, *this); }
 
