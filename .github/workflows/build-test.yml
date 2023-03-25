@@ -45,26 +45,23 @@ jobs:
       - name: Download bpt Linux
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: > 
-          sudo apt update && sudo apt upgrade -y
-          sudo apt install curl
-          curl bpt.pizza/get/linux -Lo bpt
-          chmod a+x bpt
-          ./bpt install-yourself
+          sudo apt update && sudo apt upgrade -y;
+          sudo apt install curl;
+          curl bpt.pizza/get/linux -Lo bpt;
+          chmod a+x bpt;
+          ./bpt install-yourself;
 
       - name: Download bpt MacOS
         if: ${{ matrix.os == 'macos-latest' }}
         run: > 
-          sudo apt update && sudo apt upgrade -y
-          sudo apt install curl
-          curl bpt.pizza/get/macos -Lo bpt
-          chmod a+x bpt
-          ./bpt install-yourself
+          curl bpt.pizza/get/macos -Lo bpt;
+          chmod a+x bpt;
+          ./bpt install-yourself;
 
       - name: Download bpt Windows
         if: ${{ matrix.os == 'windows-latest' }}
         run: > 
-          Invoke-WebRequest bpt.pizza/get/windows -OutFile bpt.exe
-          bpt.exe install-yourself
+          Invoke-WebRequest bpt.pizza/get/windows -OutFile bpt.exe && bpt.exe install-yourself
 
       - name: Run tests on GCC
         if: ${{ matrix.compiler == 'g++' }}
