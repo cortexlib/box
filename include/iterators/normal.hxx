@@ -7,7 +7,7 @@
 ///
 /// Header Version: v0.1.2
 ///
-/// Date: 12-03-2023
+/// Date: 23-03-2023
 ///
 /// License: MIT
 ///
@@ -15,22 +15,20 @@
 /// \file normal.hxx
 
 #ifndef CORTEX_NORMAL_ITERATOR
-#define CORTEX_NORMAL_ITERATOR
+#   define CORTEX_NORMAL_ITERATOR
 
-#include <iterator>
+#include <iterator> 
 #include <ranges>
 #include <type_traits>
 #include <utility>
 
 #if __cpp_lib_three_way_comparison
 #    include <compare>
-#endif  /// __cpp_lib_three_way_comparison
+#endif  //< __cpp_lib_three_way_comparison
 
 #if __cpp_concepts >= 201907L
 #    include <concepts>
-#endif  /// __cpp_concepts >= 201907L
-
-#if __cplusplus >= 201402L
+#endif  //< __cpp_concepts >= 201907L
 
 namespace cxl
 {
@@ -70,7 +68,7 @@ namespace cxl
                     std::conditional_t<std::input_iterator<Iterator>,
                                        std::input_iterator_tag,
                                        std::output_iterator_tag>>>>;
-#    endif  /// __cpp_concepts >= 201907L
+#    endif  //< __cpp_concepts >= 201907L
 
         using value_type            = typename iter_traits_type::value_type;
         using difference_type       = typename iter_traits_type::difference_type;
@@ -150,7 +148,7 @@ public:
 #    if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
-#    endif
+#    endif  //< __cplusplus > 201703L && __cpp_concepts >= 201907L
         { return _S_to_pointer(current); }
 
         /// \brief Arrow Deference Operator Overload.
@@ -166,7 +164,7 @@ public:
 #    if __cplusplus > 201703L && __cpp_concepts >= 201907L
             requires std::is_pointer_v<iterator_type> ||
             requires (const iterator_type i) { i.operator->(); }
-#    endif
+#    endif  //< __cplusplus > 201703L && __cpp_concepts >= 201907L
         { return _S_to_pointer(current); }
 
         /// \brief Prefix Increment Operator Overload.
@@ -334,9 +332,9 @@ public:
         _S_to_pointer(P obj) -> pointer 
         { return obj.operator->(); }
 
-    };  /// class normal_iterator
+    };  //< class normal_iterator
 
-#    if __cpp_lib_three_way_comparison  /// C++20
+#    if __cpp_lib_three_way_comparison  //< C++20
 
     /// \brief Equality Operator Overload.
     ///
@@ -386,7 +384,7 @@ public:
         noexcept(noexcept(lhs.base() <=> rhs.base())) -> std::weak_ordering 
     { return lhs.base() <=> rhs.base(); }
 
-#    else  /// __cpp_lib_three_way_comparison -> C++20
+#    else  //< __cpp_lib_three_way_comparison -> C++20
 
     /// \brief Equality Operator Overload.
     ///
@@ -628,7 +626,7 @@ public:
         noexcept(noexcept(lhs.base() >= rhs.base())) ->bool 
     { return lhs.base() >= rhs.base(); }
 
-#    endif  /// __cpp_lib_three_way_comparison
+#    endif  //< __cpp_lib_three_way_comparison
 
     /// \brief Difference Operator Overload.
     ///
@@ -658,7 +656,7 @@ public:
     inline typename normal_iterator<IterL, Container>::difference_type
     operator- (const normal_iterator<IterL, Container>& lhs,
                const normal_iterator<IterR, Container>& rhs)
-#    endif  /// __cplusplus >= 201103L
+#    endif  //< __cplusplus >= 201103L
     { return lhs.base() - rhs.base(); }
 
     /// \brief Difference Operator Overload.
@@ -680,27 +678,26 @@ public:
                const normal_iterator<Iterator, Container>& rhs)
         noexcept(noexcept(lhs.base() - rhs.base()))
         -> decltype(lhs.base() - rhs.base())
-#    else   /// ! C++11
+#    else   //< ! C++11
     inline
         typename normal_iterator<Iterator, Container>::difference_type
         operator- (const normal_iterator<Iterator, Container>& lhs,
                    const normal_iterator<Iterator, Container>& rhs)
-#    endif  /// __cplusplus >= 201103L
+#    endif  //< __cplusplus >= 201103L
     { return lhs.base() - rhs.base(); }
 
     /// \brief Addition Operator Overload.
     ///
-    /// \details Takes an offset \param n and a normal_iterators
-    /// \param i. Constructs a new normal_iterators by adding
-    /// \param n to \param i.base().
+    /// \details Takes an offset n and a normal_iterators
+    /// i. Constructs a new normal_iterators by adding
+    /// n to i.base().
     ///
     /// \tparam Iterator
     /// \tparam Container
     ///
-    /// \param n type: normal_iterator<Iterator,
-    /// Container>::difference_type \param i type: const
-    /// normal_iterator<Iterator, Container>& i \returns constexpr
-    /// inline normal_iterator<Iterator, Container>
+    /// \param n type: normal_iterator<Iterator, Container>::difference_type
+    /// \param i type: const normal_iterator<Iterator, Container>&
+    /// \returns constexpr inline normal_iterator<Iterator, Container>
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator+ (typename normal_iterator<Iterator, Container>::difference_type n,
@@ -740,7 +737,7 @@ public:
         -> normal_iterator<Iterator, Container> 
     { return normal_iterator<Iterator, Container>(i); }
 
-}  // namespace cxl
+}  //< namespace cxl
 
 namespace std
 {
@@ -784,8 +781,6 @@ namespace std
         ) -> void 
     { ranges::iter_swap(x.base(), y.base()); }
 
-}  // namespace std
+}  //< namespace std
 
-#endif  /// __cplusplus >= 201402L
-
-#endif  /// CORTEX_NORMAL_ITERATOR
+#endif  //< CORTEX_NORMAL_ITERATOR

@@ -4,9 +4,9 @@
 #include <data_structures/matrix.hxx>
 
 #include <iostream>
+#include <numeric>
 #include <tuple>
 #include <utility>
-
 
 TEST_CASE("Constructors and Assignments")
 {

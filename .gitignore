@@ -50,3 +50,6 @@ _deps/*
 
 # caches
 .cache/*
+
+docs/html/*
+docs/latex/*
