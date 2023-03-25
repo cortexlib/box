@@ -38,9 +38,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Run the projects setup.
-        run: 
-
       - name: Add msbuild to PATH
         if: ${{ matrix.os == 'windows-latest' }}
         uses: microsoft/setup-msbuild@v1.0.2
