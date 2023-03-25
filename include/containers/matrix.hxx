@@ -1,4 +1,4 @@
-/// -*- C++ -*- Header compatibility <matrix.hxx>
+// -*- C++ -*- Header compatibility <matrix.hxx>
 
 /// \brief Two dimensional array data structure.
 ///
@@ -6,15 +6,15 @@
 /// 
 /// Header Version: v0.2.0
 ///
-/// Date: 12-03-2023
+/// Date: 23-03-2023
 ///
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022-2023
 /// \file matrix.hxx
 
-#ifndef CORTEX_BOX
-#   define CORTEX_BOX
+#ifndef CORTEX_MATRIX
+#   define CORTEX_MATRIX
 
 #include <iterators/normal.hxx>
 
@@ -103,6 +103,11 @@ namespace cxl
         /// or fill constructed depending on the default 
         /// contractibility qualification.
         ///
+        /// \code
+        /// /* Construct a zero matrix of size 3x5 */
+        /// cxl::matrix<int> mx(3, 5);
+        /// \endcode
+        ///
         /// \param num_columns type: size_type
         /// \param num_rows type: size_type
         /// \param alloc type: const allocator_type&
@@ -172,7 +177,7 @@ namespace cxl
 
         /// \brief Move Constructor
         ///
-        /// \details Moves ownership of an existing Boxes
+        /// \details Moves ownership of an existing Matrix's
         /// resources to this matrix and leaves the other matrix
         /// in a default constructed state.
         ///
@@ -194,7 +199,7 @@ namespace cxl
 
         /// \brief Move Constructor with Alternative Allocator
         ///
-        /// \details Moves ownership of an existing Boxes
+        /// \details Moves ownership of an existing Matrices
         /// resources to this matrix and leaves the other matrix
         /// in a default constructed state. Uses an alternative
         /// allocator for construction of `this` matrix.
@@ -221,7 +226,7 @@ namespace cxl
         ///
         /// \details Uses std::initializer_list to create a matrix
         /// from an initializer list of initializer lists. Elements
-        /// ownership is moved to the Boxes memory.
+        /// ownership is moved to the Matrices memory.
         ///
         /// \exception std::invalid_argument
         ///
@@ -332,7 +337,7 @@ namespace cxl
         ///
         /// \details Uses std::initializer_list to create a matrix
         /// from an initializer list of initializer lists. Elements
-        /// ownership is moved to the Boxes memory.
+        /// ownership is moved to the Matrices memory.
         ///
         /// \exception std::invalid_argument
         ///
@@ -391,7 +396,7 @@ namespace cxl
         ///
         /// \details Uses std::initializer_list to reassign 
         /// values to a matrix. If the lists dimensions are not
-        /// the same as the Boxes dimensions, then the matrix
+        /// the same as the Matrices dimensions, then the matrix
         /// is resized to match the dimensions of the list.
         ///
         /// \exception std::invalid_argument
@@ -440,7 +445,7 @@ namespace cxl
             -> void
         { resize(new_rows, new_columns, value_type{}); }
 
-        /// \brief Resizes Boxes memory
+        /// \brief Resizes Matrices memory
         ///
         /// \details Resizes the matrix to a new shape of new_rows x new_columns.
         /// Resizing will cause reallocation to a new memory block if the new 
@@ -562,7 +567,7 @@ namespace cxl
 
         /// \brief Reshape current matrix elements to new dimensions
         ///
-        /// \details Reshapes the current Boxes dimensions while
+        /// \details Reshapes the current Matrices dimensions while
         /// guaranteeing that no reallocation occurs. Elements are
         /// preserved but reordered.
         ///
@@ -582,9 +587,9 @@ namespace cxl
                 resize(new_rows, new_columns);
         }
 
-        /// \brief Swaps two Boxes of the same type.
+        /// \brief Swaps two Matrices of the same type.
         ///
-        /// \details Swaps the contents of two Boxes 
+        /// \details Swaps the contents of two Matrices 
         /// with the same underlying value and allocator
         /// types. The swap is performed by moving ownership
         /// of the matrices resources.
@@ -655,7 +660,7 @@ namespace cxl
 
         /// \brief Dimensions
         /// 
-        /// \details Returns a tuple of the Boxes shape.
+        /// \details Returns a tuple of the Matrices shape.
         ///
         /// \returns constexpr std::tuple<size_type, size_type>
         constexpr auto 
@@ -740,7 +745,7 @@ namespace cxl
 
         /// \brief Point based element access operator
         ///
-        /// \details Provides point access to Boxes elements.
+        /// \details Provides point access to Matrices elements.
         /// Overloads the invocation operator. Utilises the at() method.
         ///
         /// \param column type: size_type
@@ -753,7 +758,7 @@ namespace cxl
 
         /// \brief Point based element access operator
         ///
-        /// \details Provides point access to Boxes elements.
+        /// \details Provides point access to Matrices elements.
         /// Overloads the invocation operator. Utilises the at() method.
         ///
         /// \param column type: size_type
@@ -811,7 +816,7 @@ namespace cxl
         /// \brief Begin Iterator
         /// 
         /// \details Iterator to the beginning of 
-        /// the Boxes data.
+        /// the Matrices data.
         ///
         /// \returns constexpr iterator
         constexpr auto
@@ -822,7 +827,7 @@ namespace cxl
         /// \brief Begin Iterator (const)
         /// 
         /// \details Constant iterator to the beginning 
-        /// of the Boxes data.
+        /// of the Matrices data.
         ///
         /// \returns constexpr const_iterator
         constexpr auto
@@ -844,7 +849,7 @@ namespace cxl
         /// \brief Reverse Begin Iterator
         /// 
         /// \details Iterator to the reversed beginning
-        /// of the Boxes data.
+        /// of the Matrices data.
         ///
         /// \returns constexpr reverse_iterator
         constexpr auto
@@ -855,7 +860,7 @@ namespace cxl
         /// \brief Reverse Begin Iterator (const)
         /// 
         /// \details Constant iterator to the reversed 
-        /// beginning of the Boxes data.
+        /// beginning of the Matrices data.
         ///
         /// \returns constexpr const_reverse_iterator
         constexpr auto
@@ -866,7 +871,7 @@ namespace cxl
         /// \brief Constant Reverse Begin Iterator
         ///
         /// \details Constant iterator to the reversed
-        /// beginning of the Boxes data.
+        /// beginning of the Matrices data.
         ///
         /// \returns constexpr const_reverse_iterator
         constexpr auto
@@ -877,7 +882,7 @@ namespace cxl
         /// \brief End Iterator
         ///
         /// \details Iterator to the end of the 
-        /// Boxes data.
+        /// Matrices data.
         ///
         /// \returns constexpr iterator
         constexpr auto
@@ -888,7 +893,7 @@ namespace cxl
         /// \brief End Iterator (const)
         /// 
         /// \details Constant iterator to the 
-        /// end of the Boxes data.
+        /// end of the Matrices data.
         ///
         /// \returns constexpr const_iterator
         constexpr auto
@@ -899,7 +904,7 @@ namespace cxl
         /// \brief Constant End Iterator
         ///
         /// \details Constant iterator to the
-        /// end of the Boxes data.
+        /// end of the Matrices data.
         ///
         /// \returns constexpr const_iterator
         constexpr auto
@@ -910,7 +915,7 @@ namespace cxl
         /// \brief Reverse End Iterator
         ///
         /// \details Iterator to the reversed end
-        /// of the Boxes data.
+        /// of the Matrices data.
         ///
         /// \returns constexpr reverse_iterator
         constexpr auto
@@ -921,7 +926,7 @@ namespace cxl
         /// \brief Reverse End Iterator (const)
         ///
         /// \details Constant iterator to the reversed
-        /// end of the Boxes data.
+        /// end of the Matrices data.
         ///
         /// \returns constexpr const_reverse_iterator
         constexpr auto
@@ -932,7 +937,7 @@ namespace cxl
         /// \brief Constant Reverse End Iterator
         ///
         /// \details Constant iterator to the reversed
-        /// end of the Boxes data.
+        /// end of the Matrices data.
         ///
         /// \returns constexpr const_reverse_iterator
         constexpr auto 
@@ -1166,7 +1171,7 @@ namespace cxl
         /// \brief Checks index's are in the bounds of the matrix
         ///
         /// \details Checks if column and row are withing
-        /// the Boxes bounds.
+        /// the Matrices bounds.
         ///
         /// \exception std::out_of_range
         ///
@@ -1238,18 +1243,18 @@ namespace cxl
         _M_data_ptr(U* ptr) noexcept 
             -> U*
         { return ptr; }
-#endif // __cplusplus >= 201103L
+#endif  //< __cplusplus >= 201103L
     
-    };  /// class matrix
+    };  //< class matrix
 
-    /// \brief Compares two Boxes for equality.
+    /// \brief Compares two Matrices for equality.
     ///
-    /// \details Uses std::equal to compare the Boxes.
+    /// \details Uses std::equal to compare the Matrices.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
-    /// \rparam lhsE type: ElemL
-    /// \rparam rhsE type: ElemR
+    /// \param lhsE type: ElemL - requires parameter
+    /// \param rhsE type: ElemR - requires parameter
     /// \param lhs type: const matrix<ElemL>&
     /// \param rhs type: const matrix<ElemR>&
     /// \returns constexpr inline bool
@@ -1270,13 +1275,13 @@ namespace cxl
     /// \brief Spaceship Operator for matrix
     ///
     /// \details Uses std::lexicographical_compare_three_way to
-    /// compare the Boxes and generates the !=, <, >, <=, >=
+    /// compare the Matrices and generates the !=, <, >, <=, >=
     /// operators.
     ///
     /// \tparam ElemL
     /// \tparam ElemR
     /// \param lhs type: const matrix<ElemL>&
-    /// \param lhs type: const matrix<ElemR>&
+    /// \param rhs type: const matrix<ElemR>&
     /// \returns constexpr inline auto
     template <typename ElemL, typename ElemR>
     constexpr inline auto
@@ -1299,9 +1304,7 @@ namespace cxl
         -> matrix<std::invoke_result_t<F, E>>
     { return bx.map(f); }
 
-}  /// namespace cxl
-
-
+}  //< namespace cxl
 
 namespace std
 {
@@ -1317,8 +1320,9 @@ namespace std
     /// \param y type: const cxl::matrix<T>&
     template <typename T>
     constexpr inline auto
-    swap(cxl::matrix<T>& x, cxl::matrix<T>& y) noexcept( noexcept(x.swap(y)) ) -> void
+    swap(cxl::matrix<T>& x, cxl::matrix<T>& y) 
+        noexcept( noexcept(x.swap(y)) ) -> void
     { x.swap(y); }
 }
 
-#endif  /// CORTEX_BOX_H
+#endif  //< CORTEX_MATRIX_H

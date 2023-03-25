@@ -9,7 +9,7 @@
 ///
 /// Header Version: v0.1.0
 ///
-/// Date: 24-12-2022
+/// Date: 23-03-2023
 ///
 /// License: MIT
 ///
@@ -24,7 +24,7 @@
 
 #if __cpp_concepts >= 201907L
 #    include <concepts>
-#endif  /// __cpp_concepts >= 201907L
+#endif  //< __cpp_concepts >= 201907L
 
 namespace cxl::utils
 {
@@ -59,7 +59,8 @@ namespace cxl::utils
         /// \details Declares `match` to be using
         /// the invocation operators `()`.
         using Fs::operator()...;
-    };
+    
+    };  //< class match
 
     /// \brief Template Deduction Guide
     template<typename... Fs>
@@ -129,6 +130,6 @@ namespace cxl::utils
         constexpr ~match_any() noexcept = delete;
     };
 
-}  // namespace cxl::utils
+}  //< namespace cxl::utils
 
-#endif  /// CORTEX_MATCH
+#endif  //< CORTEX_MATCH
