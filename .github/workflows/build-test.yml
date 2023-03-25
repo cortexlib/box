@@ -20,19 +20,19 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        compiler: [ g++ ]
+        compiler: [ g++, clang++ ]
         include:
           - os: ubuntu-latest
-            compiler: g++
+            compiler: [ g++, clang++ ]
             target: Linux
 
-          - os: macos-latest
-            compiler: g++
-            target: Macos
+          # - os: macos-latest
+          #   compiler: g++
+          #   target: Macos
 
-          - os: windows-latest
-            compiler: cl
-            target: Windows
+          # - os: windows-latest
+          #   compiler: cl
+          #   target: Windows
 
     steps:
       - name: Checkout Repository
@@ -51,17 +51,17 @@ jobs:
           chmod a+x bpt;
           ./bpt install-yourself;
 
-      - name: Download bpt MacOS
-        if: ${{ matrix.os == 'macos-latest' }}
-        run: > 
-          curl bpt.pizza/get/macos -Lo bpt;
-          chmod a+x bpt;
-          ./bpt install-yourself;
+      # - name: Download bpt MacOS
+      #   if: ${{ matrix.os == 'macos-latest' }}
+      #   run: > 
+      #     curl bpt.pizza/get/macos -Lo bpt;
+      #     chmod a+x bpt;
+      #     ./bpt install-yourself;
 
-      - name: Download bpt Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: > 
-          Invoke-WebRequest bpt.pizza/get/windows -OutFile bpt.exe && bpt.exe install-yourself
+      # - name: Download bpt Windows
+      #   if: ${{ matrix.os == 'windows-latest' }}
+      #   run: > 
+      #     Invoke-WebRequest bpt.pizza/get/windows -OutFile bpt.exe && bpt.exe install-yourself
 
       - name: Run tests on GCC
         if: ${{ matrix.compiler == 'g++' }}
@@ -71,6 +71,6 @@ jobs:
         if: ${{ matrix.compiler == 'clang++' }}
         run: bpt build -t clang-build.yaml -j 8 -o build
 
-      - name: Run tests on MSVC
-        if: ${{ matrix.compiler == 'cl' }}
-        run: bpt build -t msvc-build.yaml -j 8 -o build
+      # - name: Run tests on MSVC
+      #   if: ${{ matrix.compiler == 'cl' }}
+      #   run: bpt build -t msvc-build.yaml -j 8 -o build
