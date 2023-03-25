@@ -7,7 +7,7 @@
 ///
 /// Header Version: v0.1.2
 ///
-/// Date: 12-03-2023
+/// Date: 23-03-2023
 ///
 /// License: MIT
 ///
@@ -15,9 +15,9 @@
 /// \file normal.hxx
 
 #ifndef CORTEX_NORMAL_ITERATOR
-#define CORTEX_NORMAL_ITERATOR
+#   define CORTEX_NORMAL_ITERATOR
 
-#include <iterator>
+#include <iterator> 
 #include <ranges>
 #include <type_traits>
 #include <utility>
@@ -29,8 +29,6 @@
 #if __cpp_concepts >= 201907L
 #    include <concepts>
 #endif  //< __cpp_concepts >= 201907L
-
-#if __cplusplus >= 201402L
 
 namespace cxl
 {
@@ -690,17 +688,16 @@ public:
 
     /// \brief Addition Operator Overload.
     ///
-    /// \details Takes an offset \param n and a normal_iterators
-    /// \param i. Constructs a new normal_iterators by adding
-    /// \param n to \param i.base().
+    /// \details Takes an offset n and a normal_iterators
+    /// i. Constructs a new normal_iterators by adding
+    /// n to i.base().
     ///
     /// \tparam Iterator
     /// \tparam Container
     ///
-    /// \param n type: normal_iterator<Iterator,
-    /// Container>::difference_type \param i type: const
-    /// normal_iterator<Iterator, Container>& i \returns constexpr
-    /// inline normal_iterator<Iterator, Container>
+    /// \param n type: normal_iterator<Iterator, Container>::difference_type
+    /// \param i type: const normal_iterator<Iterator, Container>&
+    /// \returns constexpr inline normal_iterator<Iterator, Container>
     template<typename Iterator, typename Container>
     constexpr inline auto
     operator+ (typename normal_iterator<Iterator, Container>::difference_type n,
@@ -785,7 +782,5 @@ namespace std
     { ranges::iter_swap(x.base(), y.base()); }
 
 }  //< namespace std
-
-#endif  //< __cplusplus >= 201402L
 
 #endif  //< CORTEX_NORMAL_ITERATOR
