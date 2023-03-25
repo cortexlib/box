@@ -1,0 +1,4 @@
+compiler_id: 'clang'
+c_compiler: 'clang'
+cxx_compiler: 'clang++'
+cxx_version: c++20

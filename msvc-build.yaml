@@ -1,0 +1,4 @@
+compiler_id: 'msvc'
+c_compiler: 'cl'
+cxx_compiler: 'cl'
+cxx_version: c++20

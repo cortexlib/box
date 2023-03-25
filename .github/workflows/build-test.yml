@@ -1,0 +1,82 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, dev, build-ci ]
+
+  pull_request:
+    branches: [ main, dev, build-ci ]
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build_and_test:
+    name: Build & testing Cortex on ${{ matrix.os }} with ${{ matrix.compiler }}.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [ g++ ]
+        include:
+          - os: ubuntu-latest
+            compiler: g++
+            target: Linux
+
+          - os: macos-latest
+            compiler: g++
+            target: Macos
+
+          - os: windows-latest
+            compiler: cl
+            target: Windows
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Run the projects setup.
+        run: 
+
+      - name: Add msbuild to PATH
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Download bpt Linux
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: > 
+          sudo apt update && sudo apt upgrade -y
+          sudo apt install curl
+          curl bpt.pizza/get/linux -Lo bpt
+          chmod a+x bpt
+          ./bpt install-yourself
+
+      - name: Download bpt MacOS
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: > 
+          sudo apt update && sudo apt upgrade -y
+          sudo apt install curl
+          curl bpt.pizza/get/macos -Lo bpt
+          chmod a+x bpt
+          ./bpt install-yourself
+
+      - name: Download bpt Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: > 
+          Invoke-WebRequest bpt.pizza/get/windows -OutFile bpt.exe
+          bpt.exe install-yourself
+
+      - name: Run tests on GCC
+        if: ${{ matrix.compiler == 'g++' }}
+        run: bpt build -t gnu-build.yaml -j 8 -o build
+
+      - name: Run tests on Clang
+        if: ${{ matrix.compiler == 'clang++' }}
+        run: bpt build -t clang-build.yaml -j 8 -o build
+
+      - name: Run tests on MSVC
+        if: ${{ matrix.compiler == 'cl' }}
+        run: bpt build -t msvc-build.yaml -j 8 -o build
