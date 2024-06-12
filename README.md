@@ -4,7 +4,7 @@
 <a href="LICENSE"><img src="https://img.shields.io/github/license/oraqlle/cortexlib" alt="License"></a>
 <img src="https://img.shields.io/github/v/release/oraqlle/cortexlib?include_prereleases" alt="Current Release">
 
-A library with a bunch of random types, classes, functions, algorithms and other general purpose utilities for C++. Cortex serves as a collection of any general C++ components that don't really fit anywhere else.
+A library of general purpose types, classes, functions, algorithms, utilities and other components for C++.
 
 ---
 
